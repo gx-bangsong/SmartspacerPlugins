@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">QWeather Plugin for Smartspacer</string>
+    <string name="save">Save</string>
+
+    <string name="complication_qweather_label">QWeather Indices</string>
+    <string name="complication_qweather_description">Displays lifestyle advice based on QWeather data</string>
+
+    <string name="settings_api_key_title">API Key</string>
+    <string name="settings_api_key_summary">Your personal API key from QWeather</string>
+    <string name="settings_location_id_title">Location ID</string>
+    <string name="settings_location_id_summary">The ID of the location to fetch weather for</string>
+    <string name="settings_select_indices_title">Select Indices</string>
+    <string name="settings_select_indices_summary">Choose which lifestyle indices to display</string>
+</resources>
