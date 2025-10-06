@@ -47,7 +47,7 @@ ext {
     signingConfigs = {
         release {
             def keystore = getKeystoreProperties()
-            if (keystore != null) {
+            if (keystore != null && keystore.getProperty("storeFile")) {
                 storeFile file(keystore.getProperty("storeFile"))
                 storePassword keystore.getProperty("storePassword")
                 keyAlias keystore.getProperty("keyAlias")

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <EditTextPreference
+        android:key="api_key"
+        android:title="@string/settings_api_key_title"
+        android:summary="@string/settings_api_key_summary"
+        android:dialogTitle="@string/settings_api_key_title" />
+
+    <EditTextPreference
+        android:key="location_id"
+        android:title="@string/settings_location_id_title"
+        android:summary="@string/settings_location_id_summary"
+        android:dialogTitle="@string/settings_location_id_title" />
+
+    <MultiSelectListPreference
+        android:key="selected_indices"
+        android:title="@string/settings_select_indices_title"
+        android:summary="@string/settings_select_indices_summary"
+        android:entries="@array/indices_entries"
+        android:entryValues="@array/indices_values" />
+
+</PreferenceScreen>
