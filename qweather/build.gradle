@@ -8,12 +8,12 @@ plugins {
 
 android {
     namespace 'com.kieronquinn.app.smartspacer.plugin.qweather'
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         applicationId "com.kieronquinn.app.smartspacer.plugin.qweather"
         minSdk 26
-        targetSdk 33
+        targetSdk 34
         versionCode 1
         versionName "1.0.0"
 
@@ -44,6 +44,11 @@ android {
     buildFeatures {
         viewBinding true
     }
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
+        }
+    }
 }
 
 dependencies {
@@ -56,4 +61,10 @@ dependencies {
 
     //Data storage
     ksp "androidx.room:room-compiler:2.5.0"
+
+    // Testing
+    testImplementation "org.junit.jupiter:junit-jupiter-api:5.10.0"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.10.0"
+    testImplementation "io.mockk:mockk:1.13.8"
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3"
 }
