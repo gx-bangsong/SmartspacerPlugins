@@ -1,6 +1,5 @@
 package com.kieronquinn.app.smartspacer.plugin.qweather.ui.screens.settings
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.preference.EditTextPreference
 import androidx.preference.MultiSelectListPreference
@@ -9,18 +8,15 @@ import androidx.preference.PreferenceFragmentCompat
 import com.kieronquinn.app.smartspacer.plugin.qweather.R
 import com.kieronquinn.app.smartspacer.plugin.qweather.complications.QWeatherComplication
 import com.kieronquinn.app.smartspacer.plugin.qweather.providers.SettingsRepository
-import com.kieronquinn.app.smartspacer.plugin.qweather.receivers.UpdateReceiver
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerComplicationProvider
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.first
 import org.koin.android.ext.android.inject
 
 class SettingsFragment : PreferenceFragmentCompat() {
 
     private val settingsRepository by inject<SettingsRepository>()
-    private val scope = CoroutineScope(Dispatchers.Main)
+    private val scope = CoroutineScope(Dispatchers.Main + Job())
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.preferences, rootKey)
@@ -29,15 +25,22 @@ class SettingsFragment : PreferenceFragmentCompat() {
         setupLocationIdPreference()
         setupIndicesPreference()
     }
+    
+    override fun onDestroyView() {
+        super.onDestroyView()
+        scope.cancel() // 取消协程，防止内存泄漏
+    }
 
     private fun setupApiKeyPreference() {
         val apiKeyPreference = findPreference<EditTextPreference>("api_key") ?: return
         scope.launch {
-            apiKeyPreference.text = settingsRepository.apiKey.get()
+            // 使用 Flow.first() 获取初始值
+            apiKeyPreference.text = settingsRepository.apiKey.first()
         }
         apiKeyPreference.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, newValue ->
             scope.launch {
-                settingsRepository.apiKey.set(newValue as String)
+                // 使用 SettingsRepository 中的 suspend 方法
+                settingsRepository.setApiKey(newValue as String)
                 triggerUpdate()
             }
             true
@@ -47,11 +50,13 @@ class SettingsFragment : PreferenceFragmentCompat() {
     private fun setupLocationIdPreference() {
         val locationIdPreference = findPreference<EditTextPreference>("location_id") ?: return
         scope.launch {
-            locationIdPreference.text = settingsRepository.locationId.get()
+            // 使用 Flow.first() 获取初始值
+            locationIdPreference.text = settingsRepository.locationId.first()
         }
         locationIdPreference.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, newValue ->
             scope.launch {
-                settingsRepository.locationId.set(newValue as String)
+                // 使用 SettingsRepository 中的 suspend 方法
+                settingsRepository.setLocationId(newValue as String)
                 triggerUpdate()
             }
             true
@@ -61,7 +66,8 @@ class SettingsFragment : PreferenceFragmentCompat() {
     private fun setupIndicesPreference() {
         val indicesPreference = findPreference<MultiSelectListPreference>("selected_indices") ?: return
         scope.launch {
-            val currentValues = settingsRepository.selectedIndices.get()
+            // 使用 Flow.first() 获取初始值
+            val currentValues = settingsRepository.selectedIndices.first()
             indicesPreference.values = currentValues.split(",").filter { it.isNotEmpty() }.toSet()
         }
         indicesPreference.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, newValue ->
@@ -69,7 +75,8 @@ class SettingsFragment : PreferenceFragmentCompat() {
             val selected = newValue as? Set<String> ?: return@OnPreferenceChangeListener false
             val commaSeparated = selected.joinToString(",")
             scope.launch {
-                settingsRepository.selectedIndices.set(commaSeparated)
+                // 使用 SettingsRepository 中的 suspend 方法
+                settingsRepository.setSelectedIndices(commaSeparated)
                 triggerUpdate()
             }
             true
@@ -79,14 +86,8 @@ class SettingsFragment : PreferenceFragmentCompat() {
     private suspend fun triggerUpdate() {
         val context = context ?: return
         withContext(Dispatchers.IO) {
-            val componentName = QWeatherComplication().getComponentName(context)
-            val activeComplications = SmartspacerComplicationProvider.getActiveComplications(context, componentName)
-            activeComplications.forEach { smartspacerId ->
-                val intent = Intent(context, UpdateReceiver::class.java).apply {
-                    putExtra(UpdateReceiver.EXTRA_SMARTSPACER_ID, smartspacerId)
-                }
-                context.sendBroadcast(intent)
-            }
+            // 调用 notifyChange 来通知 Smartspacer 更新
+            SmartspacerComplicationProvider.notifyChange(context, QWeatherComplication::class.java)
         }
     }
 }
