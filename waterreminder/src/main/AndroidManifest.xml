@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
+    <application
+        android:name=".WaterReminderPlugin"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.Smartspacer">
+
+        <activity
+            android:name=".ui.settings.WaterReminderSettingsActivity"
+            android:excludeFromRecents="true"
+            android:exported="true"
+            android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <receiver
+            android:name=".receivers.WaterActionReceiver"
+            android:exported="false" />
+
+        <provider
+            android:name=".providers.WaterReminderProvider"
+            android:authorities="${applicationId}.provider.waterreminder"
+            android:permission="com.kieronquinn.app.smartspacer.permission.ACCESS_SMARTSPACER_PROVIDERS"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.kieronquinn.app.smartspacer.REGISTER_SMARTSPACER_TARGET_PROVIDER" />
+            </intent-filter>
+        </provider>
+
+    </application>
+
+</manifest>
