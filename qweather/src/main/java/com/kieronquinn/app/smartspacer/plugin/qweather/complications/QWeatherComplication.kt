@@ -49,6 +49,7 @@ class QWeatherComplication : SmartspacerComplicationProvider() {
             val previousDaily = previousWeatherData?.daily?.find { it.type == daily.type }
             val (primaryText, secondaryText) = com.kieronquinn.app.smartspacer.plugin.qweather.utils.AdviceGenerator.generateAdvice(daily, previousDaily)
 
+            // 确保 SmartspaceAction.Builder 被正确导入
             SmartspaceAction.Builder(smartspacerId, provideContext().packageName)
                 .setPrimaryText(Text(primaryText))
                 .setSubtitle(Text(secondaryText))
@@ -59,6 +60,7 @@ class QWeatherComplication : SmartspacerComplicationProvider() {
     }
 
     private fun getSetupAction(secondaryText: String = "Tap to configure"): SmartspaceAction {
+        // 确保 SmartspaceAction.Builder 被正确导入
         return SmartspaceAction.Builder("qweather_setup", provideContext().packageName)
             .setPrimaryText(Text("Set up QWeather"))
             .setSubtitle(Text(secondaryText))
