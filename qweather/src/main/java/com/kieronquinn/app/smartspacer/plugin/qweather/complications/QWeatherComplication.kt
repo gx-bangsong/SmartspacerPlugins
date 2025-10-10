@@ -50,22 +50,36 @@ class QWeatherComplication : SmartspacerComplicationProvider() {
             val (primaryText, secondaryText) = com.kieronquinn.app.smartspacer.plugin.qweather.utils.AdviceGenerator.generateAdvice(daily, previousDaily)
 
             // 确保 SmartspaceAction.Builder 被正确导入
-            SmartspaceAction("qweather_${daily.type}", provideContext().packageName,
-                Text(primaryText),
-                Text(secondaryText),
-                Icon(AndroidIcon.createWithResource(provideContext(), R.drawable.ic_launcher_foreground)),
-                TapAction(intent = Intent())
+            SmartspaceAction(
+                id = "qweather_${daily.type}",
+                context = provideContext(),
+                title = primaryText,
+                subtitle = secondaryText,
+                icon = AndroidIcon.createWithResource(provideContext(), R.drawable.ic_launcher_foreground),
+                pendingIntent = PendingIntent.getActivity(
+                    provideContext(),
+                    0,
+                    Intent(),
+                    PendingIntent.FLAG_IMMUTABLE
+                )
             )
         }
     }
 
     private fun getSetupAction(secondaryText: String = "Tap to configure"): SmartspaceAction {
         // 确保 SmartspaceAction.Builder 被正确导入
-        return SmartspaceAction("qweather_setup", provideContext().packageName,
-            Text("Set up QWeather"),
-            Text(secondaryText),
-            Icon(AndroidIcon.createWithResource(provideContext(), R.drawable.ic_launcher_foreground)),
-            TapAction(intent = Intent(provideContext(), SettingsActivity::class.java))
+        return SmartspaceAction(
+            id ="qweather_setup",
+            context = provideContext(),
+            title = "Set up QWeather",
+            subtitle = secondaryText,
+            icon = AndroidIcon.createWithResource(provideContext(), R.drawable.ic_launcher_foreground),
+            pendingIntent = PendingIntent.getActivity(
+                provideContext(),
+                0,
+                Intent(provideContext(), SettingsActivity::class.java),
+                PendingIntent.FLAG_IMMUTABLE
+            )
         )
     }
 
