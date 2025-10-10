@@ -14,6 +14,7 @@ import com.kieronquinn.app.smartspacer.plugin.qweather.providers.getBlocking
 import com.kieronquinn.app.smartspacer.plugin.qweather.receivers.UpdateReceiver
 import com.kieronquinn.app.smartspacer.plugin.qweather.ui.activities.SettingsActivity
 import com.kieronquinn.app.smartspacer.sdk.model.SmartspaceAction
+import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.ComplicationTemplate
 import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Icon
 import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.TapAction
 import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Text
@@ -50,37 +51,27 @@ class QWeatherComplication : SmartspacerComplicationProvider() {
             val (primaryText, secondaryText) = com.kieronquinn.app.smartspacer.plugin.qweather.utils.AdviceGenerator.generateAdvice(daily, previousDaily)
 
             // 确保 SmartspaceAction.Builder 被正确导入
-            SmartspaceAction(
+            ComplicationTemplate.Basic(
                 id = "qweather_${daily.type}",
-                context = provideContext(),
-                title = primaryText,
-                subtitle = secondaryText,
-                icon = AndroidIcon.createWithResource(provideContext(), R.drawable.ic_launcher_foreground),
-                pendingIntent = PendingIntent.getActivity(
-                    provideContext(),
-                    0,
-                    Intent(),
-                    PendingIntent.FLAG_IMMUTABLE
+                icon = Icon(AndroidIcon.createWithResource(provideContext(), R.drawable.ic_launcher_foreground)),
+                content = Text(primaryText),
+                onClick = TapAction(
+                    intent = Intent()
                 )
-            )
+            ).create()
         }
     }
 
     private fun getSetupAction(secondaryText: String = "Tap to configure"): SmartspaceAction {
         // 确保 SmartspaceAction.Builder 被正确导入
-        return SmartspaceAction(
-            id ="qweather_setup",
-            context = provideContext(),
-            title = "Set up QWeather",
-            subtitle = secondaryText,
-            icon = AndroidIcon.createWithResource(provideContext(), R.drawable.ic_launcher_foreground),
-            pendingIntent = PendingIntent.getActivity(
-                provideContext(),
-                0,
-                Intent(provideContext(), SettingsActivity::class.java),
-                PendingIntent.FLAG_IMMUTABLE
+        return ComplicationTemplate.Basic(
+            id = "qweather_setup",
+            icon = Icon(AndroidIcon.createWithResource(provideContext(), R.drawable.ic_launcher_foreground)),
+            content = Text(secondaryText),
+            onClick = TapAction(
+                intent = Intent(provideContext(), SettingsActivity::class.java)
             )
-        )
+        ).create()
     }
 
     override fun getConfig(smartspacerId: String?): Config {
