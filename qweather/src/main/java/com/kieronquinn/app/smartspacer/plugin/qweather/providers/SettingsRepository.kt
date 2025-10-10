@@ -70,7 +70,7 @@ class SettingsRepositoryImpl(context: Context) : BaseSettingsRepositoryImpl(), S
     }
 }
 
-// 确保这个扩展函数在同一个包中
+// 修正 getBlocking 扩展函数，确保它正确返回 Flow.first() 的结果
 fun <T> Flow<T>.getBlocking(): T {
     return runBlocking { this.first() }
 }
