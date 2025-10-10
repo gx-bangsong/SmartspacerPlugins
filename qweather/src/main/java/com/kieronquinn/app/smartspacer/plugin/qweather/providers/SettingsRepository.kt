@@ -2,13 +2,13 @@ package com.kieronquinn.app.smartspacer.plugin.qweather.providers
 
 import android.content.Context
 import androidx.core.content.edit
+import com.kieronquinn.app.smartspacer.plugin.shared.repositories.BaseSettingsRepository
+import com.kieronquinn.app.smartspacer.plugin.shared.repositories.BaseSettingsRepositoryImpl
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
-import com.kieronquinn.app.smartspacer.plugin.shared.repositories.BaseSettingsRepository
-import com.kieronquinn.app.smartspacer.plugin.shared.repositories.BaseSettingsRepositoryImpl
 
 interface SettingsRepository : BaseSettingsRepository {
     val apiKey: Flow<String>
@@ -31,7 +31,6 @@ class SettingsRepositoryImpl(context: Context) : BaseSettingsRepositoryImpl(), S
     override val sharedPreferences =
         context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE)
 
-    // Using MutableStateFlow to expose settings reactively
     private val _apiKey = MutableStateFlow(sharedPreferences.getString(API_KEY_KEY, "") ?: "")
     private val _locationId = MutableStateFlow(sharedPreferences.getString(LOCATION_ID_KEY, "") ?: "")
     private val _selectedIndices = MutableStateFlow(sharedPreferences.getString(SELECTED_INDICES_KEY, "1,2,3,5,9") ?: "1,2,3,5,9")
@@ -41,7 +40,6 @@ class SettingsRepositoryImpl(context: Context) : BaseSettingsRepositoryImpl(), S
     override val selectedIndices: Flow<String> = _selectedIndices.asStateFlow()
 
     init {
-        // Register a listener to update the StateFlows whenever SharedPreferences change
         sharedPreferences.registerOnSharedPreferenceChangeListener { sharedPreferences, key ->
             when (key) {
                 API_KEY_KEY -> _apiKey.value = sharedPreferences.getString(API_KEY_KEY, "") ?: ""
@@ -53,21 +51,17 @@ class SettingsRepositoryImpl(context: Context) : BaseSettingsRepositoryImpl(), S
 
     override suspend fun setApiKey(value: String) {
         sharedPreferences.edit { putString(API_KEY_KEY, value) }
-        _apiKey.value = value
     }
 
     override suspend fun setLocationId(value: String) {
         sharedPreferences.edit { putString(LOCATION_ID_KEY, value) }
-        _locationId.value = value
     }
 
     override suspend fun setSelectedIndices(value: String) {
         sharedPreferences.edit { putString(SELECTED_INDICES_KEY, value) }
-        _selectedIndices.value = value
     }
 
     override suspend fun getBackup(): Map<String, String> {
-        // Not implemented for this plugin
         return emptyMap()
     }
 
@@ -76,9 +70,7 @@ class SettingsRepositoryImpl(context: Context) : BaseSettingsRepositoryImpl(), S
     }
 }
 
-// Extension function to help with settings retrieval in a blocking way, if needed.
-// This should only be used in specific contexts where a Flow isn't feasible, like the one-time fetch in the complication provider.
+// 确保这个扩展函数在同一个包中
 fun <T> Flow<T>.getBlocking(): T {
-    // 确保 runBlocking 返回 first() 的结果
-    return runBlocking { this@getBlocking.first() }
+    return runBlocking { this.first() }
 }
