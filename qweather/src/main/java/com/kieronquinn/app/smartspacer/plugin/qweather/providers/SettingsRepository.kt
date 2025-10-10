@@ -78,5 +78,7 @@ class SettingsRepositoryImpl(context: Context) : BaseSettingsRepositoryImpl(), S
 
 // Extension function to help with settings retrieval in a blocking way, if needed.
 // This should only be used in specific contexts where a Flow isn't feasible, like the one-time fetch in the complication provider.
-fun <T> Flow<T>.getBlocking(): T = runBlocking { this@getBlocking.first() }
-
+fun <T> Flow<T>.getBlocking(): T {
+    // 确保 runBlocking 返回 first() 的结果
+    return runBlocking { this@getBlocking.first() }
+}
