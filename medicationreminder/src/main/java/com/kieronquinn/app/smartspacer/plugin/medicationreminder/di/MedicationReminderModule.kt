@@ -1,7 +1,6 @@
 package com.kieronquinn.app.smartspacer.plugin.medicationreminder.di
 
 import androidx.room.Room
-import androidx.room.Room
 import com.kieronquinn.app.smartspacer.plugin.medicationreminder.data.MedicationReminderDatabase
 import com.kieronquinn.app.smartspacer.plugin.medicationreminder.data.MedicationRepository
 import com.kieronquinn.app.smartspacer.plugin.medicationreminder.ui.settings.AddMedicationViewModel

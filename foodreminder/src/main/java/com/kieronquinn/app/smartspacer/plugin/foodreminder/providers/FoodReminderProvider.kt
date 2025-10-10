@@ -17,6 +17,14 @@ import java.util.concurrent.TimeUnit
 
 class FoodReminderProvider : SmartspacerTargetProvider() {
 
+    override fun getConfig(smartspacerId: String?): Config {
+        return Config(
+            label = "Food Reminders",
+            description = "Reminds you about expiring food",
+            icon = R.drawable.ic_launcher_foreground
+        )
+    }
+
     companion object {
         private const val TAG = "FoodReminderProvider"
         const val ACTION_REFRESH = "com.kieronquinn.app.smartspacer.plugin.foodreminder.REFRESH"

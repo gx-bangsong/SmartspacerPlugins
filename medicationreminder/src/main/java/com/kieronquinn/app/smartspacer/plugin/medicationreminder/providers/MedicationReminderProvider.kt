@@ -21,6 +21,14 @@ import java.time.format.DateTimeFormatter
 
 class MedicationReminderProvider : SmartspacerTargetProvider() {
 
+    override fun getConfig(smartspacerId: String?): Config {
+        return Config(
+            label = "Medication Reminders",
+            description = "Reminds you to take your medication",
+            icon = R.drawable.ic_launcher_foreground
+        )
+    }
+
     companion object {
         private const val TAG = "MedicationProvider"
         const val ACTION_REFRESH = "com.kieronquinn.app.smartspacer.plugin.medicationreminder.REFRESH"

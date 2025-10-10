@@ -17,6 +17,14 @@ import java.time.format.DateTimeFormatter
 
 class WaterReminderProvider : SmartspacerTargetProvider() {
 
+    override fun getConfig(smartspacerId: String?): Config {
+        return Config(
+            label = "Water Reminder",
+            description = "Reminds you to drink water",
+            icon = R.drawable.ic_launcher_foreground
+        )
+    }
+
     companion object {
         private const val TAG = "WaterReminderProvider"
         const val ACTION_REFRESH = "com.kieronquinn.app.smartspacer.plugin.waterreminder.REFRESH"

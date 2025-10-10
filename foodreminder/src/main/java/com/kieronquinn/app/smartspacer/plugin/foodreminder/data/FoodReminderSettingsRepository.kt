@@ -9,6 +9,14 @@ class FoodReminderSettingsRepository(
     val onChange: MutableSharedFlow<String> = MutableSharedFlow(replay = 1)
 ) : BaseSettingsRepositoryImpl() {
 
+    override suspend fun getBackup(): Map<String, String> {
+        return emptyMap()
+    }
+
+    override suspend fun restoreBackup(settings: Map<String, String>) {
+        // No-op
+    }
+
     companion object {
         private const val PREFERENCES_NAME = "food_reminder_settings"
         private const val KEY_REMINDER_LEAD_TIME_DAYS = "reminder_lead_time_days"

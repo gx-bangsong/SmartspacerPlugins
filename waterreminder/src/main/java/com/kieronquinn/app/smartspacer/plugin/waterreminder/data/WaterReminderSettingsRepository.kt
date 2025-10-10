@@ -9,6 +9,14 @@ class WaterReminderSettingsRepository(
     val onChange: MutableSharedFlow<String> = MutableSharedFlow(replay = 1)
 ) : BaseSettingsRepositoryImpl() {
 
+    override suspend fun getBackup(): Map<String, String> {
+        return emptyMap()
+    }
+
+    override suspend fun restoreBackup(settings: Map<String, String>) {
+        // No-op
+    }
+
     companion object {
         private const val PREFERENCES_NAME = "water_reminder_settings"
         private const val KEY_DAILY_GOAL_ML = "daily_goal_ml"
