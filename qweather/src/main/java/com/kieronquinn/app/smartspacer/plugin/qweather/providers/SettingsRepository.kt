@@ -71,6 +71,6 @@ class SettingsRepositoryImpl(context: Context) : BaseSettingsRepositoryImpl(), S
 }
 
 // 修正 getBlocking 扩展函数，确保它正确返回 Flow.first() 的结果
-fun <T> Flow<T>.getBlocking(): T {
-    return runBlocking { this.first() }
+fun <T> Flow<T>.getBlocking(): T = runBlocking {
+    this@getBlocking.first()
 }
