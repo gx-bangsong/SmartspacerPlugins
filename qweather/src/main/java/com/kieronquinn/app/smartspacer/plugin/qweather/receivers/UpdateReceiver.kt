@@ -1,7 +1,6 @@
 package com.kieronquinn.app.smartspacer.plugin.qweather.receivers
 
 import android.content.BroadcastReceiver
-import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.util.Log
@@ -30,10 +29,9 @@ class UpdateReceiver : BroadcastReceiver(), KoinComponent {
     override fun onReceive(context: Context, intent: Intent) {
         val pendingResult = goAsync()
         val smartspacerId = intent.getStringExtra(EXTRA_SMARTSPACER_ID)
-        
+
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                // Using getBlocking() extension from the SettingsRepository fix
                 val apiKey = settingsRepository.apiKey.getBlocking()
                 val locationId = settingsRepository.locationId.getBlocking()
                 val selectedIndices = settingsRepository.selectedIndices.getBlocking()
@@ -46,9 +44,9 @@ class UpdateReceiver : BroadcastReceiver(), KoinComponent {
                 val response = QWeatherClient.instance.getIndices(locationId, apiKey, selectedIndices)
                 qWeatherRepository.setWeatherData(response)
                 Log.d(TAG, "Successfully fetched and saved weather data.")
-                
-                val componentName = ComponentName(context, QWeatherComplication::class.java)
-                SmartspacerComplicationProvider.notifyChange(context, componentName, smartspacerId)
+
+                // 使用提供者类的引用来调用 notifyChange
+                SmartspacerComplicationProvider.notifyChange(context, QWeatherComplication::class.java, smartspacerId)
 
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to fetch weather data", e)
