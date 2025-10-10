@@ -25,21 +25,19 @@ class SettingsFragment : PreferenceFragmentCompat() {
         setupLocationIdPreference()
         setupIndicesPreference()
     }
-    
+
     override fun onDestroyView() {
         super.onDestroyView()
-        scope.cancel() // 取消协程，防止内存泄漏
+        scope.cancel()
     }
 
     private fun setupApiKeyPreference() {
         val apiKeyPreference = findPreference<EditTextPreference>("api_key") ?: return
         scope.launch {
-            // 使用 Flow.first() 获取初始值
             apiKeyPreference.text = settingsRepository.apiKey.first()
         }
         apiKeyPreference.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, newValue ->
             scope.launch {
-                // 使用 SettingsRepository 中的 suspend 方法
                 settingsRepository.setApiKey(newValue as String)
                 triggerUpdate()
             }
@@ -50,12 +48,10 @@ class SettingsFragment : PreferenceFragmentCompat() {
     private fun setupLocationIdPreference() {
         val locationIdPreference = findPreference<EditTextPreference>("location_id") ?: return
         scope.launch {
-            // 使用 Flow.first() 获取初始值
             locationIdPreference.text = settingsRepository.locationId.first()
         }
         locationIdPreference.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, newValue ->
             scope.launch {
-                // 使用 SettingsRepository 中的 suspend 方法
                 settingsRepository.setLocationId(newValue as String)
                 triggerUpdate()
             }
@@ -66,7 +62,6 @@ class SettingsFragment : PreferenceFragmentCompat() {
     private fun setupIndicesPreference() {
         val indicesPreference = findPreference<MultiSelectListPreference>("selected_indices") ?: return
         scope.launch {
-            // 使用 Flow.first() 获取初始值
             val currentValues = settingsRepository.selectedIndices.first()
             indicesPreference.values = currentValues.split(",").filter { it.isNotEmpty() }.toSet()
         }
@@ -75,7 +70,6 @@ class SettingsFragment : PreferenceFragmentCompat() {
             val selected = newValue as? Set<String> ?: return@OnPreferenceChangeListener false
             val commaSeparated = selected.joinToString(",")
             scope.launch {
-                // 使用 SettingsRepository 中的 suspend 方法
                 settingsRepository.setSelectedIndices(commaSeparated)
                 triggerUpdate()
             }
@@ -86,7 +80,6 @@ class SettingsFragment : PreferenceFragmentCompat() {
     private suspend fun triggerUpdate() {
         val context = context ?: return
         withContext(Dispatchers.IO) {
-            // 调用 notifyChange 来通知 Smartspacer 更新
             SmartspacerComplicationProvider.notifyChange(context, QWeatherComplication::class.java)
         }
     }
