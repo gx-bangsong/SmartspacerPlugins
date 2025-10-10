@@ -50,7 +50,7 @@ class QWeatherComplication : SmartspacerComplicationProvider() {
             val (primaryText, secondaryText) = com.kieronquinn.app.smartspacer.plugin.qweather.utils.AdviceGenerator.generateAdvice(daily, previousDaily)
 
             // 确保 SmartspaceAction.Builder 被正确导入
-            SmartspaceAction.Builder(smartspacerId, provideContext().packageName)
+            SmartspaceAction.Builder("qweather_${daily.type}", provideContext().packageName)
                 .setPrimaryText(Text(primaryText))
                 .setSubtitle(Text(secondaryText))
                 .setIcon(Icon(AndroidIcon.createWithResource(provideContext(), R.drawable.ic_launcher_foreground)))
