@@ -1,6 +1,7 @@
 package com.kieronquinn.app.smartspacer.plugin.qweather.receivers
 
 import android.content.BroadcastReceiver
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import com.kieronquinn.app.smartspacer.plugin.qweather.complications.QWeatherComplication
@@ -11,11 +12,10 @@ class BootReceiver : BroadcastReceiver() {
         if (intent.action != Intent.ACTION_BOOT_COMPLETED) {
             return
         }
-        // Re-schedule alarms for all active complications
-        val complication = QWeatherComplication()
-        val activeComplications = SmartspacerComplicationProvider.getActiveComplications(context, complication.getComponentName(context))
-        activeComplications.forEach {
-            complication.onProviderAdded(it)
-        }
+        
+        // This is a simplified approach. The more robust solution would be for the main app
+        // to manage boot updates. For now, we simply notify a generic change.
+        val componentName = ComponentName(context, QWeatherComplication::class.java)
+        SmartspacerComplicationProvider.notifyChange(context, componentName)
     }
 }
