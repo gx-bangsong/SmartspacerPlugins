@@ -14,6 +14,7 @@ import com.kieronquinn.app.smartspacer.plugin.qweather.providers.getBlocking
 import com.kieronquinn.app.smartspacer.plugin.qweather.receivers.UpdateReceiver
 import com.kieronquinn.app.smartspacer.plugin.qweather.ui.activities.SettingsActivity
 import com.kieronquinn.app.smartspacer.sdk.model.SmartspaceAction
+import com.kieronquinn.app.smartspacer.sdk.model.SmartspaceAction.Builder
 import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Icon
 import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.TapAction
 import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Text
