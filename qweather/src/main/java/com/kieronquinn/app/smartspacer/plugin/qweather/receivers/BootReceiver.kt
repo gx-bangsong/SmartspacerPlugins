@@ -12,10 +12,6 @@ class BootReceiver : BroadcastReceiver() {
         if (intent.action != Intent.ACTION_BOOT_COMPLETED) {
             return
         }
-        
-        // This is a simplified approach. The more robust solution would be for the main app
-        // to manage boot updates. For now, we simply notify a generic change.
-        val componentName = ComponentName(context, QWeatherComplication::class.java)
-        SmartspacerComplicationProvider.notifyChange(context, componentName)
+        SmartspacerComplicationProvider.notifyChange(context, QWeatherComplication::class.java)
     }
 }
