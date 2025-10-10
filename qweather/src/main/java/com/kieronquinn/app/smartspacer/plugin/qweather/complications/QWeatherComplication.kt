@@ -10,6 +10,7 @@ import androidx.annotation.RequiresApi
 import com.kieronquinn.app.smartspacer.plugin.qweather.R
 import com.kieronquinn.app.smartspacer.plugin.qweather.providers.QWeatherRepository
 import com.kieronquinn.app.smartspacer.plugin.qweather.providers.SettingsRepository
+import com.kieronquinn.app.smartspacer.plugin.qweather.providers.getBlocking
 import com.kieronquinn.app.smartspacer.plugin.qweather.receivers.UpdateReceiver
 import com.kieronquinn.app.smartspacer.plugin.qweather.ui.activities.SettingsActivity
 import com.kieronquinn.app.smartspacer.sdk.model.SmartspaceAction
@@ -30,7 +31,7 @@ class QWeatherComplication : SmartspacerComplicationProvider() {
     private val alarmManager by lazy { provideContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager }
 
     override fun getSmartspaceActions(smartspacerId: String): List<SmartspaceAction> {
-          val apiKey = settingsRepository.apiKey.getBlocking()
+        val apiKey = settingsRepository.apiKey.getBlocking()
         val locationId = settingsRepository.locationId.getBlocking()
 
         if (apiKey.isBlank() || locationId.isBlank()) {
@@ -47,58 +48,23 @@ class QWeatherComplication : SmartspacerComplicationProvider() {
         return weatherData.daily.map { daily ->
             val previousDaily = previousWeatherData?.daily?.find { it.type == daily.type }
             val (primaryText, secondaryText) = com.kieronquinn.app.smartspacer.plugin.qweather.utils.AdviceGenerator.generateAdvice(daily, previousDaily)
-            
-            // Use the builder pattern for SmartspaceAction
+
             SmartspaceAction.Builder(smartspacerId, provideContext().packageName)
                 .setPrimaryText(Text(primaryText))
                 .setSubtitle(Text(secondaryText))
                 .setIcon(Icon(AndroidIcon.createWithResource(provideContext(), R.drawable.ic_launcher_foreground)))
-                // TapAction is now set directly on the builder
-                .setTapAction(TapAction(intent = Intent())) // The TapAction can be set to a specific intent if needed
+                .setTapAction(TapAction(intent = Intent()))
                 .build()
         }
     }
 
     private fun getSetupAction(secondaryText: String = "Tap to configure"): SmartspaceAction {
-        // Use the builder pattern for the setup action
         return SmartspaceAction.Builder("qweather_setup", provideContext().packageName)
             .setPrimaryText(Text("Set up QWeather"))
             .setSubtitle(Text(secondaryText))
             .setIcon(Icon(AndroidIcon.createWithResource(provideContext(), R.drawable.ic_launcher_foreground)))
             .setTapAction(TapAction(intent = Intent(provideContext(), SettingsActivity::class.java)))
             .build()
-    }
-
-    // onProviderAdded and onProviderRemoved have been removed as they are no longer part of the Smartspacer SDK.
-    // Logic for scheduling updates should be handled elsewhere, such as in the BootReceiver or the plugin's main entry point.
-
-    private fun scheduleUpdates(smartspacerId: String) {
-        val intent = Intent(provideContext(), UpdateReceiver::class.java).apply {
-            putExtra(UpdateReceiver.EXTRA_SMARTSPACER_ID, smartspacerId)
-        }
-        val pendingIntent = PendingIntent.getBroadcast(
-            provideContext(),
-            smartspacerId.hashCode(),
-            intent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-        )
-        alarmManager.setInexactRepeating(
-            AlarmManager.ELAPSED_REALTIME_WAKEUP,
-            0,
-            TimeUnit.HOURS.toMillis(1),
-            pendingIntent
-        )
-    }
-
-    private fun cancelUpdates(smartspacerId: String) {
-        val intent = Intent(provideContext(), UpdateReceiver::class.java)
-        val pendingIntent = PendingIntent.getBroadcast(
-            provideContext(),
-            smartspacerId.hashCode(),
-            intent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-        )
-        alarmManager.cancel(pendingIntent)
     }
 
     override fun getConfig(smartspacerId: String?): Config {
