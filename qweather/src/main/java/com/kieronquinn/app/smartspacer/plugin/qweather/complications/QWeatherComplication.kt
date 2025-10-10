@@ -30,8 +30,8 @@ class QWeatherComplication : SmartspacerComplicationProvider() {
     private val alarmManager by lazy { provideContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager }
 
     override fun getSmartspaceActions(smartspacerId: String): List<SmartspaceAction> {
-        val apiKey = runBlocking { settingsRepository.apiKey.get() }
-        val locationId = runBlocking { settingsRepository.locationId.get() }
+          val apiKey = settingsRepository.apiKey.getBlocking()
+        val locationId = settingsRepository.locationId.getBlocking()
 
         if (apiKey.isBlank() || locationId.isBlank()) {
             return listOf(getSetupAction())
@@ -49,7 +49,7 @@ class QWeatherComplication : SmartspacerComplicationProvider() {
             val (primaryText, secondaryText) = com.kieronquinn.app.smartspacer.plugin.qweather.utils.AdviceGenerator.generateAdvice(daily, previousDaily)
             
             // Use the builder pattern for SmartspaceAction
-            SmartspaceAction.Builder("qweather_${daily.type}", provideContext().packageName)
+            SmartspaceAction.Builder(smartspacerId, provideContext().packageName)
                 .setPrimaryText(Text(primaryText))
                 .setSubtitle(Text(secondaryText))
                 .setIcon(Icon(AndroidIcon.createWithResource(provideContext(), R.drawable.ic_launcher_foreground)))
