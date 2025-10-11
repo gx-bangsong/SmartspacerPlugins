@@ -2,6 +2,7 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-parcelize'
+    id 'androidx.navigation.safeargs.kotlin'
     id 'com.google.devtools.ksp'
 }
 
@@ -41,35 +42,30 @@ android {
         jvmTarget = '17'
     }
     buildFeatures {
-        compose true
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion '1.5.3'
-    }
-    testOptions {
-        unitTests {
-            includeAndroidResources = true
-        }
+        viewBinding true
     }
 }
 
 dependencies {
     implementation project(path: ':shared')
 
-    // WorkManager for background tasks
-    implementation "androidx.work:work-runtime-ktx:2.9.0"
+    //Countdown icons
+    implementation "com.mikepenz:iconics-core:5.4.0"
+    //noinspection GradleDynamicVersion
+    implementation 'com.mikepenz:google-material-typeface:+@aar'
+    //noinspection GradleDynamicVersion
+    implementation 'com.mikepenz:google-material-typeface-outlined:+@aar'
+    //noinspection GradleDynamicVersion
+    implementation 'com.mikepenz:google-material-typeface-rounded:+@aar'
+    //noinspection GradleDynamicVersion
+    implementation 'com.mikepenz:google-material-typeface-sharp:+@aar'
+    //noinspection GradleDynamicVersion
+    implementation 'com.mikepenz:fontawesome-typeface:+@aar'
+    //noinspection GradleDynamicVersion
+    implementation 'com.mikepenz:community-material-typeface:+@aar'
+    //noinspection GradleDynamicVersion
+    implementation 'com.mikepenz:phosphor-typeface:+@aar'
 
-    // Jetpack Compose
-    implementation platform('androidx.compose:compose-bom:2023.08.00')
-    implementation 'androidx.compose.ui:ui'
-    implementation 'androidx.compose.ui:ui-graphics'
-    implementation 'androidx.compose.ui:ui-tooling-preview'
-    implementation 'androidx.compose.material3:material3'
-    implementation 'androidx.activity:activity-compose:1.8.2'
-
-    // Testing
-    testImplementation "org.junit.jupiter:junit-jupiter-api:5.10.0"
-    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.10.0"
-    testImplementation "io.mockk:mockk:1.13.8"
-    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3"
+    //Data storage
+    ksp "androidx.room:room-compiler:$room_version"
 }
