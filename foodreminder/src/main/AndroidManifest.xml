@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application
-        android:name=".FoodReminderPlugin"
+        android:name="com.kieronquinn.app.smartspacer.plugin.foodreminder.FoodReminderPlugin"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -13,8 +15,7 @@
         android:theme="@style/Theme.Smartspacer">
 
         <activity
-            android:name=".ui.settings.FoodReminderSettingsActivity"
-            android:excludeFromRecents="true"
+            android:name=".SettingsActivity"
             android:exported="true"
             android:label="@string/app_name">
             <intent-filter>
@@ -24,12 +25,12 @@
         </activity>
 
         <provider
-            android:name=".providers.FoodReminderProvider"
+            android:name=".provider.FoodReminderProvider"
             android:authorities="${applicationId}.provider.foodreminder"
             android:permission="com.kieronquinn.app.smartspacer.permission.ACCESS_SMARTSPACER_PROVIDERS"
             android:exported="true">
             <intent-filter>
-                <action android:name="com.kieronquinn.app.smartspacer.REGISTER_SMARTSPACER_TARGET_PROVIDER" />
+                <action android:name="com.kieronquinn.app.smartspacer.provider.SMARTSPACER_PROVIDER" />
             </intent-filter>
         </provider>
 

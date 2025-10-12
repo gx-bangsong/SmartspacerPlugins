@@ -1,31 +1,33 @@
 package com.kieronquinn.app.smartspacer.plugin.waterreminder
 
-import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
-import com.kieronquinn.app.smartspacer.plugin.waterreminder.di.waterReminderModule
-import com.kieronquinn.app.smartspacer.plugin.waterreminder.worker.WaterReminderWorker
 import com.kieronquinn.app.smartspacer.sdk.SmartspacerPlugin
+import com.kieronquinn.app.smartspacer.plugin.waterreminder.worker.WaterReminderWorker
 import org.koin.core.component.KoinComponent
 import java.util.concurrent.TimeUnit
 
-class WaterReminderPlugin : SmartspacerPlugin(), KoinComponent {
+class WaterReminderPlugin: SmartspacerPlugin(), KoinComponent {
+    override fun getModules() = listOf(waterReminderModule)
 
-    override val modules = listOf(waterReminderModule)
-
-    override fun onCreate() {
-        super.onCreate()
-        setupWorker()
+    override fun onPluginEnabled() {
+        super.onPluginEnabled()
+        val workRequest = PeriodicWorkRequestBuilder<WaterReminderWorker>(15, TimeUnit.MINUTES).build()
+        WorkManager.getInstance(this).enqueue(workRequest)
+        scheduleDailyReset()
     }
 
-    private fun setupWorker() {
-        val workRequest = PeriodicWorkRequestBuilder<WaterReminderWorker>(1, TimeUnit.HOURS)
+    private fun scheduleDailyReset() {
+        val midnight = java.util.Calendar.getInstance().apply {
+            add(java.util.Calendar.DAY_OF_YEAR, 1)
+            set(java.util.Calendar.HOUR_OF_DAY, 0)
+            set(java.util.Calendar.MINUTE, 0)
+            set(java.util.Calendar.SECOND, 0)
+        }
+        val delay = midnight.timeInMillis - System.currentTimeMillis()
+        val workRequest = androidx.work.OneTimeWorkRequestBuilder<com.kieronquinn.app.smartspacer.plugin.waterreminder.worker.ResetWorker>()
+            .setInitialDelay(delay, java.util.concurrent.TimeUnit.MILLISECONDS)
             .build()
-
-        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
-            WaterReminderWorker.WORKER_TAG,
-            ExistingPeriodicWorkPolicy.KEEP,
-            workRequest
-        )
+        WorkManager.getInstance(this).enqueue(workRequest)
     }
 }

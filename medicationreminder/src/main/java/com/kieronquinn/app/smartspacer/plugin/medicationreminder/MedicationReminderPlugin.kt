@@ -1,31 +1,18 @@
 package com.kieronquinn.app.smartspacer.plugin.medicationreminder
 
-import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
-import com.kieronquinn.app.smartspacer.plugin.medicationreminder.di.medicationReminderModule
-import com.kieronquinn.app.smartspacer.plugin.medicationreminder.worker.MedicationReminderWorker
 import com.kieronquinn.app.smartspacer.sdk.SmartspacerPlugin
+import com.kieronquinn.app.smartspacer.plugin.medicationreminder.worker.MedicationReminderWorker
 import org.koin.core.component.KoinComponent
 import java.util.concurrent.TimeUnit
 
-class MedicationReminderPlugin : SmartspacerPlugin(), KoinComponent {
+class MedicationReminderPlugin: SmartspacerPlugin(), KoinComponent {
+    override fun getModules() = listOf(medicationReminderModule)
 
-    override val modules = listOf(medicationReminderModule)
-
-    override fun onCreate() {
-        super.onCreate()
-        setupWorker()
-    }
-
-    private fun setupWorker() {
-        val workRequest = PeriodicWorkRequestBuilder<MedicationReminderWorker>(15, TimeUnit.MINUTES)
-            .build()
-
-        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
-            MedicationReminderWorker.WORKER_TAG,
-            ExistingPeriodicWorkPolicy.KEEP,
-            workRequest
-        )
+    override fun onPluginEnabled() {
+        super.onPluginEnabled()
+        val workRequest = PeriodicWorkRequestBuilder<MedicationReminderWorker>(1, TimeUnit.DAYS).build()
+        WorkManager.getInstance(this).enqueue(workRequest)
     }
 }

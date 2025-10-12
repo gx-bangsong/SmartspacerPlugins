@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
-        android:name=".WaterReminderPlugin"
+        android:name="com.kieronquinn.app.smartspacer.plugin.waterreminder.WaterReminderPlugin"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -13,8 +14,7 @@
         android:theme="@style/Theme.Smartspacer">
 
         <activity
-            android:name=".ui.settings.WaterReminderSettingsActivity"
-            android:excludeFromRecents="true"
+            android:name=".SettingsActivity"
             android:exported="true"
             android:label="@string/app_name">
             <intent-filter>
@@ -23,19 +23,23 @@
             </intent-filter>
         </activity>
 
-        <receiver
-            android:name=".receivers.WaterActionReceiver"
-            android:exported="false" />
-
         <provider
-            android:name=".providers.WaterReminderProvider"
+            android:name=".provider.WaterReminderProvider"
             android:authorities="${applicationId}.provider.waterreminder"
             android:permission="com.kieronquinn.app.smartspacer.permission.ACCESS_SMARTSPACER_PROVIDERS"
             android:exported="true">
             <intent-filter>
-                <action android:name="com.kieronquinn.app.smartspacer.REGISTER_SMARTSPACER_TARGET_PROVIDER" />
+                <action android:name="com.kieronquinn.app.smartspacer.provider.SMARTSPACER_PROVIDER" />
             </intent-filter>
         </provider>
+
+        <receiver
+            android:name=".receiver.WaterActionReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="${applicationId}.ACTION_DRINK_WATER" />
+            </intent-filter>
+        </receiver>
 
     </application>
 

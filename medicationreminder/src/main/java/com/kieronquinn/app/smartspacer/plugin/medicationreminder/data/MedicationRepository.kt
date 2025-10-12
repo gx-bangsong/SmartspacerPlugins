@@ -1,29 +1,30 @@
 package com.kieronquinn.app.smartspacer.plugin.medicationreminder.data
 
-import com.kieronquinn.app.smartspacer.plugin.medicationreminder.data.model.DoseLog
-import com.kieronquinn.app.smartspacer.plugin.medicationreminder.data.model.Medication
 import kotlinx.coroutines.flow.Flow
 
-class MedicationRepository(private val medicationDao: MedicationDao) {
+class MedicationRepository(
+    private val medicationDao: MedicationDao,
+    private val takenDoseDao: TakenDoseDao
+) {
+    val allMedications: Flow<List<Medication>> = medicationDao.getAll()
 
-    fun getMedications(): Flow<List<Medication>> {
-        return medicationDao.getMedications()
+    fun getTakenDosesForMedication(medicationId: Int): Flow<List<TakenDose>> {
+        return takenDoseDao.getTakenDosesForMedication(medicationId)
     }
 
-    suspend fun addMedication(medication: Medication) {
-        medicationDao.insertMedication(medication)
+    suspend fun insert(medication: Medication) {
+        medicationDao.insert(medication)
     }
 
-    suspend fun deleteMedication(medicationId: Int) {
-        medicationDao.deleteMedication(medicationId)
+    suspend fun insert(takenDose: TakenDose) {
+        takenDoseDao.insert(takenDose)
     }
 
-    suspend fun logDose(medicationId: Int, timestamp: Long) {
-        val doseLog = DoseLog(medicationId = medicationId, doseTimestamp = timestamp)
-        medicationDao.logDose(doseLog)
+    suspend fun update(medication: Medication) {
+        medicationDao.update(medication)
     }
 
-    fun getDoseLogs(medicationId: Int): Flow<List<DoseLog>> {
-        return medicationDao.getDoseLogsForMedication(medicationId)
+    suspend fun deleteById(id: Int) {
+        medicationDao.deleteById(id)
     }
 }

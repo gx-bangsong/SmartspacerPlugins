@@ -1,49 +1,56 @@
 package com.kieronquinn.app.smartspacer.plugin.foodreminder.worker
 
 import android.content.Context
-import android.content.Intent
-import android.util.Log
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
+import com.kieronquinn.app.smartspacer.plugin.foodreminder.R
 import com.kieronquinn.app.smartspacer.plugin.foodreminder.data.FoodItemRepository
-import com.kieronquinn.app.smartspacer.plugin.foodreminder.data.FoodReminderSettingsRepository
-import com.kieronquinn.app.smartspacer.plugin.foodreminder.providers.FoodReminderProvider
 import kotlinx.coroutines.flow.first
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
-import java.util.concurrent.TimeUnit
 
 class FoodReminderWorker(
-    private val appContext: Context,
+    appContext: Context,
     workerParams: WorkerParameters
 ) : CoroutineWorker(appContext, workerParams), KoinComponent {
 
-    companion object {
-        const val WORKER_TAG = "food_reminder_worker"
-    }
-
-    private val foodItemRepository: FoodItemRepository by inject()
-    private val settingsRepository: FoodReminderSettingsRepository by inject()
+    private val repository: FoodItemRepository by inject()
+    private val settings: com.kieronquinn.app.smartspacer.plugin.foodreminder.FoodReminderSettings by inject()
 
     override suspend fun doWork(): Result {
-        Log.d(WORKER_TAG, "Worker running...")
-        val leadTimeDays = settingsRepository.reminderLeadTimeDays.get()
-        val expiringItems = foodItemRepository.getFoodItems().first().filter {
-            val daysUntilExpiry = TimeUnit.MILLISECONDS.toDays(it.expiryDate - System.currentTimeMillis())
-            daysUntilExpiry in 0..leadTimeDays
+        val foodItems = repository.allFoodItems.first()
+        val reminderTimeframe = settings.reminderTimeframe
+        val expiringItems = foodItems.filter {
+            val diff = it.expiryDate - System.currentTimeMillis()
+            val days = java.util.concurrent.TimeUnit.MILLISECONDS.toDays(diff)
+            days in 0..reminderTimeframe
         }
 
-        if (expiringItems.isNotEmpty()) {
-            Log.d(WORKER_TAG, "Found ${expiringItems.size} expiring items. Notifying provider.")
-            // Notify the provider to refresh its targets
-            val intent = Intent(appContext, FoodReminderProvider::class.java).apply {
-                action = FoodReminderProvider.ACTION_REFRESH
-            }
-            appContext.sendBroadcast(intent)
-        } else {
-            Log.d(WORKER_TAG, "No expiring items found within the $leadTimeDays-day lead time.")
+        expiringItems.forEach {
+            sendNotification(it)
         }
 
         return Result.success()
+    }
+
+    private fun sendNotification(foodItem: com.kieronquinn.app.smartspacer.plugin.foodreminder.data.FoodItem) {
+        val channelId = "food_reminder_channel"
+        val notificationManager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as android.app.NotificationManager
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            val channel = android.app.NotificationChannel(
+                channelId,
+                "Food Expiry Reminders",
+                android.app.NotificationManager.IMPORTANCE_DEFAULT
+            )
+            notificationManager.createNotificationChannel(channel)
+        }
+
+        val notification = androidx.core.app.NotificationCompat.Builder(applicationContext, channelId)
+            .setContentTitle("Food Expiring Soon")
+            .setContentText("${foodItem.name} is expiring soon!")
+            .setSmallIcon(R.drawable.ic_notification)
+            .build()
+
+        notificationManager.notify(foodItem.id, notification)
     }
 }

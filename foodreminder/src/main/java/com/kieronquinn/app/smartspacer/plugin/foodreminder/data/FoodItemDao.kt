@@ -1,24 +1,22 @@
 package com.kieronquinn.app.smartspacer.plugin.foodreminder.data
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
-import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface FoodItemDao {
-    @Query("SELECT * FROM food_items ORDER BY expiryDate ASC")
+    @Query("SELECT * FROM food_items")
     fun getAll(): Flow<List<FoodItem>>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(item: FoodItem)
+    @Insert
+    suspend fun insert(foodItem: FoodItem)
 
     @Update
-    suspend fun update(item: FoodItem)
+    suspend fun update(foodItem: FoodItem)
 
-    @Delete
-    suspend fun delete(item: FoodItem)
+    @Query("DELETE FROM food_items WHERE id = :id")
+    suspend fun deleteById(id: Int)
 }
