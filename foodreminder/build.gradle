@@ -49,6 +49,7 @@ android {
 dependencies {
     implementation project(path: ':shared')
     ksp "androidx.room:room-compiler:2.5.0"
+    implementation 'com.kieronquinn.app.smartspacer:sdk-plugin:1.2.0'
 
     // Lifecycle
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.6.2"
