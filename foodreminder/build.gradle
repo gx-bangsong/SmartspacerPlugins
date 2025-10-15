@@ -13,7 +13,7 @@ configurations.all {
 }
 android {
     namespace 'com.kieronquinn.app.smartspacer.plugin.foodreminder'
-    compileSdk rootProject.ext.compile_sdk 34
+    compileSdk rootProject.ext.compile_sdk='34'
 
     defaultConfig {
         applicationId "com.kieronquinn.app.smartspacer.plugin.foodreminder"
