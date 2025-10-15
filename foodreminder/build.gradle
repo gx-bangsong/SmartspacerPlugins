@@ -5,7 +5,12 @@ plugins {
     id 'androidx.navigation.safeargs.kotlin'
     id 'com.google.devtools.ksp'
 }
-
+configurations.all {
+    resolutionStrategy {
+        force "androidx.core:core:1.13.1"
+        force "androidx.core:core-ktx:1.13.1"
+    }
+}
 android {
     namespace 'com.kieronquinn.app.smartspacer.plugin.foodreminder'
     compileSdk rootProject.ext.compile_sdk 34
