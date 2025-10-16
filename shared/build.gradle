@@ -8,12 +8,11 @@ plugins {
 
 android {
     namespace 'com.kieronquinn.app.shared'
-    compileSdk compile_sdk
+    compileSdk 35   // ✅ 建议直接写死，避免 compile_sdk 未定义时报错
 
     defaultConfig {
-        minSdk min_sdk
-        targetSdk target_sdk
-
+        minSdk 29
+        targetSdk 35
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -23,55 +22,59 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
     buildFeatures {
         viewBinding true
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
     }
+
     kotlinOptions {
         jvmTarget = '17'
     }
 }
 
 dependencies {
-    //AndroidX + Material
+    // ✅ AndroidX + Material
     api 'androidx.core:core-ktx:1.13.1'
     api 'androidx.appcompat:appcompat:1.7.0'
     api 'com.google.android.material:material:1.12.0'
-    api "androidx.navigation:navigation-fragment-ktx:$nav_version"
-    api "androidx.navigation:navigation-ui-ktx:$nav_version"
+    api "androidx.navigation:navigation-fragment-ktx:2.8.2"
+    api "androidx.navigation:navigation-ui-ktx:2.8.2"
     api "androidx.security:security-crypto:1.1.0-alpha06"
     api "androidx.preference:preference-ktx:1.2.1"
 
-    //Hidden APIs
-    api "dev.rikka.tools.refine:runtime:$refine_version"
+    // ✅ Hidden APIs
+    api "dev.rikka.tools.refine:runtime:4.3.0"
 
-    //Smartspacer SDK
-    api 'com.kieronquinn.smartspacer:sdk-plugin:1.0.3'
+    // ✅ Smartspacer SDK (必须为 1.1，否则 FoodReminder 无法识别 SmartspacerProvider 等)
+    api 'com.kieronquinn.smartspacer:sdk-plugin:1.1'
 
-    //Dependency Injection
+    // ✅ 依赖注入
     api "io.insert-koin:koin-android:3.5.6"
 
-    //Theming
+    // ✅ Theming
     api 'com.github.KieronQuinn:MonetCompat:0.4.1'
 
-    //Image Loading
+    // ✅ 图片加载
     api 'com.github.bumptech.glide:glide:4.16.0'
     ksp 'com.github.bumptech.glide:ksp:4.15.1'
 
-    //Data Loading
+    // ✅ 网络与数据
     api "com.squareup.retrofit2:retrofit:2.11.0"
     api "com.squareup.retrofit2:converter-gson:2.11.0"
 
-    //Used in Backup + Restore
+    // ✅ Gson (用于备份/恢复)
     api 'com.google.code.gson:gson:2.11.0'
 
-    //Room for data storage
-    api "androidx.room:room-runtime:$room_version"
-    api "androidx.room:room-ktx:$room_version"
-    ksp "androidx.room:room-compiler:$room_version"
+    // ✅ Room 数据库
+    api "androidx.room:room-runtime:2.5.0"
+    api "androidx.room:room-ktx:2.5.0"
+    ksp "androidx.room:room-compiler:2.5.0"
 
+    // ✅ 仅编译期引用（不打包）
     compileOnly project(path: ':systemstubs')
 }
