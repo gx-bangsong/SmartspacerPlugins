@@ -12,11 +12,11 @@ import com.kieronquinn.app.smartspacer.plugin.waterreminder.receiver.WaterAction
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-class WaterReminderProvider : SmartspacerProvider(), KoinComponent {
+class WaterReminderProvider : com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerProvider() {
 
     private val settings: WaterReminderSettings by inject()
 
-    override suspend fun getSmartspaceTargets(): List<SmartspaceTarget> {
+    override suspend fun getSmartspaceTargets(smartspacerId: String): List<SmartspaceTarget> {
         val dailyGoal = settings.dailyGoal
         val cupSize = settings.cupSize
         val currentIntake = settings.currentIntake
@@ -48,7 +48,8 @@ class WaterReminderProvider : SmartspacerProvider(), KoinComponent {
 
         return listOf(
             SmartspaceTarget(
-                id = "water_reminder",
+                smartspaceTargetId = "water_reminder",
+                featureType = SmartspaceTarget.FEATURE_BASIC,
                 componentName = componentName,
                 templateData = BaseTemplateData(
                     primaryText = Text(title)
@@ -93,6 +94,7 @@ class WaterReminderProvider : SmartspacerProvider(), KoinComponent {
         }
 
         val totalCups = settings.dailyGoal / settings.cupSize
+        if (totalCups == 0) return null
         val activeDuration = (settings.activeHoursEnd - settings.activeHoursStart).toLong()
         val interval = activeDuration / totalCups
 

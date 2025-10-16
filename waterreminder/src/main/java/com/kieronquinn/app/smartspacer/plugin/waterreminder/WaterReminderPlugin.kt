@@ -7,11 +7,13 @@ import com.kieronquinn.app.smartspacer.plugin.waterreminder.worker.WaterReminder
 import org.koin.core.component.KoinComponent
 import java.util.concurrent.TimeUnit
 
-class WaterReminderPlugin: SmartspacerPlugin(), KoinComponent {
-    override fun getModules() = listOf(waterReminderModule)
+class WaterReminderPlugin: com.kieronquinn.app.smartspacer.plugin.shared.SmartspacerPlugin() {
+    override fun getModule(context: Context): Module {
+        return waterReminderModule
+    }
 
-    override fun onPluginEnabled() {
-        super.onPluginEnabled()
+    override fun onCreate() {
+        super.onCreate()
         val workRequest = PeriodicWorkRequestBuilder<WaterReminderWorker>(15, TimeUnit.MINUTES).build()
         WorkManager.getInstance(this).enqueue(workRequest)
         scheduleDailyReset()

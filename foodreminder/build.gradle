@@ -5,15 +5,10 @@ plugins {
     id 'androidx.navigation.safeargs.kotlin'
     id 'com.google.devtools.ksp'
 }
-configurations.all {
-    resolutionStrategy {
-        force "androidx.core:core:1.13.1"
-        force "androidx.core:core-ktx:1.13.1"
-    }
-}
+
 android {
     namespace 'com.kieronquinn.app.smartspacer.plugin.foodreminder'
-    compileSdk rootProject.ext.compile_sdk='34'
+    compileSdk rootProject.ext.compile_sdk
 
     defaultConfig {
         applicationId "com.kieronquinn.app.smartspacer.plugin.foodreminder"
@@ -52,16 +47,14 @@ android {
 }
 
 dependencies {
-    implementation project(path: ':shared')
-        implementation "androidx.core:core-ktx:1.13.1"
-
+    api project(path: ':shared')
     ksp "androidx.room:room-compiler:2.5.0"
-    implementation 'com.kieronquinn.smartspacer:sdk-plugin:1.1'
+
     // Lifecycle
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.6.2"
 
     // Koin
-    implementation "io.insert-koin:koin-android:3.4.0"
+    implementation "io.insert-koin:koin-android:3.5.6"
 
     // WorkManager
     implementation "androidx.work:work-runtime-ktx:2.8.1"

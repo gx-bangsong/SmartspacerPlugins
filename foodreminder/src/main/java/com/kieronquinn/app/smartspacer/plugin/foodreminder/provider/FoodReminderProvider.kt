@@ -11,12 +11,12 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import java.util.concurrent.TimeUnit
 
-class FoodReminderProvider : SmartspacerProvider(), KoinComponent {
+class FoodReminderProvider : com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerProvider() {
 
     private val repository: FoodItemRepository by inject()
     private val settings: com.kieronquinn.app.smartspacer.plugin.foodreminder.FoodReminderSettings by inject()
 
-    override suspend fun getSmartspaceTargets(): List<SmartspaceTarget> {
+    override suspend fun getSmartspaceTargets(smartspacerId: String): List<SmartspaceTarget> {
         val foodItems = repository.allFoodItems.first()
         if (foodItems.isEmpty()) {
             return emptyList()
@@ -42,7 +42,8 @@ class FoodReminderProvider : SmartspacerProvider(), KoinComponent {
 
         return listOf(
             SmartspaceTarget(
-                id = "food_reminder_list",
+                smartspaceTargetId = "food_reminder_list",
+                featureType = SmartspaceTarget.FEATURE_SUB_LIST,
                 componentName = componentName,
                 templateData = SubListTemplateData(
                     title = Text("Expiring Food"),

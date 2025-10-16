@@ -7,11 +7,13 @@ import com.kieronquinn.app.smartspacer.plugin.medicationreminder.worker.Medicati
 import org.koin.core.component.KoinComponent
 import java.util.concurrent.TimeUnit
 
-class MedicationReminderPlugin: SmartspacerPlugin(), KoinComponent {
-    override fun getModules() = listOf(medicationReminderModule)
+class MedicationReminderPlugin: com.kieronquinn.app.smartspacer.plugin.shared.SmartspacerPlugin() {
+    override fun getModule(context: Context): Module {
+        return medicationReminderModule
+    }
 
-    override fun onPluginEnabled() {
-        super.onPluginEnabled()
+    override fun onCreate() {
+        super.onCreate()
         val workRequest = PeriodicWorkRequestBuilder<MedicationReminderWorker>(1, TimeUnit.DAYS).build()
         WorkManager.getInstance(this).enqueue(workRequest)
     }

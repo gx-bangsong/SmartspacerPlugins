@@ -7,11 +7,13 @@ import com.kieronquinn.app.smartspacer.plugin.foodreminder.worker.FoodReminderWo
 import org.koin.core.component.KoinComponent
 import java.util.concurrent.TimeUnit
 
-class FoodReminderPlugin: SmartspacerPlugin(), KoinComponent {
-    override fun getModules() = listOf(foodReminderModule)
+class FoodReminderPlugin: com.kieronquinn.app.smartspacer.plugin.shared.SmartspacerPlugin() {
+    override fun getModule(context: Context): Module {
+        return foodReminderModule
+    }
 
-    override fun onPluginEnabled() {
-        super.onPluginEnabled()
+    override fun onCreate() {
+        super.onCreate()
         val workRequest = PeriodicWorkRequestBuilder<FoodReminderWorker>(1, TimeUnit.DAYS).build()
         WorkManager.getInstance(this).enqueue(workRequest)
     }

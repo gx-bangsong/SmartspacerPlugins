@@ -3,32 +3,92 @@ name: Android CI
 on:
   push:
     branches: [ "main" ]
+    paths:
+      - 'qweather/**'
+      - 'foodreminder/**'
+      - 'medicationreminder/**'
+      - 'waterreminder/**'
   pull_request:
     branches: [ "main" ]
+    paths:
+      - 'qweather/**'
+      - 'foodreminder/**'
+      - 'medicationreminder/**'
+      - 'waterreminder/**'
 
 jobs:
-  test:
+  qweather:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: gradle
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+      - name: Create local.properties
+        run: echo "sdk.dir=${ANDROID_HOME}" > local.properties
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+      - name: Run tests with Gradle
+        run: ./gradlew :qweather:test
 
-    - name: Set up JDK 17
-      uses: actions/setup-java@v4
-      with:
-        java-version: '17'
-        distribution: 'temurin'
-        cache: gradle
+  foodreminder:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: gradle
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+      - name: Create local.properties
+        run: echo "sdk.dir=${ANDROID_HOME}" > local.properties
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+      - name: Run tests with Gradle
+        run: ./gradlew :foodreminder:test
 
-    - name: Set up Android SDK
-      uses: android-actions/setup-android@v3
+  medicationreminder:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: gradle
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+      - name: Create local.properties
+        run: echo "sdk.dir=${ANDROID_HOME}" > local.properties
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+      - name: Run tests with Gradle
+        run: ./gradlew :medicationreminder:test
 
-    - name: Create local.properties
-      run: echo "sdk.dir=${ANDROID_HOME}" > local.properties
-
-    - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
-
-    - name: Run tests with Gradle
-      run: ./gradlew :foodreminder:test
+  waterreminder:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: gradle
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+      - name: Create local.properties
+        run: echo "sdk.dir=${ANDROID_HOME}" > local.properties
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+      - name: Run tests with Gradle
+        run: ./gradlew :waterreminder:test

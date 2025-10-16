@@ -47,10 +47,10 @@ android {
 }
 
 dependencies {
-    implementation project(path: ':shared')
+    api project(path: ':shared')
 
     // Koin
-    implementation "io.insert-koin:koin-android:3.4.0"
+    implementation "io.insert-koin:koin-android:3.5.6"
 
     // WorkManager
     implementation "androidx.work:work-runtime-ktx:2.8.1"

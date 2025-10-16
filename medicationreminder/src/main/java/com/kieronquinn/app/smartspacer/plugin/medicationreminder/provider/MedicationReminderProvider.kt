@@ -13,11 +13,11 @@ import kotlinx.coroutines.flow.first
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-class MedicationReminderProvider : SmartspacerProvider(), KoinComponent {
+class MedicationReminderProvider : com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerProvider() {
 
     private val repository: MedicationRepository by inject()
 
-    override suspend fun getSmartspaceTargets(): List<SmartspaceTarget> {
+    override suspend fun getSmartspaceTargets(smartspacerId: String): List<SmartspaceTarget> {
         val medications = repository.allMedications.first()
         if (medications.isEmpty()) {
             return emptyList()
@@ -62,15 +62,15 @@ class MedicationReminderProvider : SmartspacerProvider(), KoinComponent {
             )
 
             SubListTemplateData.SubListItem(
-                text = Text("Take ${it.name} ${it.dosage ?: ""}"),
+                text = Text("Take ${medication.name} ${medication.dosage ?: ""}"),
                 tapAction = SmartspaceAction(
-                    id = "mark_as_taken_${it.id}",
+                    id = "mark_as_taken_${medication.id}",
                     intent = markAsTakenIntent,
                     pendingIntent = markAsTakenPendingIntent,
                     title = "Mark as Taken"
                 ),
                 secondaryAction = SmartspaceAction(
-                    id = "snooze_${it.id}",
+                    id = "snooze_${medication.id}",
                     intent = snoozeIntent,
                     pendingIntent = snoozePendingIntent,
                     title = "Snooze"
@@ -80,7 +80,8 @@ class MedicationReminderProvider : SmartspacerProvider(), KoinComponent {
 
         return listOf(
             SmartspaceTarget(
-                id = "medication_reminder_list",
+                smartspaceTargetId = "medication_reminder_list",
+                featureType = SmartspaceTarget.FEATURE_SUB_LIST,
                 componentName = componentName,
                 templateData = SubListTemplateData(
                     title = Text("Medication Reminders"),
