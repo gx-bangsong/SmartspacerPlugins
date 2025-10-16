@@ -1,25 +1,26 @@
 package com.kieronquinn.app.smartspacer.plugin.foodreminder.provider
 
-import android.content.Context
 import android.content.ComponentName
+import com.kieronquinn.app.smartspacer.plugin.foodreminder.FoodReminderSettings
+import com.kieronquinn.app.smartspacer.plugin.foodreminder.FoodItemRepository
+import com.kieronquinn.smartspacer.sdk.SmartspacerProvider
+import com.kieronquinn.smartspacer.sdk.SmartspaceTarget
+import com.kieronquinn.smartspacer.sdk.feature.sublist.SubListTemplateData
+import com.kieronquinn.smartspacer.sdk.feature.sublist.SubListTemplateData.SubListItem
+import com.kieronquinn.smartspacer.sdk.feature.sublist.FEATURE_SUB_LIST
+import kotlinx.coroutines.flow.first
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
-import com.kieronquinn.smartspacer.sdk.SmartspacerPlugin
-import com.kieronquinn.smartspacer.sdk.SmartspacerProvider
-import com.kieronquinn.smartspacer.sdk.feature.sublist.SubListItem
-import com.kieronquinn.smartspacer.sdk.feature.sublist.FEATURE_SUB_LIST
 import java.util.concurrent.TimeUnit
 
-class FoodReminderProvider : com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerProvider() {
+class FoodReminderProvider : SmartspacerProvider(), KoinComponent {
 
     private val repository: FoodItemRepository by inject()
-    private val settings: com.kieronquinn.app.smartspacer.plugin.foodreminder.FoodReminderSettings by inject()
+    private val settings: FoodReminderSettings by inject()
 
     override suspend fun getSmartspaceTargets(smartspacerId: String): List<SmartspaceTarget> {
         val foodItems = repository.allFoodItems.first()
-        if (foodItems.isEmpty()) {
-            return emptyList()
-        }
+        if (foodItems.isEmpty()) return emptyList()
 
         val reminderTimeframe = settings.reminderTimeframe
         val expiringItems = foodItems.filter {
@@ -27,14 +28,11 @@ class FoodReminderProvider : com.kieronquinn.app.smartspacer.sdk.provider.Smarts
             val days = TimeUnit.MILLISECONDS.toDays(diff)
             days in 0..reminderTimeframe
         }
-
-        if (expiringItems.isEmpty()) {
-            return emptyList()
-        }
+        if (expiringItems.isEmpty()) return emptyList()
 
         val subListItems = expiringItems.map {
-            SubListTemplateData.SubListItem(
-                text = Text("${it.name} - Expires in ${TimeUnit.MILLISECONDS.toDays(it.expiryDate - System.currentTimeMillis())} days"),
+            SubListItem(
+                text = "${it.name} - Expires in ${TimeUnit.MILLISECONDS.toDays(it.expiryDate - System.currentTimeMillis())} days",
                 tapAction = null
             )
         }
@@ -42,11 +40,11 @@ class FoodReminderProvider : com.kieronquinn.app.smartspacer.sdk.provider.Smarts
         return listOf(
             SmartspaceTarget(
                 smartspaceTargetId = "food_reminder_list",
-                featureType = SmartspaceTarget.FEATURE_SUB_LIST,
-                componentName = componentName,
+                featureType = FEATURE_SUB_LIST,
+                componentName = ComponentName(context.packageName, javaClass.name),
                 templateData = SubListTemplateData(
-                    title = Text("Expiring Food"),
-                    subListTexts = subListItems
+                    title = "Expiring Food",
+                    subListItems = subListItems
                 )
             )
         )
