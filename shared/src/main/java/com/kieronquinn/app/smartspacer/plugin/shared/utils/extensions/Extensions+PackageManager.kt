@@ -2,22 +2,14 @@ package com.kieronquinn.app.smartspacer.plugin.shared.utils.extensions
 
 import android.content.ComponentName
 import android.content.Intent
-import android.content.pm.ActivityInfo
-import android.content.pm.ApplicationInfo
-import android.content.pm.PackageInfo
-import android.content.pm.PackageInfo.REQUESTED_PERMISSION_GRANTED
-import android.content.pm.PackageManager
-import android.content.pm.PackageManager.NameNotFoundException
-import android.content.pm.ProviderInfo
-import android.content.pm.ResolveInfo
-import android.content.pm.ServiceInfo
+import android.content.pm.*
 import android.os.Build
 
 fun PackageManager.isPackageInstalled(packageName: String): Boolean {
     return try {
         getPackageInfoCompat(packageName)
         true
-    }catch (e: NameNotFoundException){
+    } catch (e: NameNotFoundException) {
         false
     }
 }
@@ -38,7 +30,7 @@ fun PackageManager.getInstalledApplications(): List<ApplicationInfo> {
 fun PackageManager.queryIntentActivitiesCompat(intent: Intent, flags: Int = 0): List<ResolveInfo> {
     return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
         queryIntentActivities(intent, PackageManager.ResolveInfoFlags.of(flags.toLong()))
-    }else{
+    } else {
         queryIntentActivities(intent, flags)
     }
 }
@@ -46,7 +38,7 @@ fun PackageManager.queryIntentActivitiesCompat(intent: Intent, flags: Int = 0): 
 fun PackageManager.queryIntentServicesCompat(intent: Intent, flags: Int = 0): List<ResolveInfo> {
     return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
         queryIntentServices(intent, PackageManager.ResolveInfoFlags.of(flags.toLong()))
-    }else{
+    } else {
         queryIntentServices(intent, flags)
     }
 }
@@ -54,7 +46,7 @@ fun PackageManager.queryIntentServicesCompat(intent: Intent, flags: Int = 0): Li
 fun PackageManager.getPackageLabel(packageName: String): CharSequence? {
     return try {
         getApplicationLabel(getApplicationInfo(packageName))
-    }catch (e: PackageManager.NameNotFoundException){
+    } catch (e: NameNotFoundException) {
         null
     }
 }
@@ -62,7 +54,7 @@ fun PackageManager.getPackageLabel(packageName: String): CharSequence? {
 fun PackageManager.getComponentLabel(componentName: ComponentName): CharSequence? {
     return try {
         getActivityInfo(componentName).loadLabel(this)
-    }catch (e: PackageManager.NameNotFoundException){
+    } catch (e: NameNotFoundException) {
         null
     }
 }
@@ -106,7 +98,7 @@ fun PackageManager.getActivityInfo(componentName: ComponentName): ActivityInfo {
 fun PackageManager.getActivityInfoNoThrow(componentName: ComponentName): ActivityInfo? {
     return try {
         getActivityInfo(componentName)
-    }catch (e: NameNotFoundException){
+    } catch (e: NameNotFoundException) {
         null
     }
 }
@@ -156,12 +148,16 @@ fun PackageManager.resolveContentProvider(authority: String): ProviderInfo? {
     }
 }
 
+/**
+ * 判断应用是否拥有指定权限
+ */
 fun PackageManager.packageHasPermission(packageName: String, permission: String): Boolean {
     return try {
         val info = getPackageInfoCompat(packageName, PackageManager.GET_PERMISSIONS)
-        val permissions = info.requestedPermissions?.zip(info.requestedPermissionsFlags?.toTypedArray() ?: intArrayOf()) ?: emptyList()
-        permissions.any { it.first == permission && it.second and REQUESTED_PERMISSION_GRANTED != 0 }
-    }catch (e: NameNotFoundException){
+        val permissions = info.requestedPermissions?.zip(info.requestedPermissionsFlags?.toTypedArray() ?: intArrayOf())
+            ?: emptyList()
+        permissions.any { it.first == permission && it.second and PackageInfo.REQUESTED_PERMISSION_GRANTED != 0 }
+    } catch (e: NameNotFoundException) {
         false
     }
 }
