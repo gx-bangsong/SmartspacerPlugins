@@ -49,8 +49,8 @@ android {
 dependencies {
     api project(path: ':shared')
     ksp "androidx.room:room-compiler:2.5.0"
-
-    // Lifecycle
+    
+    implementation 'com.kieronquinn.smartspacer:sdk-plugin:1.1'
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.6.2"
 
     // Koin
