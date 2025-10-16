@@ -4,6 +4,8 @@ import android.content.ComponentName
 import android.content.Intent
 import android.content.pm.*
 import android.os.Build
+import android.content.pm.PackageManager.NameNotFoundException // ✅ 这个必须加
+
 
 fun PackageManager.isPackageInstalled(packageName: String): Boolean {
     return try {
