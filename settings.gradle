@@ -5,18 +5,21 @@ pluginManagement {
         gradlePluginPortal()
     }
 }
+
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
         google()
-        mavenCentral()
+        mavenCentral()        // ✅ 从这里获取 Smartspacer SDK
         mavenLocal()
-        maven { url 'https://jitpack.io' }
-        jcenter()
+        maven { url 'https://jitpack.io' } // 可保留备用，不冲突
     }
 }
+
 rootProject.name = "Smartspacer Plugins"
+
 include ':shared'
+include ':foodreminder'
 include ':googlewallet'
 include ':systemstubs'
 include ':amazon'
@@ -41,6 +44,5 @@ include ':bbcweather'
 include ':youtube'
 include ':controls'
 include ':qweather'
-include ':foodreminder'
 include ':medicationreminder'
 include ':waterreminder'
