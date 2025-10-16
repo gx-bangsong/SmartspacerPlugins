@@ -8,7 +8,10 @@ plugins {
 
 android {
     namespace 'com.kieronquinn.app.smartspacer.plugin.medicationreminder'
-    compileSdk rootProject.ext.compile_sdk
+    compileSdk 35
+    defaultConfig {
+        targetSdk 35
+    }
 
     defaultConfig {
         applicationId "com.kieronquinn.app.smartspacer.plugin.medicationreminder"
