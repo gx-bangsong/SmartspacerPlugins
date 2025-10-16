@@ -27,12 +27,12 @@ android {
         jvmTarget = '17'
     }
 }
-
 dependencies {
     implementation project(":shared")
-	  implementation 'com.kieronquinn.smartspacer:sdk-plugin:1.1'
+    implementation 'com.kieronquinn.smartspacer:sdk-plugin:1.1'
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.6.2"
-    implementation "io.insert-koin:koin-android:3.5.6"
     implementation "androidx.work:work-runtime-ktx:2.8.1"
+    implementation "io.insert-koin:koin-android:3.5.6"
+    implementation "io.insert-koin:koin-core:3.5.6"
     ksp "androidx.room:room-compiler:2.5.0"
 }
