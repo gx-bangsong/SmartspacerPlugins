@@ -53,7 +53,7 @@ dependencies {
     api project(path: ':shared')
     ksp "androidx.room:room-compiler:2.5.0"
 
-    implementation 'com.kieronquinn.smartspacer:sdk-plugin:1.1'
+    implementation 'com.kieronquinn.smartspacer:sdk-plugin:1.0.1'
     implementation 'com.google.code.gson:gson:2.10.1'
 
     // Lifecycle
