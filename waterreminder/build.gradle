@@ -51,7 +51,7 @@ android {
 
 dependencies {
     api project(path: ':shared')
-    implementation 'com.github.KieronQuinn.smartspacer:sdk-plugin:1.1'
+    
 
     implementation "io.insert-koin:koin-android:3.5.6"
 
