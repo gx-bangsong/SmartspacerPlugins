@@ -149,14 +149,19 @@ fun PackageManager.resolveContentProvider(authority: String): ProviderInfo? {
 }
 
 /**
- * 判断应用是否拥有指定权限
+ * 检查指定包名是否拥有某权限
  */
 fun PackageManager.packageHasPermission(packageName: String, permission: String): Boolean {
     return try {
         val info = getPackageInfoCompat(packageName, PackageManager.GET_PERMISSIONS)
-        val permissions = info.requestedPermissions?.zip(info.requestedPermissionsFlags?.toTypedArray() ?: intArrayOf())
-            ?: emptyList()
-        permissions.any { it.first == permission && it.second and PackageInfo.REQUESTED_PERMISSION_GRANTED != 0 }
+        val perms = info.requestedPermissions ?: return false
+        val flags = info.requestedPermissionsFlags ?: return false
+
+        val permissions = perms.zip(flags.asIterable())
+
+        permissions.any { (perm, flag) ->
+            perm == permission && flag and PackageInfo.REQUESTED_PERMISSION_GRANTED != 0
+        }
     } catch (e: NameNotFoundException) {
         false
     }
