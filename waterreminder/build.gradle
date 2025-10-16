@@ -49,7 +49,7 @@ android {
 dependencies {
     api project(path: ':shared')
 
-    // Koin
+    implementation 'com.kieronquinn.smartspacer:sdk-plugin:1.1'
     implementation "io.insert-koin:koin-android:3.5.6"
 
     // WorkManager
