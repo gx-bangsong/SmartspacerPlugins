@@ -1,15 +1,6 @@
 package com.kieronquinn.app.smartspacer.plugin.foodreminder.provider
 import android.content.Context
 import android.content.ComponentName
-import com.kieronquinn.app.smartspacer.plugin.foodreminder.FoodReminderSettings
-import com.kieronquinn.app.smartspacer.plugin.foodreminder.FoodItemRepository
-import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerProvider
-import com.kieronquinn.app.smartspacer.sdk.model.SmartspaceTarget
-import com.kieronquinn.app.smartspacer.sdk.model.SubListItem
-import com.kieronquinn.app.smartspacer.sdk.model.SubListTemplateData
-import com.kieronquinn.smartspacer.sdk.SmartspacerPlugin
-import com.kieronquinn.smartspacer.sdk.feature.sublist.Text
-import com.kieronquinn.smartspacer.sdk.feature.sublist.Text
 import com.kieronquinn.smartspacer.sdk.feature.sublist.SubListTemplateData
 import com.kieronquinn.smartspacer.sdk.feature.sublist.SubListTemplateData.SubListItem
 import com.kieronquinn.smartspacer.sdk.feature.sublist.FEATURE_SUB_LIST
@@ -24,6 +15,7 @@ class FoodReminderProvider : SmartspacerProvider(), KoinComponent {
 
     private val repository: FoodItemRepository by inject()
     private val settings: FoodReminderSettings by inject()
+    private val context: Context by inject() // 注入 context
 
     override suspend fun getSmartspaceTargets(smartspacerId: String): List<SmartspaceTarget> {
         val foodItems = repository.allFoodItems.first()
