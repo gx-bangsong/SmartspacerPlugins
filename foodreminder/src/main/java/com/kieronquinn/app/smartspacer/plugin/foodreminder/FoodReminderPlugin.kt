@@ -11,12 +11,27 @@ import org.koin.dsl.module
 
 class FoodReminderPlugin : SmartspacerPlugin() {
 
-    override fun getModule(context: Context): Module {
-        return module {
-            single { FoodReminderSettings(context) }
-            single { com.kieronquinn.app.smartspacer.plugin.foodreminder.data.FoodItemRepository(private val foodItemDao: FoodItemDao) }
+override fun getModule(context: Context): Module {
+    return module {
+        single { FoodReminderSettings(context) }
+
+        // 先创建 Room Database
+        single {
+            androidx.room.Room.databaseBuilder(
+                context,
+                com.kieronquinn.app.smartspacer.plugin.foodreminder.data.FoodItemDatabase::class.java,
+                "food_item_database"
+            ).build()
         }
+
+        // 注入 Dao
+        single { get<com.kieronquinn.app.smartspacer.plugin.foodreminder.data.FoodItemDatabase>().foodItemDao() }
+
+        // 注入 Repository
+        single { com.kieronquinn.app.smartspacer.plugin.foodreminder.data.FoodItemRepository(get()) }
     }
+}
+
 
     override fun onCreate() {
         super.onCreate()
