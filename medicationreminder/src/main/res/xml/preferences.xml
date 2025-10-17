@@ -1,0 +1,29 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory
+        app:key="medications_category"
+        app:title="Medications">
+
+        <Preference
+            app:key="add_medication"
+            app:title="Add Medication"
+            app:summary="Add a new medication reminder" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:key="reminders_category"
+        app:title="Reminders">
+
+        <EditTextPreference
+            app:key="snooze_duration"
+            app:title="Snooze Duration"
+            app:summary="Set the snooze duration in minutes"
+            app:dialogTitle="Snooze Duration"
+            app:dialogMessage="Enter the duration in minutes"
+            app:defaultValue="15"
+            app:useSimpleSummaryProvider="true" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

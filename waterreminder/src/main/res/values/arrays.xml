@@ -1,0 +1,13 @@
+<resources>
+    <string-array name="ui_style_entries">
+        <item>Combined View</item>
+        <item>Progress Only</item>
+        <item>Reminder Only</item>
+    </string-array>
+
+    <string-array name="ui_style_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+</resources>

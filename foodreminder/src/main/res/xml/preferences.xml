@@ -1,0 +1,29 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory
+        app:key="food_items_category"
+        app:title="Food Items">
+
+        <Preference
+            app:key="add_food_item"
+            app:title="Add Food Item"
+            app:summary="Add a new food item to track" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:key="reminders_category"
+        app:title="Reminders">
+
+        <EditTextPreference
+            app:key="reminder_timeframe"
+            app:title="Reminder Timeframe"
+            app:summary="Set how many days in advance you want to be reminded"
+            app:dialogTitle="Reminder Timeframe"
+            app:dialogMessage="Enter the number of days"
+            app:defaultValue="1"
+            app:useSimpleSummaryProvider="true" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

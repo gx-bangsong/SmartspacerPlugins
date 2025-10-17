@@ -8,7 +8,7 @@ plugins {
 
 android {
     namespace 'com.kieronquinn.app.smartspacer.plugin.qweather'
-    compileSdk rootProject.ext.compile_sdk
+    compileSdk 35
 
     defaultConfig {
         applicationId "com.kieronquinn.app.smartspacer.plugin.qweather"
@@ -66,9 +66,8 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:4.10.0'
 
-    //Data storage
     ksp "androidx.room:room-compiler:2.5.0"
-
+    
     // Testing
     testImplementation "org.junit.jupiter:junit-jupiter-api:5.10.0"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.10.0"
