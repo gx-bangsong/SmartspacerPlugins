@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.kieronquinn.app.smartspacer.plugin.shared.SmartspacerPlugin
+import com.kieronquinn.app.smartspacer.plugin.foodreminder.work.FoodReminderWorker   // ✅ 注意这里的 import
 import java.util.concurrent.TimeUnit
 import org.koin.core.module.Module
 
