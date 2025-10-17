@@ -1,16 +1,21 @@
 package com.kieronquinn.app.smartspacer.plugin.foodreminder.provider
-
+import android.content.Context
 import android.content.ComponentName
 import com.kieronquinn.app.smartspacer.plugin.foodreminder.FoodReminderSettings
 import com.kieronquinn.app.smartspacer.plugin.foodreminder.FoodItemRepository
 import com.kieronquinn.smartspacer.sdk.SmartspacerProvider
 import com.kieronquinn.smartspacer.sdk.SmartspaceTarget
+import com.kieronquinn.smartspacer.sdk.SmartspacerPlugin
+import com.kieronquinn.smartspacer.sdk.feature.sublist.Text
+import com.kieronquinn.smartspacer.sdk.feature.sublist.Text
 import com.kieronquinn.smartspacer.sdk.feature.sublist.SubListTemplateData
 import com.kieronquinn.smartspacer.sdk.feature.sublist.SubListTemplateData.SubListItem
 import com.kieronquinn.smartspacer.sdk.feature.sublist.FEATURE_SUB_LIST
+import com.kieronquinn.smartspacer.sdk.feature.sublist.Text
 import kotlinx.coroutines.flow.first
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import org.koin.core.module.Module
 import java.util.concurrent.TimeUnit
 
 class FoodReminderProvider : SmartspacerProvider(), KoinComponent {
