@@ -3,10 +3,6 @@ package com.kieronquinn.app.smartspacer.plugin.foodreminder
 import android.content.Context
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
-import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerProvider
-import com.kieronquinn.app.smartspacer.sdk.model.SmartspaceTarget
-import com.kieronquinn.app.smartspacer.sdk.model.SubListItem
-import com.kieronquinn.app.smartspacer.sdk.model.SubListTemplateData
 import com.kieronquinn.app.smartspacer.plugin.shared.SmartspacerPlugin
 import com.kieronquinn.app.smartspacer.plugin.foodreminder.worker.FoodReminderWorker   // ✅ 注意这里的 import
 import java.util.concurrent.TimeUnit
