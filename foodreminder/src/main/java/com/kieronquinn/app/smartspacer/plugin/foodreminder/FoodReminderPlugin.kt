@@ -14,7 +14,7 @@ class FoodReminderPlugin : SmartspacerPlugin() {
     override fun getModule(context: Context): Module {
         return module {
             single { FoodReminderSettings(context) }
-            single { com.kieronquinn.app.smartspacer.plugin.foodreminder.data.FoodItemRepository(context) }
+            single { com.kieronquinn.app.smartspacer.plugin.foodreminder.data.FoodItemRepository(private val foodItemDao: FoodItemDao) }
         }
     }
 
