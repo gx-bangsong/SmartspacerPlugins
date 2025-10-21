@@ -1,6 +1,5 @@
 package com.kieronquinn.app.smartspacer.plugin.water.providers
 
-import com.kieronquinn.app.smartspacer.sdk.model.SmartspacerTarget
 import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Text
 import android.content.Intent
 import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.TapAction
