@@ -47,10 +47,14 @@ class WaterProvider : SmartspacerTargetProvider(), KoinComponent {
 
     override fun getConfig(smartspacerId: String?): Config {
         return Config(
-            label = "Water Reminder",
-            description = "Track your water intake",
-            icon = android.graphics.drawable.Icon.createWithResource(context, R.drawable.ic_launcher_foreground),
-            configActivity = Intent(context, com.kieronquinn.app.smartspacer.plugin.water.ui.activities.SettingsActivity::class.java)
+            "Water Reminder",
+            "Track your water intake",
+            android.graphics.drawable.Icon.createWithResource(context, R.drawable.ic_launcher_foreground),
+            Intent(context, com.kieronquinn.app.smartspacer.plugin.water.ui.activities.SettingsActivity::class.java)
         )
+    }
+
+    override fun onDismiss(smartspacerId: String, targetId: String): Boolean {
+        return false
     }
 }
