@@ -3,9 +3,6 @@ package com.kieronquinn.app.smartspacer.plugin.water.providers
 import com.kieronquinn.app.smartspacer.sdk.model.SmartspacerTarget
 import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Text
 import android.content.Intent
-import com.kieronquinn.app.smartspacer.sdk.model.SmartspacerTarget
-import android.content.Intent
-import com.kieronquinn.app.smartspacer.sdk.model.SmartspacerTarget
 import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.TapAction
 import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Icon
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider
@@ -54,7 +51,7 @@ class WaterProvider : SmartspacerTargetProvider(), KoinComponent {
             "Water Reminder",
             "Track your water intake",
             android.graphics.drawable.Icon.createWithResource(context, R.drawable.ic_launcher_foreground),
-            Intent(context, com.kieronquinn.app.smartspacer.plugin.water.ui.activities.SettingsActivity::class.java)
+            configActivity = Intent(context, com.kieronquinn.app.smartspacer.plugin.water.ui.activities.SettingsActivity::class.java)
         )
     }
 
