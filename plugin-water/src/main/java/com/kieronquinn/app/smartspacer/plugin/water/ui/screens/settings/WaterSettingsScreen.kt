@@ -94,7 +94,7 @@ fun WaterSettingsScreen(viewModel: WaterSettingsViewModel) {
         // Snooze Minutes
         OutlinedTextField(
             value = snoozeMinutes.toString(),
-            onValuechange = { viewModel.setSnoozeMinutes(it.toIntOrNull() ?: 0) },
+            onValueChange = { viewModel.setSnoozeMinutes(it.toIntOrNull() ?: 0) },
             label = { Text("Snooze Duration (minutes)") },
             modifier = Modifier.fillMaxWidth()
         )

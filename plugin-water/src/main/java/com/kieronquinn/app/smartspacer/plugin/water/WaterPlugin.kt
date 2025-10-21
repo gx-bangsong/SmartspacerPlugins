@@ -24,11 +24,11 @@ class WaterPlugin: SmartspacerPlugin() {
         const val NOTIFICATION_CHANNEL_ID = "water_reminders"
     }
 
-    override fun onPluginLoaded(context: Context) {
-        super.onPluginLoaded(context)
-        createNotificationChannel(context)
+    override fun onCreate() {
+        super.onCreate()
+        createNotificationChannel(this)
         //Start the daily scheduler
-        val workManager = WorkManager.getInstance(context)
+        val workManager = WorkManager.getInstance(this)
         val request = OneTimeWorkRequestBuilder<DailyScheduleWorker>()
             .setInitialDelay(1, TimeUnit.MINUTES) //Start in 1 minute for first run
             .build()

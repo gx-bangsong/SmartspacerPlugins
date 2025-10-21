@@ -6,6 +6,7 @@ import com.kieronquinn.app.smartspacer.plugin.water.repositories.DisplayMode
 import com.kieronquinn.app.smartspacer.plugin.water.repositories.WaterDataRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import android.util.Log
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 

@@ -16,7 +16,7 @@ class WaterProvider : SmartspacerTargetProvider(), KoinComponent {
 
     private val waterDataRepository by inject<WaterDataRepository>()
 
-    override fun getTargets(smartspacerId: String): List<SmartspacerTarget> {
+    override fun getSmartspaceTargets(smartspacerId: String): List<SmartspacerTarget> {
         val today = LocalDate.now()
         val schedule = waterDataRepository.getDailySchedule(today) ?: return emptyList()
 
@@ -35,13 +35,22 @@ class WaterProvider : SmartspacerTargetProvider(), KoinComponent {
 
         val target = SmartspacerTarget.UI(
             id = "water_progress",
-            componentName = "Water Progress",
-            icon = Icon(R.drawable.ic_launcher_foreground), // Replace with a proper icon
+            componentName = Text("Water Progress"),
+            icon = Icon(android.graphics.drawable.Icon.createWithResource(context, R.drawable.ic_launcher_foreground)), // Replace with a proper icon
             primaryText = Text(text),
             tapAction = TapAction(
-                intent = context.packageManager.getLaunchIntentForPackage(context.packageName)
+                intent = context?.packageManager?.getLaunchIntentForPackage(context!!.packageName)
             )
         )
         return listOf(target)
+    }
+
+    override fun getConfig(smartspacerId: String?): Config {
+        return Config(
+            label = "Water Reminder",
+            description = "Track your water intake",
+            icon = android.graphics.drawable.Icon.createWithResource(context, R.drawable.ic_launcher_foreground),
+            configActivity = Intent(context, com.kieronquinn.app.smartspacer.plugin.water.ui.activities.SettingsActivity::class.java)
+        )
     }
 }
