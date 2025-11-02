@@ -18,7 +18,7 @@ class WaterProvider : SmartspacerTargetProvider(), KoinComponent {
 
     private val waterDataRepository by inject<WaterDataRepository>()
 
-    override fun getSmartspaceTargets(smartspacerId: String): List<SmartspacerTarget> {
+    override fun getSmartspaceTargets(smartspacerId: String): List<Target> {
         val today = LocalDate.now()
         val schedule = waterDataRepository.getDailySchedule(today) ?: return emptyList()
 
@@ -35,7 +35,7 @@ class WaterProvider : SmartspacerTargetProvider(), KoinComponent {
             }
         }
 
-        val target = SmartspacerTarget.UI(
+        val target = Target.UI(
             id = "water_progress",
             componentName = Text("Water Progress"),
             icon = Icon(android.graphics.drawable.Icon.createWithResource(context, R.drawable.ic_launcher_foreground)), // Replace with a proper icon
