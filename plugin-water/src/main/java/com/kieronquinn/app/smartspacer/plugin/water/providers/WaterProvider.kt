@@ -9,6 +9,7 @@ import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider
 import com.kieronquinn.app.smartspacer.plugin.water.R
 import com.kieronquinn.app.smartspacer.plugin.water.repositories.DisplayMode
 import com.kieronquinn.app.smartspacer.plugin.water.repositories.WaterDataRepository
+import com.kieronquinn.app.smartspacer.sdk.SmartspacerTarget
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import java.time.LocalDate
