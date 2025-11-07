@@ -1,0 +1,75 @@
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+    id 'kotlin-parcelize'
+    id 'androidx.navigation.safeargs.kotlin'
+    id 'com.google.devtools.ksp'
+}
+
+android {
+    namespace 'com.kieronquinn.app.smartspacer.plugin.water'
+    compileSdk compile_sdk
+
+    defaultConfig {
+        applicationId "com.kieronquinn.app.smartspacer.plugin.water"
+        minSdk min_sdk
+        targetSdk target_sdk
+        versionCode 100
+        versionName "1.0.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    signingConfigs rootProject.ext.signingConfigs
+
+    buildTypes {
+        release {
+            signingConfig signingConfigs.release
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    applicationVariants.configureEach { variant ->
+        variant.outputs.each { output ->
+            output.outputFileName = new File(outputFileDir, output.outputFile.name)
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    kotlinOptions {
+        jvmTarget = '17'
+    }
+    buildFeatures {
+        viewBinding true
+        compose true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion "1.5.3"
+    }
+}
+
+dependencies {
+    implementation project(path: ':shared')
+
+    // WorkManager for background scheduling
+    implementation "androidx.work:work-runtime-ktx:2.9.0"
+
+    // ViewModel and LiveData for UI state
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.3"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.8.3"
+
+    // Jetpack Compose for UI
+    implementation "androidx.activity:activity-compose:1.9.0"
+    implementation "androidx.compose.ui:ui:1.6.8"
+    implementation "androidx.compose.ui:ui-tooling-preview:1.6.8"
+    implementation "androidx.compose.material3:material3:1.2.1"
+
+    // Koin for dependency injection
+    implementation "io.insert-koin:koin-android:3.5.6"
+    implementation "io.insert-koin:koin-androidx-compose:3.5.6"
+
+    //Data storage
+    ksp "androidx.room:room-compiler:$room_version"
+}
