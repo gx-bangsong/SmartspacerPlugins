@@ -53,6 +53,9 @@ android {
 dependencies {
     implementation project(path: ':shared')
 
+    //Smartspacer SDK
+    api 'com.kieronquinn.smartspacer:sdk-plugin:1.0.3'
+
     // WorkManager for background scheduling
     implementation "androidx.work:work-runtime-ktx:2.9.0"
 
