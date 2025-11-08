@@ -52,7 +52,6 @@ class QWeatherComplication : SmartspacerComplicationProvider() {
             // 确保 SmartspaceAction.Builder 被正确导入
             SmartspaceAction(
                 id = "qweather_${daily.type}",
-                context = provideContext(),
                 title = primaryText,
                 subtitle = secondaryText,
                 icon = AndroidIcon.createWithResource(provideContext(), R.drawable.ic_launcher_foreground),
@@ -70,7 +69,6 @@ class QWeatherComplication : SmartspacerComplicationProvider() {
         // 确保 SmartspaceAction.Builder 被正确导入
         return SmartspaceAction(
             id ="qweather_setup",
-            context = provideContext(),
             title = "Set up QWeather",
             subtitle = secondaryText,
             icon = AndroidIcon.createWithResource(provideContext(), R.drawable.ic_launcher_foreground),

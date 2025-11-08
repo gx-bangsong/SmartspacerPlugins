@@ -31,4 +31,8 @@ jobs:
       run: chmod +x gradlew
 
     - name: Run tests with Gradle
-      run: ./gradlew :qweather:test
+      run: |
+        ./gradlew :qweather:test
+        ./gradlew :plugin-water:test
+        ./gradlew :plugin-food:test
+        ./gradlew :plugin-medication:test
