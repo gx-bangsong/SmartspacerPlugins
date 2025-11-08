@@ -2,7 +2,6 @@ package com.kieronquinn.app.smartspacer.plugin.water.providers
 
 import android.content.ComponentName
 import android.content.Intent
-import android.os.UserHandle
 import com.kieronquinn.app.smartspacer.plugin.water.R
 import com.kieronquinn.app.smartspacer.plugin.water.repositories.DisplayMode
 import com.kieronquinn.app.smartspacer.plugin.water.repositories.WaterDataRepository
@@ -35,17 +34,14 @@ class WaterProvider : SmartspacerTargetProvider(), KoinComponent {
         }
 
         val componentName = ComponentName(context!!, this::class.java)
-        val target = SmartspaceTarget.Builder(
-            "water_progress",
-            componentName,
-            UserHandle.getUserHandleForUid(android.os.Process.myUid())
-        ).setHeaderAction(
-            SmartspaceAction(
-                id = "water_progress_header",
-                icon = android.graphics.drawable.Icon.createWithResource(context, R.drawable.ic_launcher_foreground),
-                title = text
-            )
-        ).build()
+        val target = SmartspaceTarget(
+            smartspaceTargetId = "water_progress",
+            componentName = componentName,
+            featureType = SmartspaceTarget.FEATURE_UNDEFINED,
+            headerAction = SmartspaceAction.Builder("water_progress_header", text)
+                .setIcon(android.graphics.drawable.Icon.createWithResource(context, R.drawable.ic_launcher_foreground))
+                .build()
+        )
 
         return listOf(target)
     }
