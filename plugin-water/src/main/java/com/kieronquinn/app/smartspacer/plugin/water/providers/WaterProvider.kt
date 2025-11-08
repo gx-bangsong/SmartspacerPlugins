@@ -8,9 +8,6 @@ import com.kieronquinn.app.smartspacer.plugin.water.repositories.DisplayMode
 import com.kieronquinn.app.smartspacer.plugin.water.repositories.WaterDataRepository
 import com.kieronquinn.app.smartspacer.sdk.model.SmartspaceAction
 import com.kieronquinn.app.smartspacer.sdk.model.SmartspaceTarget
-import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Icon
-import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.TapAction
-import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Text
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -46,8 +43,7 @@ class WaterProvider : SmartspacerTargetProvider(), KoinComponent {
             SmartspaceAction(
                 id = "water_progress_header",
                 icon = android.graphics.drawable.Icon.createWithResource(context, R.drawable.ic_launcher_foreground),
-                title = text,
-                pendingIntent = null
+                title = text
             )
         ).build()
 
