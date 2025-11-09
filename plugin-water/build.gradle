@@ -75,4 +75,7 @@ dependencies {
 
     //Data storage
     ksp "androidx.room:room-compiler:$room_version"
+
+    //Testing
+    testImplementation "junit:junit:4.13.2"
 }
