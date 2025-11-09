@@ -34,17 +34,15 @@ class WaterProvider : SmartspacerTargetProvider(), KoinComponent {
         }
 
         val componentName = ComponentName(context!!, this::class.java)
-        val headerAction = SmartspaceAction(
-            id = "water_progress_header",
-            title = text
-        )
-        headerAction.icon = android.graphics.drawable.Icon.createWithResource(context, R.drawable.ic_launcher_foreground)
-
         val target = SmartspaceTarget(
             smartspaceTargetId = "water_progress",
             componentName = componentName,
             featureType = SmartspaceTarget.FEATURE_UNDEFINED,
-            headerAction = headerAction
+            headerAction = SmartspaceAction(
+                id = "water_progress_header",
+                title = text,
+                icon = android.graphics.drawable.Icon.createWithResource(context, R.drawable.ic_launcher_foreground)
+            )
         )
 
         return listOf(target)
