@@ -1,8 +1,8 @@
 package com.kieronquinn.app.smartspacer.plugin.medication.providers
 
 import com.kieronquinn.app.smartspacer.plugin.medication.R
+import com.kieronquinn.app.smartspacer.sdk.model.SmartspaceTarget
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider
-import com.kieronquinn.app.smartspacer.sdk.model.SmartspacerTarget
 
 class MedicationProvider : SmartspacerTargetProvider() {
 
@@ -17,6 +17,10 @@ class MedicationProvider : SmartspacerTargetProvider() {
             description = "A medication reminder",
             icon = android.graphics.drawable.Icon.createWithResource(context, R.drawable.ic_launcher_foreground)
         )
+    }
+
+    override fun onDismiss(smartspacerId: String, targetId: String): Boolean {
+        return false
     }
 
 }
