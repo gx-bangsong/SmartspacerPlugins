@@ -52,7 +52,7 @@ class WaterPlugin: SmartspacerPlugin() {
     override fun getModule(context: Context) = module {
         single<WaterDataRepository> { WaterDataRepositoryImpl(get()) }
         single { WaterScheduler() }
-        viewModel { WaterSettingsViewModelImpl(get()) }
+        viewModel<WaterSettingsViewModel> { WaterSettingsViewModelImpl(get()) }
     }
 
 }
