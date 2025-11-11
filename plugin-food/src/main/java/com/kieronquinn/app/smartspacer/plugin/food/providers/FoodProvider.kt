@@ -10,4 +10,17 @@ class FoodProvider : SmartspacerTargetProvider() {
         return emptyList()
     }
 
+    override fun getConfig(smartspacerId: String?): Config {
+        return Config(
+            label = "Food Shelf Life Reminder",
+            description = "Track the shelf life of your food",
+            icon = android.graphics.drawable.Icon.createWithResource(context, R.drawable.ic_launcher_foreground),
+            configActivity = null
+        )
+    }
+
+    override fun onDismiss(smartspacerId: String, targetId: String): Boolean {
+        return false
+    }
+
 }
