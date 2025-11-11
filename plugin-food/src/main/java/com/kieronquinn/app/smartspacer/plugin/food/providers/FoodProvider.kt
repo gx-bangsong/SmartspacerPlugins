@@ -1,5 +1,7 @@
 package com.kieronquinn.app.smartspacer.plugin.food.providers
 
+import android.content.Intent
+import com.kieronquinn.app.smartspacer.plugin.food.R
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider
 import com.kieronquinn.app.smartspacer.sdk.model.SmartspaceTarget
 
@@ -15,7 +17,7 @@ class FoodProvider : SmartspacerTargetProvider() {
             label = "Food Shelf Life Reminder",
             description = "Track the shelf life of your food",
             icon = android.graphics.drawable.Icon.createWithResource(context, R.drawable.ic_launcher_foreground),
-            configActivity = null
+            configActivity = Intent(context, com.kieronquinn.app.smartspacer.plugin.food.ui.activities.SettingsActivity::class.java)
         )
     }
 
