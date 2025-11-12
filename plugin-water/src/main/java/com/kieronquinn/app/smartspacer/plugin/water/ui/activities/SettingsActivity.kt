@@ -5,11 +5,12 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import com.kieronquinn.app.smartspacer.plugin.water.ui.screens.settings.WaterSettingsScreen
 import com.kieronquinn.app.smartspacer.plugin.water.ui.screens.settings.WaterSettingsViewModel
+import com.kieronquinn.app.smartspacer.plugin.water.ui.screens.settings.WaterSettingsViewModelImpl
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SettingsActivity : ComponentActivity() {
 
-    private val viewModel: WaterSettingsViewModel by viewModel()
+    private val viewModel: WaterSettingsViewModelImpl by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
