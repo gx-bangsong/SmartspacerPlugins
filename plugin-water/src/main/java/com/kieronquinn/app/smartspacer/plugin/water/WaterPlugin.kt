@@ -53,7 +53,6 @@ class WaterPlugin: SmartspacerPlugin() {
         single<WaterDataRepository> { WaterDataRepositoryImpl(context) }
         single { WaterScheduler() }
         viewModel { WaterSettingsViewModelImpl(get()) }
-        factory<WaterSettingsViewModel> { get<WaterSettingsViewModelImpl>() }
     }
 
 }
