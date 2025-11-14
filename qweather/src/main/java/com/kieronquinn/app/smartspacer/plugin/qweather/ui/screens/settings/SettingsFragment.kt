@@ -22,7 +22,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         setPreferencesFromResource(R.xml.preferences, rootKey)
 
         setupApiKeyPreference()
-        setupLocationIdPreference()
+        setupLocationNamePreference()
         setupIndicesPreference()
     }
 
@@ -45,14 +45,14 @@ class SettingsFragment : PreferenceFragmentCompat() {
         }
     }
 
-    private fun setupLocationIdPreference() {
-        val locationIdPreference = findPreference<EditTextPreference>("location_id") ?: return
+    private fun setupLocationNamePreference() {
+        val locationNamePreference = findPreference<EditTextPreference>("location_name") ?: return
         scope.launch {
-            locationIdPreference.text = settingsRepository.locationId.first()
+            locationNamePreference.text = settingsRepository.locationName.first()
         }
-        locationIdPreference.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, newValue ->
+        locationNamePreference.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, newValue ->
             scope.launch {
-                settingsRepository.setLocationId(newValue as String)
+                settingsRepository.setLocationName(newValue as String)
                 triggerUpdate()
             }
             true
