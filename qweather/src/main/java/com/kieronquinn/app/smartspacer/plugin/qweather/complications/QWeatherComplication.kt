@@ -32,10 +32,15 @@ class QWeatherComplication : SmartspacerComplicationProvider() {
 
     override fun getSmartspaceActions(smartspacerId: String): List<SmartspaceAction> {
         val apiKey = settingsRepository.apiKey.getBlocking()
-        val locationId = settingsRepository.locationId.getBlocking()
+        val locationName = settingsRepository.locationName.getBlocking()
+        val cityLookupFailed = settingsRepository.cityLookupFailed.getBlocking()
 
-        if (apiKey.isBlank() || locationId.isBlank()) {
+        if (apiKey.isBlank() || locationName.isBlank()) {
             return listOf(getSetupAction())
+        }
+
+        if (cityLookupFailed) {
+            return listOf(getSetupAction("City not found. Tap to re-enter."))
         }
 
         val weatherData = runBlocking { qWeatherRepository.weatherData.first() }

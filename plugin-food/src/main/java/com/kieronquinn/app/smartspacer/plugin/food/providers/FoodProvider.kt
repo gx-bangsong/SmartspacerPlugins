@@ -5,11 +5,41 @@ import com.kieronquinn.app.smartspacer.plugin.food.R
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider
 import com.kieronquinn.app.smartspacer.sdk.model.SmartspaceTarget
 
-class FoodProvider : SmartspacerTargetProvider() {
+import com.kieronquinn.app.smartspacer.plugin.food.data.FoodItemDao
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
+import java.util.concurrent.TimeUnit
+
+class FoodProvider : SmartspacerTargetProvider(), KoinComponent {
+
+    private val foodItemDao by inject<FoodItemDao>()
 
     override fun getSmartspaceTargets(smartspacerId: String): List<SmartspaceTarget> {
-        // Logic to create and return the food shelf life target will be added here
-        return emptyList()
+        val foodItems = runBlocking { foodItemDao.getAll().first() }
+        val now = System.currentTimeMillis()
+
+        return foodItems
+            .filter { it.enabled }
+            .mapNotNull { foodItem ->
+                val expiresInMillis = foodItem.expiryDate - now
+                if (expiresInMillis <= 0) return@mapNotNull null
+
+                val reminderThreshold = TimeUnit.DAYS.toMillis(foodItem.reminderOffsetDays.toLong())
+                if (expiresInMillis > reminderThreshold) return@mapNotNull null
+
+                val expiresInDays = TimeUnit.MILLISECONDS.toDays(expiresInMillis)
+                SmartspaceTarget(
+                    id = "food_${foodItem.id}",
+                    headerAction = SmartspaceAction(
+                        id = "food_header_${foodItem.id}",
+                        title = "${foodItem.name} - Expires in $expiresInDays days",
+                        intent = Intent(context, com.kieronquinn.app.smartspacer.plugin.food.ui.activities.SettingsActivity::class.java)
+                    ),
+                    feature_type = SmartspaceTarget.FeatureType.FEATURE_REMINDER
+                )
+            }
     }
 
     override fun getConfig(smartspacerId: String?): Config {
