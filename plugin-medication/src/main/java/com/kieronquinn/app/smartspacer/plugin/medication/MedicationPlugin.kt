@@ -1,7 +1,6 @@
 package com.kieronquinn.app.smartspacer.plugin.medication
 
 import android.content.Context
-import android.content.Context
 import com.kieronquinn.app.smartspacer.plugin.medication.data.MedicationDatabase
 import com.kieronquinn.app.smartspacer.plugin.shared.SmartspacerPlugin
 import org.koin.dsl.module
