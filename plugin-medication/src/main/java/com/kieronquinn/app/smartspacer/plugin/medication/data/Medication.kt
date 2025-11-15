@@ -12,7 +12,7 @@ data class Medication(
     val startDate: Long,
     val endDate: Long?,
     val isUnlimited: Boolean,
-    val scheduleType: ScheduleType,
+    val scheduleType: String,
     val intervalHours: Int?,
     val intervalDays: Int?,
     val timesOfDay: String?, // JSON list of times, e.g., ["08:00", "20:00"]
