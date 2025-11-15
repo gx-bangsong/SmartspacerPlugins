@@ -15,7 +15,7 @@ import org.koin.android.ext.android.inject
 class SettingsActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySettingsBinding
-    private val medicationDao by inject<MedicationDao>()
+    private val medicationRepository by inject<MedicationRepository>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,7 +24,7 @@ class SettingsActivity : AppCompatActivity() {
 
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
         lifecycleScope.launch {
-            medicationDao.getAll().collect { medications ->
+            medicationRepository.medications.collect { medications ->
                 binding.recyclerView.adapter = MedicationAdapter(medications)
             }
         }
@@ -33,7 +33,7 @@ class SettingsActivity : AppCompatActivity() {
             val addMedicationFragment = AddMedicationFragment()
             addMedicationFragment.setOnMedicationAddedListener { medication ->
                 lifecycleScope.launch {
-                    medicationDao.insert(medication)
+                    medicationRepository.addMedication(medication)
                 }
             }
             addMedicationFragment.show(supportFragmentManager, "AddMedicationFragment")
