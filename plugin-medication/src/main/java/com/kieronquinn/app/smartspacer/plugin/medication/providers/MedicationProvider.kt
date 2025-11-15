@@ -4,6 +4,7 @@ import com.kieronquinn.app.smartspacer.plugin.medication.R
 import com.kieronquinn.app.smartspacer.sdk.model.SmartspaceTarget
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider
 
+import android.content.ComponentName
 import android.content.Intent
 import com.kieronquinn.app.smartspacer.plugin.medication.data.MedicationDao
 import com.kieronquinn.app.smartspacer.plugin.medication.ui.activities.RecordDoseActivity

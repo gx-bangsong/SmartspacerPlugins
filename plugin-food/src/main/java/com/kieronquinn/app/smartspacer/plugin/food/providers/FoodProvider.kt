@@ -1,5 +1,6 @@
 package com.kieronquinn.app.smartspacer.plugin.food.providers
 
+import android.content.ComponentName
 import android.content.Intent
 import com.kieronquinn.app.smartspacer.plugin.food.R
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider
