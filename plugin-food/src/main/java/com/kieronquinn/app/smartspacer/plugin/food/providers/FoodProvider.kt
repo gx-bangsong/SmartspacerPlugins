@@ -38,8 +38,8 @@ class FoodProvider : SmartspacerTargetProvider(), KoinComponent {
                         title = "${foodItem.name} - Expires in $expiresInDays days",
                         intent = Intent(context, com.kieronquinn.app.smartspacer.plugin.food.ui.activities.SettingsActivity::class.java)
                     ),
-                    featureType = SmartspaceTarget.FeatureType.FEATURE_REMINDER,
-                    componentName = componentName
+                    featureType = SmartspaceTarget.FEATURE_REMINDER,
+                    componentName = this.componentName
                 )
             }
     }

@@ -36,13 +36,14 @@ class MedicationProvider : SmartspacerTargetProvider(), KoinComponent {
                 }
 
                 SmartspaceTarget(
-                    id = "medication_${medication.id}",
+                    smartspaceTargetId = "medication_${medication.id}",
                     headerAction = SmartspaceAction(
                         id = "medication_header_${medication.id}",
                         title = title,
                         intent = intent
                     ),
-                    feature_type = SmartspaceTarget.FeatureType.FEATURE_REMINDER
+                    featureType = SmartspaceTarget.FEATURE_REMINDER,
+                    componentName = this.componentName
                 )
             }
     }
