@@ -42,8 +42,7 @@ class MedicationProvider : SmartspacerTargetProvider(), KoinComponent {
                         title = title,
                         intent = intent
                     ),
-                    featureType = SmartspaceTarget.FEATURE_REMINDER,
-                    componentName = this.componentName
+                    featureType = SmartspaceTarget.FEATURE_REMINDER
                 )
             }
     }
