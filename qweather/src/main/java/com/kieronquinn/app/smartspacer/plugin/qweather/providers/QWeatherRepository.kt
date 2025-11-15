@@ -1,13 +1,9 @@
 package com.kieronquinn.app.smartspacer.plugin.qweather.providers
 
 import com.kieronquinn.app.smartspacer.plugin.qweather.data.QWeatherResponse
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.MutableStateFlow
-
-import com.kieronquinn.app.smartspacer.plugin.qweather.data.QWeatherResponse
 import com.kieronquinn.app.smartspacer.plugin.qweather.retrofit.QWeatherClient
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
 
 interface QWeatherRepository {
