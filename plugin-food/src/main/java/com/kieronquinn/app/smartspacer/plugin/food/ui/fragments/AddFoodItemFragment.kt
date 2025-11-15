@@ -73,7 +73,8 @@ class AddFoodItemFragment : DialogFragment() {
             name = name,
             storageMethod = storageMethod,
             expiryDate = expiryDate,
-            reminderOffsetDays = 1 // Default to 1 day reminder
+            reminderOffsetDays = 1, // Default to 1 day reminder
+            notes = null
         )
     }
 

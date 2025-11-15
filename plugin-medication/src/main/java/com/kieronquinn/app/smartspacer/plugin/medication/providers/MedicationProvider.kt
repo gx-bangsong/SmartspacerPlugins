@@ -4,7 +4,9 @@ import com.kieronquinn.app.smartspacer.plugin.medication.R
 import com.kieronquinn.app.smartspacer.sdk.model.SmartspaceTarget
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider
 
+import android.content.ComponentName
 import android.content.Intent
+import com.kieronquinn.app.smartspacer.sdk.model.SmartspaceAction
 import com.kieronquinn.app.smartspacer.plugin.medication.data.MedicationDao
 import com.kieronquinn.app.smartspacer.plugin.medication.ui.activities.RecordDoseActivity
 import com.kieronquinn.app.smartspacer.plugin.medication.ui.activities.SettingsActivity
@@ -21,6 +23,7 @@ class MedicationProvider : SmartspacerTargetProvider(), KoinComponent {
     private val medicationDao by inject<MedicationDao>()
 
     override fun getSmartspaceTargets(smartspacerId: String): List<SmartspaceTarget> {
+        val context = this.context ?: return emptyList()
         val medications = runBlocking { medicationDao.getAll().first() }
         val now = System.currentTimeMillis()
 
@@ -36,13 +39,14 @@ class MedicationProvider : SmartspacerTargetProvider(), KoinComponent {
                 }
 
                 SmartspaceTarget(
-                    id = "medication_${medication.id}",
+                    smartspaceTargetId = "medication_${medication.id}",
                     headerAction = SmartspaceAction(
                         id = "medication_header_${medication.id}",
                         title = title,
                         intent = intent
                     ),
-                    feature_type = SmartspaceTarget.FeatureType.FEATURE_REMINDER
+                    featureType = SmartspaceTarget.FEATURE_REMINDER,
+                    componentName = ComponentName(context, MedicationProvider::class.java)
                 )
             }
     }
