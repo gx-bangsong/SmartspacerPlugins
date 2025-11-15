@@ -32,4 +32,4 @@ jobs:
 
     - name: Run tests with Gradle
       run: |
-        ./gradlew :plugin-medication:kspReleaseKotlin --no-daemon -Dorg.gradle.debug=true -Pkotlin.compiler.execution.strategy=in-process --rerun-tasks
+                ./gradlew :plugin-medication:assembledebug
