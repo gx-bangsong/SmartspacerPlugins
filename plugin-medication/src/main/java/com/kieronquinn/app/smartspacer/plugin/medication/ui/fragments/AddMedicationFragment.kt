@@ -92,7 +92,7 @@ class AddMedicationFragment : DialogFragment() {
             startDate = startDate,
             endDate = endDate,
             isUnlimited = endDate == null,
-            scheduleType = ScheduleType.SPECIFIC_TIMES.name,
+            scheduleType = ScheduleType.SPECIFIC_TIMES,
             intervalHours = null,
             intervalDays = null,
             timesOfDay = gson.toJson(reminderTimes),
