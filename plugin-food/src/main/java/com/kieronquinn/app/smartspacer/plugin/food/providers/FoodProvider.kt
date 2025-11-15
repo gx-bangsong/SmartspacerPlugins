@@ -19,6 +19,7 @@ class FoodProvider : SmartspacerTargetProvider(), KoinComponent {
     private val foodItemDao by inject<FoodItemDao>()
 
     override fun getSmartspaceTargets(smartspacerId: String): List<SmartspaceTarget> {
+        val context = this.context ?: return emptyList()
         val foodItems = runBlocking { foodItemDao.getAll().first() }
         val now = System.currentTimeMillis()
 

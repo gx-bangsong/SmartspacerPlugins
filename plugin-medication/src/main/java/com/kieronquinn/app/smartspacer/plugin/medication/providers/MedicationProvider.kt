@@ -22,6 +22,7 @@ class MedicationProvider : SmartspacerTargetProvider(), KoinComponent {
     private val medicationDao by inject<MedicationDao>()
 
     override fun getSmartspaceTargets(smartspacerId: String): List<SmartspaceTarget> {
+        val context = this.context ?: return emptyList()
         val medications = runBlocking { medicationDao.getAll().first() }
         val now = System.currentTimeMillis()
 
