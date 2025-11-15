@@ -19,11 +19,11 @@ import java.util.Locale
 
 class MedicationProvider : SmartspacerTargetProvider(), KoinComponent {
 
-    private val medicationRepository by inject<MedicationRepository>()
+    private val medicationDao by inject<MedicationDao>()
 
     override fun getSmartspaceTargets(smartspacerId: String): List<SmartspaceTarget> {
         val context = this.context ?: return emptyList()
-        val medications = runBlocking { medicationRepository.medications.first() }
+        val medications = runBlocking { medicationDao.getAll().first() }
         val now = System.currentTimeMillis()
 
         return medications

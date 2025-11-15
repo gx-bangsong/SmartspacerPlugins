@@ -13,7 +13,7 @@ import java.util.Calendar
 class RecordDoseActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityRecordDoseBinding
-    private val medicationRepository by inject<MedicationRepository>()
+    private val medicationDao by inject<MedicationDao>()
     private val gson = Gson()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,13 +28,13 @@ class RecordDoseActivity : AppCompatActivity() {
         }
 
         lifecycleScope.launch {
-            val medication = medicationRepository.getMedication(medicationId) ?: return@launch
+            val medication = medicationDao.getById(medicationId) ?: return@launch
             binding.textViewMedicationName.text = medication.name
 
             binding.buttonTaken.setOnClickListener {
                 lifecycleScope.launch {
                     val nextDoseTs = calculateNextDose(medication.startDate, gson.fromJson(medication.timesOfDay, Array<String>::class.java).toList())
-                    medicationRepository.updateMedication(medication.copy(nextDoseTs = nextDoseTs))
+                    medicationDao.update(medication.copy(nextDoseTs = nextDoseTs))
                     finish()
                 }
             }
@@ -42,7 +42,7 @@ class RecordDoseActivity : AppCompatActivity() {
             binding.buttonSkip.setOnClickListener {
                 lifecycleScope.launch {
                     val nextDoseTs = calculateNextDose(medication.startDate, gson.fromJson(medication.timesOfDay, Array<String>::class.java).toList())
-                    medicationRepository.updateMedication(medication.copy(nextDoseTs = nextDoseTs))
+                    medicationDao.update(medication.copy(nextDoseTs = nextDoseTs))
                     finish()
                 }
             }
