@@ -1,4 +1,4 @@
-name: Android CI
+name: Test kspReleaseKotlin in med plugin
 
 on:
   push:
