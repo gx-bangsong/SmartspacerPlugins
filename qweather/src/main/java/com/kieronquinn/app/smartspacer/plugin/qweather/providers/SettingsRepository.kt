@@ -12,12 +12,14 @@ import kotlinx.coroutines.runBlocking
 
 interface SettingsRepository : BaseSettingsRepository {
     val apiKey: Flow<String>
+    val apiHost: Flow<String>
     val locationName: Flow<String>
     val selectedIndices: Flow<String>
     val cityLookupFailed: Flow<Boolean>
     var locationId: String?
 
     suspend fun setApiKey(value: String)
+    suspend fun setApiHost(value: String)
     suspend fun setLocationName(value: String)
     suspend fun setSelectedIndices(value: String)
     suspend fun setCityLookupFailed(value: Boolean)
@@ -27,6 +29,7 @@ class SettingsRepositoryImpl(context: Context) : BaseSettingsRepositoryImpl(), S
     companion object {
         private const val PREFERENCES_NAME = "qweather_prefs"
         private const val API_KEY_KEY = "api_key"
+        private const val API_HOST_KEY = "api_host"
         private const val LOCATION_NAME_KEY = "location_name"
         private const val SELECTED_INDICES_KEY = "selected_indices"
         private const val CITY_LOOKUP_FAILED_KEY = "city_lookup_failed"
@@ -36,11 +39,13 @@ class SettingsRepositoryImpl(context: Context) : BaseSettingsRepositoryImpl(), S
         context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE)
 
     private val _apiKey = MutableStateFlow(sharedPreferences.getString(API_KEY_KEY, "") ?: "")
+    private val _apiHost = MutableStateFlow(sharedPreferences.getString(API_HOST_KEY, "") ?: "")
     private val _locationName = MutableStateFlow(sharedPreferences.getString(LOCATION_NAME_KEY, "") ?: "")
     private val _selectedIndices = MutableStateFlow(sharedPreferences.getString(SELECTED_INDICES_KEY, "1,2,3,5,9") ?: "1,2,3,5,9")
     private val _cityLookupFailed = MutableStateFlow(sharedPreferences.getBoolean(CITY_LOOKUP_FAILED_KEY, false))
 
     override val apiKey: Flow<String> = _apiKey.asStateFlow()
+    override val apiHost: Flow<String> = _apiHost.asStateFlow()
     override val locationName: Flow<String> = _locationName.asStateFlow()
     override val selectedIndices: Flow<String> = _selectedIndices.asStateFlow()
     override val cityLookupFailed: Flow<Boolean> = _cityLookupFailed.asStateFlow()
@@ -50,6 +55,7 @@ class SettingsRepositoryImpl(context: Context) : BaseSettingsRepositoryImpl(), S
         sharedPreferences.registerOnSharedPreferenceChangeListener { sharedPreferences, key ->
             when (key) {
                 API_KEY_KEY -> _apiKey.value = sharedPreferences.getString(API_KEY_KEY, "") ?: ""
+                API_HOST_KEY -> _apiHost.value = sharedPreferences.getString(API_HOST_KEY, "") ?: ""
                 LOCATION_NAME_KEY -> _locationName.value = sharedPreferences.getString(LOCATION_NAME_KEY, "") ?: ""
                 SELECTED_INDICES_KEY -> _selectedIndices.value = sharedPreferences.getString(SELECTED_INDICES_KEY, "1,2,3,5,9") ?: "1,2,3,5,9"
                 CITY_LOOKUP_FAILED_KEY -> _cityLookupFailed.value = sharedPreferences.getBoolean(CITY_LOOKUP_FAILED_KEY, false)
@@ -59,6 +65,10 @@ class SettingsRepositoryImpl(context: Context) : BaseSettingsRepositoryImpl(), S
 
     override suspend fun setApiKey(value: String) {
         sharedPreferences.edit { putString(API_KEY_KEY, value) }
+    }
+
+    override suspend fun setApiHost(value: String) {
+        sharedPreferences.edit { putString(API_HOST_KEY, value) }
     }
 
     override suspend fun setLocationName(value: String) {

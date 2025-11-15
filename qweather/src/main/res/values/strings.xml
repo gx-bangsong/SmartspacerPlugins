@@ -7,6 +7,8 @@
 
     <string name="settings_api_key_title">API Key</string>
     <string name="settings_api_key_summary">Your personal API key from QWeather</string>
+    <string name="settings_api_host_title">API Host</string>
+    <string name="settings_api_host_summary">The custom API host for QWeather</string>
     <string name="settings_location_name_title">City Name</string>
     <string name="settings_location_name_summary">Enter the name of the city to fetch weather for</string>
     <string name="settings_select_indices_title">Select Indices</string>
