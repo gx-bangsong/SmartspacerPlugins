@@ -6,8 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 
-@Database(entities = [Medication::class], version = 1, exportSchema = false)
-@TypeConverters(com.kieronquinn.app.smartspacer.plugin.medication.data.TypeConverters::class)
+@Database(entities = [Medication::class], version = 1, exportSchema = false, typeConverters = [TypeConverters::class])
 abstract class MedicationDatabase : RoomDatabase() {
 
     abstract fun medicationDao(): MedicationDao

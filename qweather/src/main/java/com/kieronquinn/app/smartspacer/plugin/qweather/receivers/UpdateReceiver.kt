@@ -33,15 +33,23 @@ class UpdateReceiver : BroadcastReceiver(), KoinComponent {
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val apiKey = settingsRepository.apiKey.getBlocking()
-                val locationId = settingsRepository.locationId.getBlocking()
+                val locationName = settingsRepository.locationName.getBlocking()
                 val selectedIndices = settingsRepository.selectedIndices.getBlocking()
 
-                if (apiKey.isBlank() || locationId.isBlank()) {
+                if (apiKey.isBlank() || locationName.isBlank()) {
                     Log.d(TAG, "API key or location not set, skipping update.")
                     return@launch
                 }
 
-                val response = QWeatherClient.instance.getIndices(locationId, apiKey, selectedIndices)
+                val locationId = QWeatherClient.lookupCity(locationName, apiKey)
+                if (locationId == null) {
+                    Log.e(TAG, "Failed to lookup city: $locationName")
+                    settingsRepository.setCityLookupFailed(true)
+                    return@launch
+                }
+
+                settingsRepository.setCityLookupFailed(false)
+                val response = QWeatherClient.getIndices(locationId, apiKey, selectedIndices)
                 qWeatherRepository.setWeatherData(response)
                 Log.d(TAG, "Successfully fetched and saved weather data.")
 

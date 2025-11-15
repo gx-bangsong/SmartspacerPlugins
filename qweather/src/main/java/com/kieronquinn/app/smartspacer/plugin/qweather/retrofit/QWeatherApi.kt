@@ -1,5 +1,6 @@
 package com.kieronquinn.app.smartspacer.plugin.qweather.retrofit
 
+import com.kieronquinn.app.smartspacer.plugin.qweather.data.CityLookupResponse
 import com.kieronquinn.app.smartspacer.plugin.qweather.data.QWeatherResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -11,4 +12,10 @@ interface QWeatherApi {
         @Query("key") key: String,
         @Query("type") type: String
     ): QWeatherResponse
+
+    @GET("v2/city/lookup")
+    suspend fun lookupCity(
+        @Query("location") location: String,
+        @Query("key") key: String
+    ): CityLookupResponse
 }

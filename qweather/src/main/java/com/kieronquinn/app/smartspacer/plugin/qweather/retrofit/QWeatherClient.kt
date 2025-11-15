@@ -17,12 +17,19 @@ object QWeatherClient {
         .addInterceptor(loggingInterceptor)
         .build()
 
-    val instance: QWeatherApi by lazy {
+    private val instance: QWeatherApi by lazy {
         val retrofit = Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .client(httpClient)
             .build()
         retrofit.create(QWeatherApi::class.java)
+    }
+
+    suspend fun getIndices(location: String, key: String, type: String) = instance.getIndices(location, key, type)
+
+    suspend fun lookupCity(location: String, key: String): String? {
+        val response = instance.lookupCity(location, key)
+        return response.locations.firstOrNull()?.id
     }
 }
