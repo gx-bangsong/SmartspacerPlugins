@@ -31,6 +31,7 @@ class FoodProvider : SmartspacerTargetProvider(), KoinComponent {
                 if (expiresInMillis > reminderThreshold) return@mapNotNull null
 
                 val expiresInDays = TimeUnit.MILLISECONDS.toDays(expiresInMillis)
+                val componentName = this.componentName
                 SmartspaceTarget(
                     smartspaceTargetId = "food_${foodItem.id}",
                     headerAction = SmartspaceAction(
@@ -38,7 +39,8 @@ class FoodProvider : SmartspacerTargetProvider(), KoinComponent {
                         title = "${foodItem.name} - Expires in $expiresInDays days",
                         intent = Intent(context, com.kieronquinn.app.smartspacer.plugin.food.ui.activities.SettingsActivity::class.java)
                     ),
-                    featureType = SmartspaceTarget.FEATURE_REMINDER
+                    featureType = SmartspaceTarget.FEATURE_REMINDER,
+                    componentName = componentName
                 )
             }
     }

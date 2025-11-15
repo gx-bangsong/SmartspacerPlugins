@@ -35,6 +35,7 @@ class MedicationProvider : SmartspacerTargetProvider(), KoinComponent {
                     putExtra("medication_id", medication.id)
                 }
 
+                val componentName = this.componentName
                 SmartspaceTarget(
                     smartspaceTargetId = "medication_${medication.id}",
                     headerAction = SmartspaceAction(
@@ -42,7 +43,8 @@ class MedicationProvider : SmartspacerTargetProvider(), KoinComponent {
                         title = title,
                         intent = intent
                     ),
-                    featureType = SmartspaceTarget.FEATURE_REMINDER
+                    featureType = SmartspaceTarget.FEATURE_REMINDER,
+                    componentName = componentName
                 )
             }
     }
