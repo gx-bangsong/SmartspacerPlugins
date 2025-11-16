@@ -21,9 +21,6 @@ class UpdateReceiver : BroadcastReceiver(), KoinComponent {
     companion object {
         private const val TAG = "QWeatherUpdateReceiver"
         const val EXTRA_SMARTSPACER_ID = "smartspacerId"
-        const val EXTRA_LOCATION_NAME = "extra_location_name"
-        const val EXTRA_API_KEY = "extra_api_key"
-        const val EXTRA_SELECTED_INDICES = "extra_selected_indices"
     }
 
     private val qWeatherRepository by inject<QWeatherRepository>()
@@ -31,12 +28,11 @@ class UpdateReceiver : BroadcastReceiver(), KoinComponent {
     override fun onReceive(context: Context, intent: Intent) {
         val pendingResult = goAsync()
         val smartspacerId = intent.getStringExtra(EXTRA_SMARTSPACER_ID)
-        val apiKey = intent.getStringExtra(EXTRA_API_KEY)
-        val locationName = intent.getStringExtra(EXTRA_LOCATION_NAME)
-        val selectedIndices = intent.getStringExtra(EXTRA_SELECTED_INDICES)
 
         CoroutineScope(Dispatchers.IO).launch {
             try {
+                // Delay to allow preferences to save
+                kotlinx.coroutines.delay(500)
                 val weatherData = qWeatherRepository.fetchWeatherData()
                 if (weatherData != null) {
                     qWeatherRepository.setWeatherData(weatherData)

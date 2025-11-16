@@ -3,11 +3,9 @@ package com.kieronquinn.app.smartspacer.plugin.qweather.ui.screens.settings
 import android.os.Bundle
 import androidx.preference.EditTextPreference
 import androidx.preference.MultiSelectListPreference
-import android.content.Intent
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import com.kieronquinn.app.smartspacer.plugin.qweather.R
-import com.kieronquinn.app.smartspacer.plugin.qweather.receivers.UpdateReceiver
 import com.kieronquinn.app.smartspacer.plugin.qweather.complications.QWeatherComplication
 import com.kieronquinn.app.smartspacer.plugin.qweather.providers.SettingsRepository
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerComplicationProvider
@@ -24,7 +22,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         setPreferencesFromResource(R.xml.preferences, rootKey)
 
         setupApiKeyPreference()
-        setupLocationNamePreference()
+        setupLocationIdPreference()
         setupIndicesPreference()
     }
 
@@ -47,14 +45,14 @@ class SettingsFragment : PreferenceFragmentCompat() {
         }
     }
 
-    private fun setupLocationNamePreference() {
-        val locationNamePreference = findPreference<EditTextPreference>("location_name") ?: return
+    private fun setupLocationIdPreference() {
+        val locationIdPreference = findPreference<EditTextPreference>("location_id") ?: return
         scope.launch {
-            locationNamePreference.text = settingsRepository.locationName.first()
+            locationIdPreference.text = settingsRepository.locationId.first()
         }
-        locationNamePreference.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, newValue ->
+        locationIdPreference.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, newValue ->
             scope.launch {
-                settingsRepository.setLocationName(newValue as String)
+                settingsRepository.setLocationId(newValue as String)
                 triggerUpdate()
             }
             true
@@ -79,9 +77,10 @@ class SettingsFragment : PreferenceFragmentCompat() {
         }
     }
 
-    private fun triggerUpdate() {
+    private suspend fun triggerUpdate() {
         val context = context ?: return
-        val intent = Intent(context, UpdateReceiver::class.java)
-        context.sendBroadcast(intent)
+        withContext(Dispatchers.IO) {
+            SmartspacerComplicationProvider.notifyChange(context, QWeatherComplication::class.java)
+        }
     }
 }
