@@ -8,10 +8,16 @@
         android:dialogTitle="@string/settings_api_key_title" />
 
     <EditTextPreference
-        android:key="location_id"
-        android:title="@string/settings_location_id_title"
-        android:summary="@string/settings_location_id_summary"
-        android:dialogTitle="@string/settings_location_id_title" />
+        android:key="api_host"
+        android:title="@string/settings_api_host_title"
+        android:summary="@string/settings_api_host_summary"
+        android:dialogTitle="@string/settings_api_host_title" />
+
+    <EditTextPreference
+        android:key="location_name"
+        android:title="@string/settings_location_name_title"
+        android:summary="@string/settings_location_name_summary"
+        android:dialogTitle="@string/settings_location_name_title" />
 
     <MultiSelectListPreference
         android:key="selected_indices"
