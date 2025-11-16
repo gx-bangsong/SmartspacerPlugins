@@ -37,7 +37,7 @@ class UpdateReceiver : BroadcastReceiver(), KoinComponent {
 
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val weatherData = qWeatherRepository.fetchWeatherData(apiKey, locationName, selectedIndices)
+                val weatherData = qWeatherRepository.fetchWeatherData()
                 if (weatherData != null) {
                     qWeatherRepository.setWeatherData(weatherData)
                     Log.d(TAG, "Successfully fetched and saved weather data.")

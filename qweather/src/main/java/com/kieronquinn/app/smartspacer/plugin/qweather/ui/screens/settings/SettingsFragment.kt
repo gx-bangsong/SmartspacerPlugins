@@ -81,16 +81,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
     private fun triggerUpdate() {
         val context = context ?: return
-        scope.launch {
-            val apiKey = settingsRepository.apiKey.first()
-            val locationName = settingsRepository.locationName.first()
-            val selectedIndices = settingsRepository.selectedIndices.first()
-            val intent = Intent(context, UpdateReceiver::class.java).apply {
-                putExtra(UpdateReceiver.EXTRA_API_KEY, apiKey)
-                putExtra(UpdateReceiver.EXTRA_LOCATION_NAME, locationName)
-                putExtra(UpdateReceiver.EXTRA_SELECTED_INDICES, selectedIndices)
-            }
-            context.sendBroadcast(intent)
-        }
+        val intent = Intent(context, UpdateReceiver::class.java)
+        context.sendBroadcast(intent)
     }
 }

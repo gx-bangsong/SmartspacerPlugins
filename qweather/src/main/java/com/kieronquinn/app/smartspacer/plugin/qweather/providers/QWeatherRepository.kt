@@ -11,7 +11,7 @@ interface QWeatherRepository {
     val weatherData: StateFlow<QWeatherResponse?>
     val previousWeatherData: StateFlow<QWeatherResponse?>
     suspend fun setWeatherData(data: QWeatherResponse)
-    suspend fun fetchWeatherData(apiKey: String?, locationName: String?, selectedIndices: String?): QWeatherResponse?
+    suspend fun fetchWeatherData(): QWeatherResponse?
 }
 
 class QWeatherRepositoryImpl(
@@ -31,25 +31,25 @@ class QWeatherRepositoryImpl(
         _weatherData.value = data
     }
 
-    override suspend fun fetchWeatherData(apiKey: String?, locationName: String?, selectedIndices: String?): QWeatherResponse? {
-        val finalApiKey = apiKey ?: settings.apiKey.first()
-        val finalLocationName = locationName ?: settings.locationName.first()
-        val finalSelectedIndices = selectedIndices ?: settings.selectedIndices.first()
+    override suspend fun fetchWeatherData(): QWeatherResponse? {
+        val apiKey = settings.apiKey.first()
+        val locationName = settings.locationName.first()
+        val selectedIndices = settings.selectedIndices.first()
 
-        if (finalApiKey.isEmpty()) {
+        if (apiKey.isEmpty()) {
             Log.d("QWeatherRepository", "API key is empty")
             return null
         }
-        if (finalLocationName.isEmpty()) {
+        if (locationName.isEmpty()) {
             Log.d("QWeatherRepository", "Location name is empty")
             return null
         }
 
-        Log.d("QWeatherRepository", "Fetching weather data for $finalLocationName with key $finalApiKey")
+        Log.d("QWeatherRepository", "Fetching weather data for $locationName with key $apiKey")
 
-        val locationId = settings.locationId ?: client.lookupCity(finalLocationName, finalApiKey)
+        val locationId = settings.locationId ?: client.lookupCity(locationName, apiKey)
         if (locationId == null) {
-            Log.d("QWeatherRepository", "Failed to lookup city ID for $finalLocationName")
+            Log.d("QWeatherRepository", "Failed to lookup city ID for $locationName")
             settings.setCityLookupFailed(true)
             return null
         }
@@ -57,6 +57,6 @@ class QWeatherRepositoryImpl(
         settings.locationId = locationId
         settings.setCityLookupFailed(false)
 
-        return client.getIndices(locationId, finalApiKey, finalSelectedIndices)
+        return client.getIndices(locationId, apiKey, selectedIndices)
     }
 }
