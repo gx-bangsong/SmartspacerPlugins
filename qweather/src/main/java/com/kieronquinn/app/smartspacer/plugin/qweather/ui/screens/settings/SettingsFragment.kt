@@ -77,10 +77,9 @@ class SettingsFragment : PreferenceFragmentCompat() {
         }
     }
 
-    private suspend fun triggerUpdate() {
+    private fun triggerUpdate() {
         val context = context ?: return
-        withContext(Dispatchers.IO) {
-            SmartspacerComplicationProvider.notifyChange(context, QWeatherComplication::class.java)
-        }
+        val intent = Intent(context, UpdateReceiver::class.java)
+        context.sendBroadcast(intent)
     }
 }
