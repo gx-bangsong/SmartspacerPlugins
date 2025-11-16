@@ -94,37 +94,4 @@ class QWeatherComplication : SmartspacerComplicationProvider() {
             configActivity = Intent(provideContext(), SettingsActivity::class.java)
         )
     }
-
-    override fun onComplicationActivated(smartspacerId: String) {
-        super.onComplicationActivated(smartspacerId)
-        // Schedule a repeating alarm to update the weather every hour
-        val intent = Intent(provideContext(), UpdateReceiver::class.java).apply {
-            putExtra(UpdateReceiver.EXTRA_SMARTSPACER_ID, smartspacerId)
-        }
-        val pendingIntent = PendingIntent.getBroadcast(
-            provideContext(),
-            0,
-            intent,
-            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
-        )
-        alarmManager.setRepeating(
-            AlarmManager.RTC_WAKEUP,
-            System.currentTimeMillis() + TimeUnit.HOURS.toMillis(1),
-            TimeUnit.HOURS.toMillis(1),
-            pendingIntent
-        )
-    }
-
-    override fun onComplicationDeactivated(smartspacerId: String) {
-        super.onComplicationDeactivated(smartspacerId)
-        // Cancel the alarm
-        val intent = Intent(provideContext(), UpdateReceiver::class.java)
-        val pendingIntent = PendingIntent.getBroadcast(
-            provideContext(),
-            0,
-            intent,
-            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
-        )
-        alarmManager.cancel(pendingIntent)
-    }
 }
