@@ -4,6 +4,7 @@ import com.kieronquinn.app.smartspacer.plugin.qweather.data.QWeatherResponse
 import com.kieronquinn.app.smartspacer.plugin.qweather.retrofit.QWeatherClient
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import android.util.Log
 import kotlinx.coroutines.flow.first
 
 interface QWeatherRepository {
@@ -35,12 +36,20 @@ class QWeatherRepositoryImpl(
         val locationName = settings.locationName.first()
         val selectedIndices = settings.selectedIndices.first()
 
-        if (apiKey.isEmpty() || locationName.isEmpty()) {
+        if (apiKey.isEmpty()) {
+            Log.d("QWeatherRepository", "API key is empty")
+            return null
+        }
+        if (locationName.isEmpty()) {
+            Log.d("QWeatherRepository", "Location name is empty")
             return null
         }
 
+        Log.d("QWeatherRepository", "Fetching weather data for $locationName with key $apiKey")
+
         val locationId = settings.locationId ?: client.lookupCity(locationName, apiKey)
         if (locationId == null) {
+            Log.d("QWeatherRepository", "Failed to lookup city ID for $locationName")
             settings.setCityLookupFailed(true)
             return null
         }
