@@ -5,10 +5,13 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import com.kieronquinn.app.smartspacer.plugin.qweather.complications.QWeatherComplication
+import android.app.AlarmManager
+import android.app.PendingIntent
 import com.kieronquinn.app.smartspacer.plugin.qweather.providers.QWeatherRepository
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerComplicationProvider
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import java.util.concurrent.TimeUnit
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -32,6 +35,7 @@ class UpdateReceiver : BroadcastReceiver(), KoinComponent {
                 if (weatherData != null) {
                     qWeatherRepository.setWeatherData(weatherData)
                     Log.d(TAG, "Successfully fetched and saved weather data.")
+                    scheduleNextUpdate(context, smartspacerId)
                 } else {
                     Log.d(TAG, "Failed to fetch weather data, skipping update.")
                 }
@@ -45,5 +49,23 @@ class UpdateReceiver : BroadcastReceiver(), KoinComponent {
                 pendingResult.finish()
             }
         }
+    }
+
+    private fun scheduleNextUpdate(context: Context, smartspacerId: String?) {
+        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val intent = Intent(context, UpdateReceiver::class.java).apply {
+            putExtra(EXTRA_SMARTSPACER_ID, smartspacerId)
+        }
+        val pendingIntent = PendingIntent.getBroadcast(
+            context,
+            0,
+            intent,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
+        alarmManager.setExactAndAllowWhileIdle(
+            AlarmManager.RTC_WAKEUP,
+            System.currentTimeMillis() + TimeUnit.HOURS.toMillis(1),
+            pendingIntent
+        )
     }
 }
