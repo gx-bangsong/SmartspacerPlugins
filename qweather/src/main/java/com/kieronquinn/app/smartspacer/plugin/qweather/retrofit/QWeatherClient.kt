@@ -25,7 +25,7 @@ class QWeatherClient(private val settings: SettingsRepository) {
     private suspend fun getApi(): QWeatherApi {
         val host = settings.apiHost.first().ifEmpty { DEFAULT_BASE_URL }
         val retrofit = Retrofit.Builder()
-            .baseUrl(host)
+            .baseUrl(if (host.endsWith("/")) host else "$host/")
             .addConverterFactory(GsonConverterFactory.create())
             .client(httpClient)
             .build()
