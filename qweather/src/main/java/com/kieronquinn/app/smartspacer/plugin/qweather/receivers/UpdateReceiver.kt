@@ -45,10 +45,8 @@ class UpdateReceiver : BroadcastReceiver(), KoinComponent {
                     Log.d(TAG, "API key or location name is empty, skipping update.")
                     return@launch
                 }
-                Log.d(TAG, "Looking up city: $locationName")
                 val locationId = qWeatherClient.lookupCity(locationName, apiKey)
                 if(locationId != null){
-                    Log.d(TAG, "Found location ID: $locationId, fetching indices.")
                     val weatherData = qWeatherClient.getIndices(locationId, apiKey, selectedIndices)
                     qWeatherRepository.setWeatherData(weatherData)
                     Log.d(TAG, "Successfully fetched and saved weather data.")
