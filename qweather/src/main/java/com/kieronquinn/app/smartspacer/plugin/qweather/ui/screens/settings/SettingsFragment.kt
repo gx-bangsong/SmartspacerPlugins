@@ -22,6 +22,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         setPreferencesFromResource(R.xml.preferences, rootKey)
 
         setupApiKeyPreference()
+        setupApiHostPreference()
         setupLocationNamePreference()
         setupIndicesPreference()
     }
@@ -39,6 +40,20 @@ class SettingsFragment : PreferenceFragmentCompat() {
         apiKeyPreference.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, newValue ->
             scope.launch {
                 settingsRepository.setApiKey(newValue as String)
+                triggerUpdate()
+            }
+            true
+        }
+    }
+
+    private fun setupApiHostPreference() {
+        val apiHostPreference = findPreference<EditTextPreference>("api_host") ?: return
+        scope.launch {
+            apiHostPreference.text = settingsRepository.apiHost.first()
+        }
+        apiHostPreference.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, newValue ->
+            scope.launch {
+                settingsRepository.setApiHost(newValue as String)
                 triggerUpdate()
             }
             true
