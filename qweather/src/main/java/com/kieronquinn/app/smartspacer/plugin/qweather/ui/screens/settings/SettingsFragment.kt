@@ -3,9 +3,11 @@ package com.kieronquinn.app.smartspacer.plugin.qweather.ui.screens.settings
 import android.os.Bundle
 import androidx.preference.EditTextPreference
 import androidx.preference.MultiSelectListPreference
+import android.content.Intent
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import com.kieronquinn.app.smartspacer.plugin.qweather.R
+import com.kieronquinn.app.smartspacer.plugin.qweather.receivers.UpdateReceiver
 import com.kieronquinn.app.smartspacer.plugin.qweather.complications.QWeatherComplication
 import com.kieronquinn.app.smartspacer.plugin.qweather.providers.SettingsRepository
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerComplicationProvider
@@ -22,7 +24,6 @@ class SettingsFragment : PreferenceFragmentCompat() {
         setPreferencesFromResource(R.xml.preferences, rootKey)
 
         setupApiKeyPreference()
-        setupApiHostPreference()
         setupLocationNamePreference()
         setupIndicesPreference()
     }
@@ -40,20 +41,6 @@ class SettingsFragment : PreferenceFragmentCompat() {
         apiKeyPreference.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, newValue ->
             scope.launch {
                 settingsRepository.setApiKey(newValue as String)
-                triggerUpdate()
-            }
-            true
-        }
-    }
-
-    private fun setupApiHostPreference() {
-        val apiHostPreference = findPreference<EditTextPreference>("api_host") ?: return
-        scope.launch {
-            apiHostPreference.text = settingsRepository.apiHost.first()
-        }
-        apiHostPreference.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, newValue ->
-            scope.launch {
-                settingsRepository.setApiHost(newValue as String)
                 triggerUpdate()
             }
             true
@@ -92,10 +79,9 @@ class SettingsFragment : PreferenceFragmentCompat() {
         }
     }
 
-    private suspend fun triggerUpdate() {
+    private fun triggerUpdate() {
         val context = context ?: return
-        withContext(Dispatchers.IO) {
-            SmartspacerComplicationProvider.notifyChange(context, QWeatherComplication::class.java)
-        }
+        val intent = Intent(context, UpdateReceiver::class.java)
+        context.sendBroadcast(intent)
     }
 }

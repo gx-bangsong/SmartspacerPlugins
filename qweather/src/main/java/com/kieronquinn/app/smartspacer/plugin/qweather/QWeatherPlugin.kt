@@ -14,7 +14,7 @@ class QWeatherPlugin : SmartspacerPlugin() {
     override fun getModule(context: Context) = module {
         single<SettingsRepository> { SettingsRepositoryImpl(get()) }
         single { QWeatherClient(get()) }
-        single<QWeatherRepository> { QWeatherRepositoryImpl() }
+        single<QWeatherRepository> { QWeatherRepositoryImpl(get(), get()) }
     }
 
 }
