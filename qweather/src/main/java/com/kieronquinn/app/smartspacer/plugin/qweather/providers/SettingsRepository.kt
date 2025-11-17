@@ -6,9 +6,11 @@ import com.kieronquinn.app.smartspacer.plugin.shared.repositories.BaseSettingsRe
 import com.kieronquinn.app.smartspacer.plugin.shared.repositories.BaseSettingsRepositoryImpl
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 
 interface SettingsRepository : BaseSettingsRepository {
     val apiKey: Flow<String>
@@ -63,27 +65,28 @@ class SettingsRepositoryImpl(context: Context) : BaseSettingsRepositoryImpl(), S
         }
     }
 
-    override suspend fun setApiKey(value: String) {
-        sharedPreferences.edit { putString(API_KEY_KEY, value) }
+    override suspend fun setApiKey(value: String) = withContext(Dispatchers.IO) {
+        sharedPreferences.edit { putString(API_KEY_KEY, value).commit() }
     }
 
-    override suspend fun setApiHost(value: String) {
-        sharedPreferences.edit { putString(API_HOST_KEY, value) }
+    override suspend fun setApiHost(value: String) = withContext(Dispatchers.IO) {
+        sharedPreferences.edit { putString(API_HOST_KEY, value).commit() }
     }
 
-    override suspend fun setLocationName(value: String) {
+    override suspend fun setLocationName(value: String) = withContext(Dispatchers.IO) {
         sharedPreferences.edit {
             putString(LOCATION_NAME_KEY, value)
             putBoolean(CITY_LOOKUP_FAILED_KEY, false)
+            commit()
         }
     }
 
-    override suspend fun setSelectedIndices(value: String) {
-        sharedPreferences.edit { putString(SELECTED_INDICES_KEY, value) }
+    override suspend fun setSelectedIndices(value: String) = withContext(Dispatchers.IO) {
+        sharedPreferences.edit { putString(SELECTED_INDICES_KEY, value).commit() }
     }
 
-    override suspend fun setCityLookupFailed(value: Boolean) {
-        sharedPreferences.edit { putBoolean(CITY_LOOKUP_FAILED_KEY, value) }
+    override suspend fun setCityLookupFailed(value: Boolean) = withContext(Dispatchers.IO) {
+        sharedPreferences.edit { putBoolean(CITY_LOOKUP_FAILED_KEY, value).commit() }
     }
 
     override suspend fun getBackup(): Map<String, String> {
