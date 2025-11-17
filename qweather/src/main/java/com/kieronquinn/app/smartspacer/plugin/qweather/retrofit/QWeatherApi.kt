@@ -6,14 +6,14 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface QWeatherApi {
-    @GET("v7/indices/1d")
+    @GET("/v7/indices/1d")
     suspend fun getIndices(
         @Query("location") location: String,
         @Query("key") key: String,
         @Query("type") type: String
     ): QWeatherResponse
 
-    @GET("v2/city/lookup")
+    @GET("/geo/v2/city/lookup")
     suspend fun lookupCity(
         @Query("location") location: String,
         @Query("key") key: String
