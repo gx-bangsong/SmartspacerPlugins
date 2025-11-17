@@ -69,6 +69,10 @@ dependencies {
     //Data storage
     ksp "androidx.room:room-compiler:2.5.0"
 
+    // Koin
+    implementation "io.insert-koin:koin-android:3.5.0"
+    implementation "io.insert-koin:koin-core:3.5.0"
+
     // Testing
     testImplementation "org.junit.jupiter:junit-jupiter-api:5.10.0"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.10.0"
