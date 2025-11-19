@@ -66,27 +66,33 @@ class SettingsRepositoryImpl(context: Context) : BaseSettingsRepositoryImpl(), S
     }
 
     override suspend fun setApiKey(value: String) = withContext(Dispatchers.IO) {
-        sharedPreferences.edit { putString(API_KEY_KEY, value).commit() }
+        sharedPreferences.edit().putString(API_KEY_KEY, value).commit()
+        _apiKey.value = value
     }
 
     override suspend fun setApiHost(value: String) = withContext(Dispatchers.IO) {
-        sharedPreferences.edit { putString(API_HOST_KEY, value).commit() }
+        sharedPreferences.edit().putString(API_HOST_KEY, value).commit()
+        _apiHost.value = value
     }
 
     override suspend fun setLocationName(value: String) = withContext(Dispatchers.IO) {
-        sharedPreferences.edit {
+        sharedPreferences.edit().apply {
             putString(LOCATION_NAME_KEY, value)
             putBoolean(CITY_LOOKUP_FAILED_KEY, false)
             commit()
         }
+        _locationName.value = value
+        _cityLookupFailed.value = false
     }
 
     override suspend fun setSelectedIndices(value: String) = withContext(Dispatchers.IO) {
-        sharedPreferences.edit { putString(SELECTED_INDICES_KEY, value).commit() }
+        sharedPreferences.edit().putString(SELECTED_INDICES_KEY, value).commit()
+        _selectedIndices.value = value
     }
 
     override suspend fun setCityLookupFailed(value: Boolean) = withContext(Dispatchers.IO) {
-        sharedPreferences.edit { putBoolean(CITY_LOOKUP_FAILED_KEY, value).commit() }
+        sharedPreferences.edit().putBoolean(CITY_LOOKUP_FAILED_KEY, value).commit()
+        _cityLookupFailed.value = value
     }
 
     override suspend fun getBackup(): Map<String, String> {

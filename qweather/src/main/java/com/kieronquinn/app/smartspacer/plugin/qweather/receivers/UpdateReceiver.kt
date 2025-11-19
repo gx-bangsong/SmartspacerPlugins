@@ -36,8 +36,6 @@ class UpdateReceiver : BroadcastReceiver(), KoinComponent {
 
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                // Delay to allow preferences to save
-                kotlinx.coroutines.delay(500)
                 val apiKey = settingsRepository.apiKey.first()
                 val locationName = settingsRepository.locationName.first()
                 val selectedIndices = settingsRepository.selectedIndices.first()
