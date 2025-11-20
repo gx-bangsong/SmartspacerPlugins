@@ -31,6 +31,7 @@ class UpdateReceiver : BroadcastReceiver(), KoinComponent {
     private val qWeatherClient by inject<QWeatherClient>()
 
     override fun onReceive(context: Context, intent: Intent) {
+        Log.e("QWeatherDebug", "UpdateReceiver 被触发了！！！！") 
         val pendingResult = goAsync()
         val smartspacerId = intent.getStringExtra(EXTRA_SMARTSPACER_ID)
 
