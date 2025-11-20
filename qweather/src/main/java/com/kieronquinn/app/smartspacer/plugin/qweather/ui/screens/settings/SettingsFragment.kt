@@ -1,6 +1,8 @@
 package com.kieronquinn.app.smartspacer.plugin.qweather.ui.screens.settings
 
+import android.content.Intent // 新增导入
 import android.os.Bundle
+import android.util.Log // 新增导入
 import androidx.preference.EditTextPreference
 import androidx.preference.MultiSelectListPreference
 import androidx.preference.Preference
@@ -8,6 +10,7 @@ import androidx.preference.PreferenceFragmentCompat
 import com.kieronquinn.app.smartspacer.plugin.qweather.R
 import com.kieronquinn.app.smartspacer.plugin.qweather.complications.QWeatherComplication
 import com.kieronquinn.app.smartspacer.plugin.qweather.providers.SettingsRepository
+import com.kieronquinn.app.smartspacer.plugin.qweather.receivers.UpdateReceiver // 确保导入你的 Receiver
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerComplicationProvider
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.first
@@ -92,10 +95,20 @@ class SettingsFragment : PreferenceFragmentCompat() {
         }
     }
 
+    // 【关键修改】这里改动了
     private suspend fun triggerUpdate() {
         val context = context ?: return
+        
+        // 1. 通知 Smartspacer 宿主刷新 UI (保持原样)
         withContext(Dispatchers.IO) {
             SmartspacerComplicationProvider.notifyChange(context, QWeatherComplication::class.java)
         }
+
+        // 2. 【新增】手动发送广播，强制唤醒 UpdateReceiver 进行网络请求
+        Log.d("QWeatherSettings", "正在手动触发 UpdateReceiver...")
+        val intent = Intent(context, UpdateReceiver::class.java)
+        // 传入一个标记，告诉 Receiver 这是手动更新（可选）
+        intent.putExtra(UpdateReceiver.EXTRA_SMARTSPACER_ID, "manual_update")
+        context.sendBroadcast(intent)
     }
 }
