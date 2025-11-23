@@ -1,5 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Medication Reminder Plugin</string>
+    <string name="app_name">Medication Reminder</string>
     <string name="settings_title">Medication Reminder Settings</string>
+    <string name="record_dose_title">记录用药情况</string>
+    <string name="action_skip">已跳过</string>
+    <string name="action_taken">已用药</string>
+    <string name="action_snooze">稍后提醒</string>
+    <string name="snooze_duration_minutes">15</string>
 </resources>

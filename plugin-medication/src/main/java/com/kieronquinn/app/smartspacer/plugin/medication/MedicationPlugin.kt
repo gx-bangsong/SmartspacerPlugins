@@ -9,6 +9,7 @@ class MedicationPlugin: SmartspacerPlugin() {
 
     override fun getModule(context: Context) = module {
         single { MedicationDatabase.getDatabase(get()).medicationDao() }
+        single { MedicationDatabase.getDatabase(get()).doseHistoryDao() }
     }
 
 }

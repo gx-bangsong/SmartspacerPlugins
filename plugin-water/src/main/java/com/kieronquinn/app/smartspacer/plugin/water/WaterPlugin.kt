@@ -50,6 +50,7 @@ class WaterPlugin: SmartspacerPlugin() {
     }
 
     override fun getModule(context: Context) = module {
+        single { com.kieronquinn.app.smartspacer.plugin.water.data.WaterDatabase.getDatabase(get()).drinkHistoryDao() }
         single<WaterDataRepository> { WaterDataRepositoryImpl(context) }
         single { WaterScheduler() }
         viewModel { WaterSettingsViewModelImpl(get()) }

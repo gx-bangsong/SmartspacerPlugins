@@ -24,6 +24,11 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".ui.activities.RecordDoseActivity"
+            android:exported="true"
+            android:theme="@android:style/Theme.Material.Light.Dialog.NoActionBar" />
+
         <provider
             android:name=".providers.MedicationProvider"
             android:authorities="${applicationId}.provider.medication"

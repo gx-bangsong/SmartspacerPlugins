@@ -1,15 +1,16 @@
 package com.kieronquinn.app.smartspacer.plugin.medication.providers
 
-import com.kieronquinn.app.smartspacer.plugin.medication.R
-import com.kieronquinn.app.smartspacer.sdk.model.SmartspaceTarget
-import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider
-
 import android.content.ComponentName
 import android.content.Intent
-import com.kieronquinn.app.smartspacer.sdk.model.SmartspaceAction
+import com.kieronquinn.app.smartspacer.plugin.medication.R
 import com.kieronquinn.app.smartspacer.plugin.medication.data.MedicationDao
 import com.kieronquinn.app.smartspacer.plugin.medication.ui.activities.RecordDoseActivity
 import com.kieronquinn.app.smartspacer.plugin.medication.ui.activities.SettingsActivity
+import com.kieronquinn.app.smartspacer.sdk.model.SmartspaceTarget
+import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.TapAction
+import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Text
+import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider
+import com.kieronquinn.app.smartspacer.sdk.utils.TargetTemplate
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.koin.core.component.KoinComponent
@@ -17,6 +18,7 @@ import org.koin.core.component.inject
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import android.graphics.drawable.Icon as AndroidIcon
 
 class MedicationProvider : SmartspacerTargetProvider(), KoinComponent {
 
@@ -36,18 +38,18 @@ class MedicationProvider : SmartspacerTargetProvider(), KoinComponent {
 
                 val intent = Intent(context, RecordDoseActivity::class.java).apply {
                     putExtra("medication_id", medication.id)
+                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 }
 
-                SmartspaceTarget(
-                    smartspaceTargetId = "medication_${medication.id}",
-                    headerAction = SmartspaceAction(
-                        id = "medication_header_${medication.id}",
-                        title = title,
-                        intent = intent
-                    ),
+                TargetTemplate.Basic(
+                    id = "medication_${medication.id}",
+                    componentName = ComponentName(context, MedicationProvider::class.java),
                     featureType = SmartspaceTarget.FEATURE_REMINDER,
-                    componentName = ComponentName(context, MedicationProvider::class.java)
-                )
+                    title = Text(title),
+                    subtitle = Text(""),
+                    icon = com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Icon(AndroidIcon.createWithResource(context, R.drawable.ic_launcher_foreground)),
+                    onClick = TapAction(intent = intent)
+                ).create()
             }
     }
 
