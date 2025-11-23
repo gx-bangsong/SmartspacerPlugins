@@ -18,6 +18,7 @@ interface WaterDataRepository {
 
     fun getDailySchedule(date: LocalDate): DailySchedule?
     fun setDailySchedule(date: LocalDate, schedule: DailySchedule)
+    fun logWaterIntake(amount: Int)
 }
 
 enum class DisplayMode {
@@ -106,5 +107,12 @@ class WaterDataRepositoryImpl(context: Context) : WaterDataRepository {
 
     private fun getScheduleKey(date: LocalDate): String {
         return KEY_SCHEDULE_PREFIX + date.format(dateFormatter)
+    }
+
+    override fun logWaterIntake(amount: Int) {
+        val today = LocalDate.now()
+        val schedule = getDailySchedule(today) ?: return
+        schedule.fulfilledCount++
+        setDailySchedule(today, schedule)
     }
 }

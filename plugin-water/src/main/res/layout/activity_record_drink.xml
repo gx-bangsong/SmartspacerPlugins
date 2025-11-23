@@ -10,21 +10,21 @@
     android:padding="24dp">
 
     <TextView
-        android:id="@+id/record_dose_title"
+        android:id="@+id/record_drink_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:text="@string/record_dose_title"
+        android:text="@string/record_drink_title"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:layout_marginBottom="16dp"/>
 
     <TextView
-        android:id="@+id/text_view_medication_info"
+        android:id="@+id/text_view_drink_info"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        tools:text="Medication Name x2"
+        tools:text="Drink 250ml"
         android:layout_marginBottom="24dp"/>
 
     <LinearLayout
@@ -32,15 +32,6 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center">
-
-        <Button
-            android:id="@+id/button_snooze"
-            style="?attr/materialButtonOutlinedStyle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginEnd="8dp"
-            android:text="@string/action_snooze" />
 
         <Button
             android:id="@+id/button_skip"
@@ -57,7 +48,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginStart="8dp"
-            android:text="@string/action_taken" />
+            android:text="@string/action_drank" />
 
     </LinearLayout>
 

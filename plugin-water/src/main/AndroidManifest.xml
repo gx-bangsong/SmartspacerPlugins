@@ -24,6 +24,11 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".ui.activities.RecordDrinkActivity"
+            android:exported="true"
+            android:theme="@android:style/Theme.Material.Light.Dialog.NoActionBar" />
+
         <provider
             android:name=".providers.WaterProvider"
             android:authorities="${applicationId}.provider.water"

@@ -4,8 +4,11 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.google.gson.Gson
+import com.kieronquinn.app.smartspacer.plugin.medication.data.DoseHistory
+import com.kieronquinn.app.smartspacer.plugin.medication.data.DoseHistoryDao
 import com.kieronquinn.app.smartspacer.plugin.medication.data.MedicationDao
 import com.kieronquinn.app.smartspacer.plugin.medication.databinding.ActivityRecordDoseBinding
+import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import java.util.Calendar
@@ -14,6 +17,7 @@ class RecordDoseActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityRecordDoseBinding
     private val medicationDao by inject<MedicationDao>()
+    private val doseHistoryDao by inject<DoseHistoryDao>()
     private val gson = Gson()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,20 +33,45 @@ class RecordDoseActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             val medication = medicationDao.getById(medicationId) ?: return@launch
-            binding.textViewMedicationName.text = medication.name
+            val medicationInfo = "${medication.name} ${medication.dosage ?: ""}"
+            binding.textViewMedicationInfo.text = medicationInfo
 
             binding.buttonTaken.setOnClickListener {
                 lifecycleScope.launch {
+                    val doseHistory = DoseHistory(
+                        medicationId = medication.id,
+                        timestamp = System.currentTimeMillis(),
+                        status = DoseHistory.Status.TAKEN
+                    )
+                    doseHistoryDao.insert(doseHistory)
                     val nextDoseTs = calculateNextDose(medication.startDate, gson.fromJson(medication.timesOfDay, Array<String>::class.java).toList())
                     medicationDao.update(medication.copy(nextDoseTs = nextDoseTs))
+                    SmartspacerTargetProvider.notifyChange(this@RecordDoseActivity, com.kieronquinn.app.smartspacer.plugin.medication.providers.MedicationProvider::class.java)
                     finish()
                 }
             }
 
             binding.buttonSkip.setOnClickListener {
                 lifecycleScope.launch {
+                    val doseHistory = DoseHistory(
+                        medicationId = medication.id,
+                        timestamp = System.currentTimeMillis(),
+                        status = DoseHistory.Status.SKIPPED
+                    )
+                    doseHistoryDao.insert(doseHistory)
                     val nextDoseTs = calculateNextDose(medication.startDate, gson.fromJson(medication.timesOfDay, Array<String>::class.java).toList())
                     medicationDao.update(medication.copy(nextDoseTs = nextDoseTs))
+                    SmartspacerTargetProvider.notifyChange(this@RecordDoseActivity, com.kieronquinn.app.smartspacer.plugin.medication.providers.MedicationProvider::class.java)
+                    finish()
+                }
+            }
+
+            binding.buttonSnooze.setOnClickListener {
+                lifecycleScope.launch {
+                    val snoozeMinutes = getString(com.kieronquinn.app.smartspacer.plugin.medication.R.string.snooze_duration_minutes).toLong()
+                    val nextDoseTs = System.currentTimeMillis() + snoozeMinutes * 60 * 1000
+                    medicationDao.update(medication.copy(nextDoseTs = nextDoseTs))
+                    SmartspacerTargetProvider.notifyChange(this@RecordDoseActivity, com.kieronquinn.app.smartspacer.plugin.medication.providers.MedicationProvider::class.java)
                     finish()
                 }
             }
