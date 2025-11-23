@@ -4,8 +4,9 @@ import android.content.ComponentName
 import android.content.Intent
 import com.kieronquinn.app.smartspacer.plugin.medication.R
 import com.kieronquinn.app.smartspacer.plugin.medication.data.MedicationDao
-import com.kieronquinn.app.smartspacer.plugin.medication.ui.activities.RecordDoseActivity
+import com.kieronquinn.app.smartspacer.plugin.medication.ui.fragments.RecordDoseFragment
 import com.kieronquinn.app.smartspacer.plugin.medication.ui.activities.SettingsActivity
+import com.kieronquinn.app.smartspacer.plugin.shared.ui.activities.DialogLauncherActivity
 import com.kieronquinn.app.smartspacer.sdk.model.SmartspaceTarget
 import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.TapAction
 import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Text
@@ -36,7 +37,8 @@ class MedicationProvider : SmartspacerTargetProvider(), KoinComponent {
                 val time = timeFormat.format(Date(medication.nextDoseTs))
                 val title = "${medication.name} ${medication.dosage ?: ""} - Take at $time"
 
-                val intent = Intent(context, RecordDoseActivity::class.java).apply {
+                val intent = Intent(context, DialogLauncherActivity::class.java).apply {
+                    putExtra(DialogLauncherActivity.EXTRA_FRAGMENT_CLASS, RecordDoseFragment::class.java.name)
                     putExtra("medication_id", medication.id)
                     addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 }

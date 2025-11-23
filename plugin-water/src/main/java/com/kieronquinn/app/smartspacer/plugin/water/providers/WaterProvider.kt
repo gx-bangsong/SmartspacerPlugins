@@ -5,15 +5,18 @@ import android.content.Intent
 import com.kieronquinn.app.smartspacer.plugin.water.R
 import com.kieronquinn.app.smartspacer.plugin.water.repositories.DisplayMode
 import com.kieronquinn.app.smartspacer.plugin.water.repositories.WaterDataRepository
-import com.kieronquinn.app.smartspacer.plugin.water.ui.activities.RecordDrinkActivity
+import com.kieronquinn.app.smartspacer.plugin.water.ui.fragments.RecordDrinkFragment
+import com.kieronquinn.app.smartspacer.plugin.shared.ui.activities.DialogLauncherActivity
 import com.kieronquinn.app.smartspacer.sdk.model.SmartspaceTarget
 import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.TapAction
 import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Text
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider
 import com.kieronquinn.app.smartspacer.sdk.utils.TargetTemplate
+import kotlinx.coroutines.runBlocking
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import java.time.LocalDate
+import kotlin.math.ceil
 import android.graphics.drawable.Icon as AndroidIcon
 
 class WaterProvider : SmartspacerTargetProvider(), KoinComponent {
@@ -23,22 +26,14 @@ class WaterProvider : SmartspacerTargetProvider(), KoinComponent {
     override fun getSmartspaceTargets(smartspacerId: String): List<SmartspaceTarget> {
         val context = this.context ?: return emptyList()
         val today = LocalDate.now()
-        val schedule = waterDataRepository.getDailySchedule(today) ?: return emptyList()
+        val drinks = runBlocking { waterDataRepository.getDrinksForDate(today) }
+        val fulfilledCount = drinks.size
+        val cupsTotal = ceil(waterDataRepository.dailyGoalMl.toDouble() / waterDataRepository.cupMl).toInt()
 
-        val text = when (waterDataRepository.displayMode) {
-            DisplayMode.PROGRESS -> "Water: ${schedule.fulfilledCount} / ${schedule.cupsTotal} cups"
-            DisplayMode.REMINDER -> "Time for a glass of water!"
-            DisplayMode.DYNAMIC -> {
-                val nextReminder = schedule.scheduledTimes.getOrNull(schedule.fulfilledCount)
-                if (nextReminder != null && nextReminder <= System.currentTimeMillis()) {
-                    "Time for a glass of water!"
-                } else {
-                    "Water: ${schedule.fulfilledCount} / ${schedule.cupsTotal} cups"
-                }
-            }
-        }
+        val text = "Water: $fulfilledCount / $cupsTotal cups"
 
-        val intent = Intent(context, RecordDrinkActivity::class.java).apply {
+        val intent = Intent(context, DialogLauncherActivity::class.java).apply {
+            putExtra(DialogLauncherActivity.EXTRA_FRAGMENT_CLASS, RecordDrinkFragment::class.java.name)
             putExtra("amount", waterDataRepository.cupMl)
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         }

@@ -1,130 +1,145 @@
 package com.kieronquinn.app.smartspacer.plugin.water.ui.screens.settings
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.*
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Button
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.Slider
+import androidx.compose.material3.Switch
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import com.google.android.material.timepicker.MaterialTimePicker
+import com.google.android.material.timepicker.TimeFormat
 import com.kieronquinn.app.smartspacer.plugin.water.repositories.DisplayMode
 
 @Composable
 fun WaterSettingsScreen(viewModel: WaterSettingsViewModel) {
-    val dailyGoalMl by viewModel.dailyGoalMl.collectAsState()
-    val cupMl by viewModel.cupMl.collectAsState()
-    val activeStartMinutes by viewModel.activeStartMinutes.collectAsState()
-    val activeEndMinutes by viewModel.activeEndMinutes.collectAsState()
-    val displayMode by viewModel.displayMode.collectAsState()
-    val resetAtActiveStart by viewModel.resetAtActiveStart.collectAsState()
-    val smartAdjust by viewModel.smartAdjust.collectAsState()
-    val snoozeMinutes by viewModel.snoozeMinutes.collectAsState()
+    val uiState by viewModel.uiState.collectAsState(viewModel.initialState)
+    val context = LocalContext.current as androidx.fragment.app.FragmentActivity
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-            .padding(16.dp)
-    ) {
-        Text("Water Reminder Settings", style = MaterialTheme.typography.headlineMedium)
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Daily Goal
-        OutlinedTextField(
-            value = dailyGoalMl.toString(),
-            onValueChange = { viewModel.setDailyGoalMl(it.toIntOrNull() ?: 0) },
-            label = { Text("Daily Goal (ml)") },
-            modifier = Modifier.fillMaxWidth()
+    Column(modifier = Modifier.padding(16.dp)) {
+        Text("Daily Goal: ${uiState.dailyGoalMl}ml")
+        Slider(
+            value = uiState.dailyGoalMl.toFloat(),
+            onValueChange = { viewModel.onDailyGoalChanged(it) },
+            valueRange = 500f..5000f,
+            steps = 9
         )
-        Spacer(modifier = Modifier.height(16.dp))
 
-        // Cup Size
-        OutlinedTextField(
-            value = cupMl.toString(),
-            onValueChange = { viewModel.setCupMl(it.toIntOrNull() ?: 0) },
-            label = { Text("Cup Size (ml)") },
-            modifier = Modifier.fillMaxWidth()
+        Text("Cup Size: ${uiState.cupSizeMl}ml")
+        Slider(
+            value = uiState.cupSizeMl.toFloat(),
+            onValueChange = { viewModel.onCupSizeChanged(it) },
+            valueRange = 100f..1000f,
+            steps = 9
         )
-        Spacer(modifier = Modifier.height(16.dp))
 
-        // Active Hours
-        // Note: Time pickers would require a more complex implementation, using text fields for now
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-            OutlinedTextField(
-                value = minutesToTime(activeStartMinutes),
-                onValueChange = { viewModel.setActiveStartMinutes(timeToMinutes(it)) },
-                label = { Text("Active Hours Start") }
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Text("Start Time: ${uiState.startTimeHour}:${uiState.startTimeMinute}")
+            Spacer(Modifier.width(8.dp))
+            Button(onClick = {
+                MaterialTimePicker.Builder()
+                    .setTimeFormat(TimeFormat.CLOCK_24H)
+                    .setHour(uiState.startTimeHour)
+                    .setMinute(uiState.startTimeMinute)
+                    .build()
+                    .apply {
+                        addOnPositiveButtonClickListener {
+                            viewModel.onStartTimeChanged(hour, minute)
+                        }
+                    }
+                    .show(context.supportFragmentManager, "start_time_picker")
+            }) {
+                Text("Change")
+            }
+        }
+
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Text("End Time: ${uiState.endTimeHour}:${uiState.endTimeMinute}")
+            Spacer(Modifier.width(8.dp))
+            Button(onClick = {
+                MaterialTimePicker.Builder()
+                    .setTimeFormat(TimeFormat.CLOCK_24H)
+                    .setHour(uiState.endTimeHour)
+                    .setMinute(uiState.endTimeMinute)
+                    .build()
+                    .apply {
+                        addOnPositiveButtonClickListener {
+                            viewModel.onEndTimeChanged(hour, minute)
+                        }
+                    }
+                    .show(context.supportFragmentManager, "end_time_picker")
+            }) {
+                Text("Change")
+            }
+        }
+
+        var expanded by remember { mutableStateOf(false) }
+        Text("Display Mode: ${uiState.displayMode}")
+        Button(onClick = { expanded = true }) {
+            Text("Change")
+        }
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false }
+        ) {
+            DisplayMode.values().forEach {
+                DropdownMenuItem(onClick = {
+                    viewModel.onDisplayModeChanged(it)
+                    expanded = false
+                }, text = { Text(it.name) })
+            }
+        }
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text("Reset at Active Start")
+            Spacer(Modifier.weight(1f))
+            Switch(
+                checked = uiState.resetAtActiveStart,
+                onCheckedChange = { viewModel.onResetAtActiveStartChanged(it) }
             )
-            OutlinedTextField(
-                value = minutesToTime(activeEndMinutes),
-                onValueChange = { viewModel.setActiveEndMinutes(timeToMinutes(it)) },
-                label = { Text("Active Hours End") }
+        }
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text("Smart Adjust")
+            Spacer(Modifier.weight(1f))
+            Switch(
+                checked = uiState.smartAdjust,
+                onCheckedChange = { viewModel.onSmartAdjustChanged(it) }
             )
         }
-        Spacer(modifier = Modifier.height(16.dp))
 
-        // Display Mode
-        Text("Display Mode", style = MaterialTheme.typography.titleMedium)
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            RadioButton(selected = displayMode == DisplayMode.PROGRESS, onClick = { viewModel.setDisplayMode(DisplayMode.PROGRESS) })
-            Text("Progress")
-            RadioButton(selected = displayMode == DisplayMode.REMINDER, onClick = { viewModel.setDisplayMode(DisplayMode.REMINDER) })
-            Text("Reminder")
-            RadioButton(selected = displayMode == DisplayMode.DYNAMIC, onClick = { viewModel.setDisplayMode(DisplayMode.DYNAMIC) })
-            Text("Dynamic")
-        }
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Toggles
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Switch(checked = resetAtActiveStart, onCheckedChange = { viewModel.setResetAtActiveStart(it) })
-            Spacer(modifier = Modifier.width(8.dp))
-            Text("Reset at start of active hours")
-        }
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Switch(checked = smartAdjust, onCheckedChange = { viewModel.setSmartAdjust(it) })
-            Spacer(modifier = Modifier.width(8.dp))
-            Text("Smart-adjust schedule")
-        }
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Snooze Minutes
-        OutlinedTextField(
-            value = snoozeMinutes.toString(),
-            onValueChange = { viewModel.setSnoozeMinutes(it.toIntOrNull() ?: 0) },
-            label = { Text("Snooze Duration (minutes)") },
-            modifier = Modifier.fillMaxWidth()
+        Text("Snooze: ${uiState.snoozeMinutes} minutes")
+        Slider(
+            value = uiState.snoozeMinutes.toFloat(),
+            onValueChange = { viewModel.onSnoozeMinutesChanged(it) },
+            valueRange = 5f..60f,
+            steps = 11
         )
 
-        Spacer(modifier = Modifier.height(24.dp))
-        Text("Developer / Debug", style = MaterialTheme.typography.headlineSmall)
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Button(onClick = { viewModel.simulateReminder() }) {
-            Text("Simulate Reminder Now")
+        Button(onClick = { viewModel.saveChanges(context) }) {
+            Text("Save")
         }
-        Button(onClick = { viewModel.clearTodaySchedule() }) {
-            Text("Clear Today's Schedule")
-        }
-    }
-}
-
-private fun minutesToTime(minutes: Int): String {
-    val hours = minutes / 60
-    val mins = minutes % 60
-    return String.format("%02d:%02d", hours, mins)
-}
-
-private fun timeToMinutes(time: String): Int {
-    return try {
-        val parts = time.split(":")
-        val hours = parts[0].toInt()
-        val minutes = parts[1].toInt()
-        hours * 60 + minutes
-    } catch (e: Exception) {
-        0
     }
 }

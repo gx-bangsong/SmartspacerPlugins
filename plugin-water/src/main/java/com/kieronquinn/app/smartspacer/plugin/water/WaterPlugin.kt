@@ -5,12 +5,8 @@ import com.kieronquinn.app.smartspacer.plugin.shared.SmartspacerPlugin
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.os.Build
-import androidx.work.ExistingWorkPolicy
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkManager
 import com.kieronquinn.app.smartspacer.plugin.water.repositories.WaterDataRepository
 import com.kieronquinn.app.smartspacer.plugin.water.repositories.WaterDataRepositoryImpl
-import com.kieronquinn.app.smartspacer.plugin.water.scheduling.DailyScheduleWorker
 import com.kieronquinn.app.smartspacer.plugin.water.scheduling.WaterScheduler
 import com.kieronquinn.app.smartspacer.plugin.water.ui.screens.settings.WaterSettingsViewModel
 import com.kieronquinn.app.smartspacer.plugin.water.ui.screens.settings.WaterSettingsViewModelImpl
@@ -27,12 +23,6 @@ class WaterPlugin: SmartspacerPlugin() {
     override fun onCreate() {
         super.onCreate()
         createNotificationChannel(this)
-        //Start the daily scheduler
-        val workManager = WorkManager.getInstance(this)
-        val request = OneTimeWorkRequestBuilder<DailyScheduleWorker>()
-            .setInitialDelay(1, TimeUnit.MINUTES) //Start in 1 minute for first run
-            .build()
-        workManager.enqueueUniqueWork("DailyScheduleWorker", ExistingWorkPolicy.KEEP, request)
     }
 
     private fun createNotificationChannel(context: Context) {
@@ -51,7 +41,7 @@ class WaterPlugin: SmartspacerPlugin() {
 
     override fun getModule(context: Context) = module {
         single { com.kieronquinn.app.smartspacer.plugin.water.data.WaterDatabase.getDatabase(get()).drinkHistoryDao() }
-        single<WaterDataRepository> { WaterDataRepositoryImpl(context) }
+        single<WaterDataRepository> { WaterDataRepositoryImpl(context, get()) }
         single { WaterScheduler() }
         viewModel { WaterSettingsViewModelImpl(get()) }
         factory<WaterSettingsViewModel> { get<WaterSettingsViewModelImpl>() }

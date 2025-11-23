@@ -1,132 +1,136 @@
 package com.kieronquinn.app.smartspacer.plugin.water.ui.screens.settings
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kieronquinn.app.smartspacer.plugin.water.repositories.DisplayMode
 import com.kieronquinn.app.smartspacer.plugin.water.repositories.WaterDataRepository
+import com.kieronquinn.app.smartspacer.plugin.water.scheduling.WaterScheduler
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import android.util.Log
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
-interface WaterSettingsViewModel {
-    val dailyGoalMl: StateFlow<Int>
-    val cupMl: StateFlow<Int>
-    val activeStartMinutes: StateFlow<Int>
-    val activeEndMinutes: StateFlow<Int>
-    val displayMode: StateFlow<DisplayMode>
-    val resetAtActiveStart: StateFlow<Boolean>
-    val smartAdjust: StateFlow<Boolean>
-    val snoozeMinutes: StateFlow<Int>
+abstract class WaterSettingsViewModel : ViewModel() {
+    abstract val uiState: Flow<UiState>
 
-    fun setDailyGoalMl(value: Int)
-    fun setCupMl(value: Int)
-    fun setActiveStartMinutes(value: Int)
-    fun setActiveEndMinutes(value: Int)
-    fun setDisplayMode(value: DisplayMode)
-    fun setResetAtActiveStart(value: Boolean)
-    fun setSmartAdjust(value: Boolean)
-    fun setSnoozeMinutes(value: Int)
+    val initialState: UiState
+        get() = UiState(0, 0, 0, 0, 0, 0, DisplayMode.DYNAMIC, false, false, 0)
 
-    // Debug functions
-    fun simulateReminder()
-    fun clearTodaySchedule()
+    abstract fun onDailyGoalChanged(newValue: Float)
+    abstract fun onCupSizeChanged(newValue: Float)
+    abstract fun onStartTimeChanged(hour: Int, minute: Int)
+    abstract fun onEndTimeChanged(hour: Int, minute: Int)
+    abstract fun onDisplayModeChanged(displayMode: DisplayMode)
+    abstract fun onResetAtActiveStartChanged(checked: Boolean)
+    abstract fun onSmartAdjustChanged(checked: Boolean)
+    abstract fun onSnoozeMinutesChanged(newValue: Float)
+    abstract fun saveChanges(context: Context)
+
+    data class UiState(
+        val dailyGoalMl: Int,
+        val cupSizeMl: Int,
+        val startTimeHour: Int,
+        val startTimeMinute: Int,
+        val endTimeHour: Int,
+        val endTimeMinute: Int,
+        val displayMode: DisplayMode,
+        val resetAtActiveStart: Boolean,
+        val smartAdjust: Boolean,
+        val snoozeMinutes: Int
+    )
 }
 
 class WaterSettingsViewModelImpl(
     private val waterDataRepository: WaterDataRepository
-) : ViewModel(), WaterSettingsViewModel {
+) : WaterSettingsViewModel(), KoinComponent {
 
-    private val _dailyGoalMl = MutableStateFlow(waterDataRepository.dailyGoalMl)
-    override val dailyGoalMl: StateFlow<Int> = _dailyGoalMl.asStateFlow()
+    private val waterScheduler by inject<WaterScheduler>()
 
-    private val _cupMl = MutableStateFlow(waterDataRepository.cupMl)
-    override val cupMl: StateFlow<Int> = _cupMl.asStateFlow()
+    private val _uiState = MutableStateFlow(
+        UiState(
+            dailyGoalMl = waterDataRepository.dailyGoalMl,
+            cupSizeMl = waterDataRepository.cupMl,
+            startTimeHour = waterDataRepository.activeStartMinutes / 60,
+            startTimeMinute = waterDataRepository.activeStartMinutes % 60,
+            endTimeHour = waterDataRepository.activeEndMinutes / 60,
+            endTimeMinute = waterDataRepository.activeEndMinutes % 60,
+            displayMode = waterDataRepository.displayMode,
+            resetAtActiveStart = waterDataRepository.resetAtActiveStart,
+            smartAdjust = waterDataRepository.smartAdjust,
+            snoozeMinutes = waterDataRepository.snoozeMinutes
+        )
+    )
+    override val uiState = _uiState.asStateFlow()
 
-    private val _activeStartMinutes = MutableStateFlow(waterDataRepository.activeStartMinutes)
-    override val activeStartMinutes: StateFlow<Int> = _activeStartMinutes.asStateFlow()
-
-    private val _activeEndMinutes = MutableStateFlow(waterDataRepository.activeEndMinutes)
-    override val activeEndMinutes: StateFlow<Int> = _activeEndMinutes.asStateFlow()
-
-    private val _displayMode = MutableStateFlow(waterDataRepository.displayMode)
-    override val displayMode: StateFlow<DisplayMode> = _displayMode.asStateFlow()
-
-    private val _resetAtActiveStart = MutableStateFlow(waterDataRepository.resetAtActiveStart)
-    override val resetAtActiveStart: StateFlow<Boolean> = _resetAtActiveStart.asStateFlow()
-
-    private val _smartAdjust = MutableStateFlow(waterDataRepository.smartAdjust)
-    override val smartAdjust: StateFlow<Boolean> = _smartAdjust.asStateFlow()
-
-    private val _snoozeMinutes = MutableStateFlow(waterDataRepository.snoozeMinutes)
-    override val snoozeMinutes: StateFlow<Int> = _snoozeMinutes.asStateFlow()
-
-    override fun setDailyGoalMl(value: Int) {
+    override fun onDailyGoalChanged(newValue: Float) {
         viewModelScope.launch {
-            waterDataRepository.dailyGoalMl = value
-            _dailyGoalMl.value = value
+            _uiState.emit(uiState.value.copy(dailyGoalMl = newValue.toInt()))
         }
     }
 
-    override fun setCupMl(value: Int) {
+    override fun onCupSizeChanged(newValue: Float) {
         viewModelScope.launch {
-            waterDataRepository.cupMl = value
-            _cupMl.value = value
+            _uiState.emit(uiState.value.copy(cupSizeMl = newValue.toInt()))
         }
     }
 
-    override fun setActiveStartMinutes(value: Int) {
+    override fun onStartTimeChanged(hour: Int, minute: Int) {
         viewModelScope.launch {
-            waterDataRepository.activeStartMinutes = value
-            _activeStartMinutes.value = value
+            _uiState.emit(uiState.value.copy(startTimeHour = hour, startTimeMinute = minute))
         }
     }
 
-    override fun setActiveEndMinutes(value: Int) {
+    override fun onEndTimeChanged(hour: Int, minute: Int) {
         viewModelScope.launch {
-            waterDataRepository.activeEndMinutes = value
-            _activeEndMinutes.value = value
+            _uiState.emit(uiState.value.copy(endTimeHour = hour, endTimeMinute = minute))
         }
     }
 
-    override fun setDisplayMode(value: DisplayMode) {
+    override fun onDisplayModeChanged(displayMode: DisplayMode) {
         viewModelScope.launch {
-            waterDataRepository.displayMode = value
-            _displayMode.value = value
+            _uiState.emit(uiState.value.copy(displayMode = displayMode))
         }
     }
 
-    override fun setResetAtActiveStart(value: Boolean) {
+    override fun onResetAtActiveStartChanged(checked: Boolean) {
         viewModelScope.launch {
-            waterDataRepository.resetAtActiveStart = value
-            _resetAtActiveStart.value = value
+            _uiState.emit(uiState.value.copy(resetAtActiveStart = checked))
         }
     }
 
-    override fun setSmartAdjust(value: Boolean) {
+    override fun onSmartAdjustChanged(checked: Boolean) {
         viewModelScope.launch {
-            waterDataRepository.smartAdjust = value
-            _smartAdjust.value = value
+            _uiState.emit(uiState.value.copy(smartAdjust = checked))
         }
     }
 
-    override fun setSnoozeMinutes(value: Int) {
+    override fun onSnoozeMinutesChanged(newValue: Float) {
         viewModelScope.launch {
-            waterDataRepository.snoozeMinutes = value
-            _snoozeMinutes.value = value
+            _uiState.emit(uiState.value.copy(snoozeMinutes = newValue.toInt()))
         }
     }
 
-    override fun simulateReminder() {
-        // Logic to trigger a notification will be added here
-        Log.d("Debug", "Simulate Reminder clicked")
-    }
+    override fun saveChanges(context: Context) {
+        waterDataRepository.dailyGoalMl = uiState.value.dailyGoalMl
+        waterDataRepository.cupMl = uiState.value.cupSizeMl
+        waterDataRepository.activeStartMinutes = uiState.value.startTimeHour * 60 + uiState.value.startTimeMinute
+        waterDataRepository.activeEndMinutes = uiState.value.endTimeHour * 60 + uiState.value.endTimeMinute
+        waterDataRepository.displayMode = uiState.value.displayMode
+        waterDataRepository.resetAtActiveStart = uiState.value.resetAtActiveStart
+        waterDataRepository.smartAdjust = uiState.value.smartAdjust
+        waterDataRepository.snoozeMinutes = uiState.value.snoozeMinutes
 
-    override fun clearTodaySchedule() {
-        viewModelScope.launch {
-            waterDataRepository.setDailySchedule(java.time.LocalDate.now(), com.kieronquinn.app.smartspacer.plugin.water.repositories.DailySchedule("", emptyList(), emptyList(), 0, 0))
-            Log.d("Debug", "Cleared today's schedule")
-        }
+        val today = java.time.LocalDate.now()
+        val totalCups = kotlin.math.ceil(waterDataRepository.dailyGoalMl.toDouble() / waterDataRepository.cupMl).toInt()
+        val schedule = waterScheduler.computeDailySchedule(
+            today,
+            waterDataRepository.activeStartMinutes,
+            waterDataRepository.activeEndMinutes,
+            totalCups
+        )
+        waterScheduler.scheduleAlarmsForDate(context, schedule)
     }
 }
