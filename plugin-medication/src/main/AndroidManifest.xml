@@ -24,10 +24,6 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".ui.activities.RecordDoseActivity"
-            android:exported="true"
-            android:theme="@style/Theme.AppCompat.Light.Dialog.Alert" />
 
         <provider
             android:name=".providers.MedicationProvider"
