@@ -27,7 +27,7 @@
         <activity
             android:name=".ui.activities.RecordDrinkActivity"
             android:exported="true"
-            android:theme="@android:style/Theme.Material.Light.Dialog.NoActionBar" />
+            android:theme="@style/Theme.AppCompat.Light.Dialog.Alert" />
 
         <provider
             android:name=".providers.WaterProvider"
