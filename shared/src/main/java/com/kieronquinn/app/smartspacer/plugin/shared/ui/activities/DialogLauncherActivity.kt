@@ -18,11 +18,7 @@ class DialogLauncherActivity : AppCompatActivity() {
             val fragment = fragmentClass.newInstance()
             fragment.arguments = intent.extras
             fragment.show(supportFragmentManager, "dialog_fragment")
-        } catch (e: ClassNotFoundException) {
-            finish()
-        } catch (e: InstantiationException) {
-            finish()
-        } catch (e: IllegalAccessException) {
+        } catch (e: Exception) {
             finish()
         }
     }

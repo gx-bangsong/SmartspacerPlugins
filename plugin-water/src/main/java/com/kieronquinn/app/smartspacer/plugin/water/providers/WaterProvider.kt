@@ -16,6 +16,7 @@ import kotlinx.coroutines.runBlocking
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import java.time.LocalDate
+import java.time.LocalTime
 import kotlin.math.ceil
 import android.graphics.drawable.Icon as AndroidIcon
 
@@ -30,7 +31,25 @@ class WaterProvider : SmartspacerTargetProvider(), KoinComponent {
         val fulfilledCount = drinks.size
         val cupsTotal = ceil(waterDataRepository.dailyGoalMl.toDouble() / waterDataRepository.cupMl).toInt()
 
-        val text = "Water: $fulfilledCount / $cupsTotal cups"
+        val activeStart = LocalTime.ofSecondOfDay(waterDataRepository.activeStartMinutes * 60L)
+        val activeEnd = LocalTime.ofSecondOfDay(waterDataRepository.activeEndMinutes * 60L)
+        val now = LocalTime.now()
+
+        val text = if (now.isBefore(activeStart) || now.isAfter(activeEnd)) {
+            // Outside active hours, show progress
+            "Water: $fulfilledCount / $cupsTotal cups"
+        } else {
+            // Inside active hours, calculate next reminder
+            val activeDuration = (waterDataRepository.activeEndMinutes - waterDataRepository.activeStartMinutes).toLong()
+            val interval = activeDuration / cupsTotal
+            val nextDrinkTime = activeStart.plusMinutes(interval * (fulfilledCount + 1))
+
+            if (now.isAfter(nextDrinkTime)) {
+                "Time for a glass of water!"
+            } else {
+                "Water: $fulfilledCount / $cupsTotal cups"
+            }
+        }
 
         val intent = Intent(context, DialogLauncherActivity::class.java).apply {
             putExtra(DialogLauncherActivity.EXTRA_FRAGMENT_CLASS, RecordDrinkFragment::class.java.name)

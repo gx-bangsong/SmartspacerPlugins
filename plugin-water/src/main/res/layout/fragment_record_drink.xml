@@ -3,9 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_gravity="center"
-    android:layout_margin="16dp"
-    android:background="?android:attr/colorBackground"
     android:orientation="vertical"
     android:padding="24dp">
 
@@ -13,17 +10,17 @@
         android:id="@+id/record_drink_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:text="@string/record_drink_title"
-        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:layout_gravity="start"
+        android:text="@string/water_record_drink"
+        android:textAppearance="?attr/textAppearanceHeadlineSmall"
         android:layout_marginBottom="16dp"/>
 
     <TextView
         android:id="@+id/text_view_drink_info"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_gravity="start"
+        android:textAppearance="?attr/textAppearanceBodyMedium"
         tools:text="Drink 250ml"
         android:layout_marginBottom="24dp"/>
 

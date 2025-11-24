@@ -6,6 +6,6 @@
         <activity
             android:name="com.kieronquinn.app.smartspacer.plugin.shared.ui.activities.DialogLauncherActivity"
             android:exported="true"
-            android:theme="@style/Theme.Smartspacer.Transparent" />
+            android:theme="@style/Theme.Smartspacer.Dialog" />
     </application>
 </manifest>
