@@ -39,7 +39,7 @@ class MedicationProvider : SmartspacerTargetProvider(), KoinComponent {
 
                 val intent = Intent(context, DialogLauncherActivity::class.java).apply {
                     putExtra(DialogLauncherActivity.EXTRA_FRAGMENT_CLASS, RecordDoseFragment::class.java.name)
-                    putExtra("medication_id", medication.id)
+                    putExtra("medicationId", medication.id)
                     addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 }
 

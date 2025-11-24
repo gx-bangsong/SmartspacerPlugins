@@ -3,6 +3,8 @@
     <string name="app_name">Water Reminder Plugin</string>
     <string name="settings_title">Water Reminder Settings</string>
     <string name="record_drink_title">记录喝水情况</string>
+    <string name="water_record_drink">记录喝水</string>
     <string name="action_skip">跳过</string>
     <string name="action_drank">已喝</string>
+    <string name="water_record_success">喝水记录成功</string>
 </resources>
