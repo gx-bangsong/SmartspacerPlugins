@@ -6,6 +6,7 @@ import androidx.fragment.app.FragmentActivity
 import com.kieronquinn.app.smartspacer.plugin.water.ui.screens.settings.WaterSettingsScreen
 import com.kieronquinn.app.smartspacer.plugin.water.ui.screens.settings.WaterSettingsViewModel
 import com.kieronquinn.app.smartspacer.plugin.water.ui.screens.settings.WaterSettingsViewModelImpl
+import com.kieronquinn.app.smartspacer.plugin.water.ui.theme.WaterTheme
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SettingsActivity : FragmentActivity() {
@@ -15,7 +16,9 @@ class SettingsActivity : FragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            WaterSettingsScreen(viewModel)
+            WaterTheme {
+                WaterSettingsScreen(viewModel)
+            }
         }
     }
 
