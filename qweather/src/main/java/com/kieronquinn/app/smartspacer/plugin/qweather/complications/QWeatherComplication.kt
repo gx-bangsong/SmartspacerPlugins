@@ -11,17 +11,13 @@ import com.kieronquinn.app.smartspacer.plugin.qweather.R
 import com.kieronquinn.app.smartspacer.plugin.qweather.providers.QWeatherRepository
 import com.kieronquinn.app.smartspacer.plugin.qweather.providers.SettingsRepository
 import com.kieronquinn.app.smartspacer.plugin.qweather.providers.getBlocking
-import com.kieronquinn.app.smartspacer.plugin.qweather.receivers.UpdateReceiver
 import com.kieronquinn.app.smartspacer.plugin.qweather.ui.activities.SettingsActivity
+import com.kieronquinn.app.smartspacer.plugin.qweather.utils.AdviceGenerator
 import com.kieronquinn.app.smartspacer.sdk.model.SmartspaceAction
-import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Icon
-import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.TapAction
-import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Text
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerComplicationProvider
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.koin.android.ext.android.inject
-import java.util.concurrent.TimeUnit
 
 @RequiresApi(Build.VERSION_CODES.O)
 class QWeatherComplication : SmartspacerComplicationProvider() {
@@ -49,26 +45,59 @@ class QWeatherComplication : SmartspacerComplicationProvider() {
             return listOf(getSetupAction("Loading weather data..."))
         }
 
-        val (primaryText, secondaryText) = com.kieronquinn.app.smartspacer.plugin.qweather.utils.AdviceGenerator.generateSummaryAdvice(weatherData.daily)
+        val actions = mutableListOf<SmartspaceAction>()
 
-        val summaryAction = SmartspaceAction(
-            id = "qweather_summary",
-            title = primaryText,
-            subtitle = secondaryText,
-            icon = AndroidIcon.createWithResource(provideContext(), R.drawable.ic_launcher_foreground),
-            pendingIntent = PendingIntent.getActivity(
-                provideContext(),
-                0,
-                Intent(),
-                PendingIntent.FLAG_IMMUTABLE
+        // Generate and add activity advice action
+        val activityAdvice = AdviceGenerator.generateActivityAdvice(weatherData.daily)
+        if (activityAdvice != null) {
+            actions.add(
+                SmartspaceAction(
+                    id = "qweather_activity_summary",
+                    title = "生活建议",
+                    subtitle = activityAdvice,
+                    icon = AndroidIcon.createWithResource(provideContext(), R.drawable.ic_launcher_foreground),
+                    pendingIntent = PendingIntent.getActivity(
+                        provideContext(),
+                        1, // Use different request code to avoid conflicts
+                        Intent(provideContext(), SettingsActivity::class.java).apply {
+                            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        },
+                        PendingIntent.FLAG_IMMUTABLE
+                    )
+                )
             )
-        )
+        }
 
-        return listOf(summaryAction)
+        // Generate and add status advice action
+        val statusAdvice = AdviceGenerator.generateStatusAdvice(weatherData.daily)
+        if (statusAdvice != null) {
+            actions.add(
+                SmartspaceAction(
+                    id = "qweather_status_summary",
+                    title = "状态摘要",
+                    subtitle = statusAdvice,
+                    icon = AndroidIcon.createWithResource(provideContext(), R.drawable.ic_launcher_foreground),
+                    pendingIntent = PendingIntent.getActivity(
+                        provideContext(),
+                        2, // Use different request code
+                        Intent(provideContext(), SettingsActivity::class.java).apply {
+                            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        },
+                        PendingIntent.FLAG_IMMUTABLE
+                    )
+                )
+            )
+        }
+
+        // If no actions could be generated, show loading state
+        if (actions.isEmpty()){
+             return listOf(getSetupAction("Loading weather data..."))
+        }
+
+        return actions
     }
 
     private fun getSetupAction(secondaryText: String = "Tap to configure"): SmartspaceAction {
-        // 确保 SmartspaceAction.Builder 被正确导入
         return SmartspaceAction(
             id ="qweather_setup",
             title = "Set up QWeather",
