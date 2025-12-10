@@ -4,6 +4,44 @@ import com.kieronquinn.app.smartspacer.plugin.qweather.data.Daily
 
 object AdviceGenerator {
 
+    fun generateSummaryAdvice(dailyList: List<Daily>): Pair<String, String> {
+        val suitable = mutableListOf<String>()
+        val unsuitable = mutableListOf<String>()
+
+        val suitableKeywords = setOf("适宜", "良好", "舒适", "需要", "较舒适", "极不易发", "基本适宜")
+        val unsuitableKeywords = setOf("不宜", "不适宜", "较差", "易发", "较易发", "较不宜")
+
+        for (daily in dailyList) {
+            val activity = daily.name.replace("指数", "")
+            when {
+                suitableKeywords.any { daily.category.contains(it) } -> suitable.add(activity)
+                unsuitableKeywords.any { daily.category.contains(it) } -> unsuitable.add(activity)
+            }
+        }
+
+        val summary = StringBuilder()
+        if (suitable.isNotEmpty()) {
+            summary.append("宜: ${suitable.joinToString(" ")}")
+        }
+        if (unsuitable.isNotEmpty()) {
+            if (summary.isNotEmpty()) summary.append(" ")
+            summary.append("不宜: ${unsuitable.joinToString(" ")}")
+        }
+
+        if (summary.isEmpty()) {
+            // Fallback to the first item if no summary can be generated
+            val firstItem = dailyList.firstOrNull()
+            return if (firstItem != null) {
+                Pair("${firstItem.name}: ${firstItem.category}", firstItem.text)
+            } else {
+                Pair("QWeather", "No data available")
+            }
+        }
+
+        return Pair("生活指数", summary.toString())
+    }
+
+    // Kept for reference, but new logic in generateSummaryAdvice is preferred.
     private fun shortenAdvice(daily: Daily): String {
         return when (daily.name) {
             "化妆指数" -> daily.category
@@ -15,17 +53,7 @@ object AdviceGenerator {
                 val result = listOfNotNull(spf, pa).joinToString(", ")
                 if (result.isNotBlank()) result else daily.text
             }
-            else -> {
-                val goodKeywords = setOf("适宜", "良好", "舒适", "需要", "较舒适")
-                val badKeywords = setOf("不宜", "不适宜", "较差", "易发", "较易发", "较少开启")
-                goodKeywords.forEach {
-                    if (daily.category.contains(it)) return "[宜：]${daily.text}"
-                }
-                badKeywords.forEach {
-                    if (daily.category.contains(it)) return "[不宜：]${daily.text}"
-                }
-                daily.text
-            }
+            else -> daily.category
         }
     }
 

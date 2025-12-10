@@ -44,30 +44,27 @@ class QWeatherComplication : SmartspacerComplicationProvider() {
         }
 
         val weatherData = runBlocking { qWeatherRepository.weatherData.first() }
-        val previousWeatherData = runBlocking { qWeatherRepository.previousWeatherData.first() }
 
-        if (weatherData == null) {
+        if (weatherData == null || weatherData.daily.isEmpty()) {
             return listOf(getSetupAction("Loading weather data..."))
         }
 
-        return weatherData.daily.map { daily ->
-            val previousDaily = previousWeatherData?.daily?.find { it.type == daily.type }
-            val (primaryText, secondaryText) = com.kieronquinn.app.smartspacer.plugin.qweather.utils.AdviceGenerator.generateAdvice(daily, previousDaily)
+        val (primaryText, secondaryText) = com.kieronquinn.app.smartspacer.plugin.qweather.utils.AdviceGenerator.generateSummaryAdvice(weatherData.daily)
 
-            // 确保 SmartspaceAction.Builder 被正确导入
-            SmartspaceAction(
-                id = "qweather_${daily.type}",
-                title = primaryText,
-                subtitle = secondaryText,
-                icon = AndroidIcon.createWithResource(provideContext(), R.drawable.ic_launcher_foreground),
-                pendingIntent = PendingIntent.getActivity(
-                    provideContext(),
-                    0,
-                    Intent(),
-                    PendingIntent.FLAG_IMMUTABLE
-                )
+        val summaryAction = SmartspaceAction(
+            id = "qweather_summary",
+            title = primaryText,
+            subtitle = secondaryText,
+            icon = AndroidIcon.createWithResource(provideContext(), R.drawable.ic_launcher_foreground),
+            pendingIntent = PendingIntent.getActivity(
+                provideContext(),
+                0,
+                Intent(),
+                PendingIntent.FLAG_IMMUTABLE
             )
-        }
+        )
+
+        return listOf(summaryAction)
     }
 
     private fun getSetupAction(secondaryText: String = "Tap to configure"): SmartspaceAction {
