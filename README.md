@@ -14,7 +14,8 @@ This repository contains an unofficial collection of plugins developed for [Smar
 
 - [饮水提醒 (Water Reminder)](#饮水提醒--water-reminder)
 - [用药提醒 (Medication Reminder)](#用药提醒--medication-reminder)
-- [食物保质期提醒 (Food Shelf Life Reminder)](#食物保质期提醒--food-shelf-life-reminder)
+- [食物保质期提醒 (Food Shelf Life Reminder)](#食物保질期提醒--food-shelf-life-reminder)
+- [和风天气生活指数 (QWeather Indices)](#和风天气生活指数--qweather-indices)
 
 
 ---
@@ -98,3 +99,35 @@ The **Food Shelf Life Reminder** plugin helps you keep track of the expiration d
 - **Flexible Shelf Life**: Easily set the shelf life for your items in days.
 - **Quick-Fill Buttons**: Use one-tap buttons for common shelf lives (e.g., 3 months, 12 months) to speed up data entry.
 - **Automatic Expiry Calculation**: The plugin automatically calculates and records the exact expiration date based on the shelf life you provide.
+
+---
+
+## 和风天气生活指数 | QWeather Indices
+
+“和风天气生活指数”插件能将您关心的各种生活指数清晰地展示在您的 Smartspace 上。它利用和风天气 API，提供精准、丰富的生活建议，帮助您更好地规划每一天。
+
+**请注意：** 使用本插件前，您需要先拥有一个和风天气的 API 密钥。
+
+### 主要功能
+
+- **丰富的指数选择**：您可以根据自己的需求，多选关心和风天气生活指数，如运动、洗车、穿衣、钓鱼、紫外线等。
+- **智能摘要显示**：插件会将您选择的众多指数智能地分类、汇总成两条简洁明了的摘要信息：“活动建议”（如“宜：洗车 | 不宜：运动”）和“状态摘要”（如“穿衣：炎热”），有效避免了信息过长被截断的问题。
+- **自定义配置**：
+    - **API 密钥**：填入您自己的和风天气 API 密钥。
+    - **API Host**：支持自定义 API 地址，方便使用代理或私有化部署的用户。
+    - **城市名称**：输入您希望查询的城市。
+
+---
+
+The **QWeather Indices** plugin brings a variety of lifestyle indices to your Smartspace, keeping you well-informed. Powered by the QWeather API, it provides accurate and rich daily-life advice to help you better plan your day.
+
+**Please Note:** You need a QWeather API Key to use this plugin.
+
+### Features
+
+- **Rich Index Selection**: Choose from a wide range of QWeather's lifestyle indices that matter to you, such as sports, car washing, dressing, fishing, UV index, and more.
+- **Smart Summary Display**: The plugin intelligently categorizes and consolidates the selected indices into two concise summary lines: "Activity Suggestions" (e.g., "Suitable for: Car Wash | Unsuitable for: Sports") and "Status Summary" (e.g., "Dressing: Hot"). This effectively prevents text from being truncated.
+- **Custom Configuration**:
+    - **API Key**: Enter your personal QWeather API key.
+    - **API Host**: Allows for a custom API host address, which is useful for users with proxies or private deployments.
+    - **City Name**: Specify the city for which you want to retrieve weather data.
