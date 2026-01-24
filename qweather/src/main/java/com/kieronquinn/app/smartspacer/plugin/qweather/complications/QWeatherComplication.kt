@@ -59,7 +59,7 @@ class QWeatherComplication : SmartspacerComplicationProvider() {
                 id = "qweather_${daily.type}",
                 title = primaryText,
                 subtitle = secondaryText,
-                icon = AndroidIcon.createWithResource(provideContext(), R.drawable.ic_launcher_foreground),
+                icon = AndroidIcon.createWithResource(provideContext(), R.drawable.ic_cloud),
                 pendingIntent = PendingIntent.getActivity(
                     provideContext(),
                     0,
@@ -76,7 +76,7 @@ class QWeatherComplication : SmartspacerComplicationProvider() {
             id ="qweather_setup",
             title = "Set up QWeather",
             subtitle = secondaryText,
-            icon = AndroidIcon.createWithResource(provideContext(), R.drawable.ic_launcher_foreground),
+            icon = AndroidIcon.createWithResource(provideContext(), R.drawable.ic_cloud),
             pendingIntent = PendingIntent.getActivity(
                 provideContext(),
                 0,
@@ -92,7 +92,7 @@ class QWeatherComplication : SmartspacerComplicationProvider() {
         return Config(
             label = provideContext().getString(R.string.complication_qweather_label),
             description = provideContext().getString(R.string.complication_qweather_description),
-            icon = AndroidIcon.createWithResource(provideContext(), R.drawable.ic_launcher_foreground),
+            icon = AndroidIcon.createWithResource(provideContext(), R.drawable.ic_cloud),
             configActivity = Intent(provideContext(), SettingsActivity::class.java).apply {
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             }
