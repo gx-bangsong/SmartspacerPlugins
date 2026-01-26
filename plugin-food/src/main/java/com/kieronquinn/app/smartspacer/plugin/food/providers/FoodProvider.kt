@@ -6,6 +6,7 @@ import com.kieronquinn.app.smartspacer.plugin.food.R
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider
 import com.kieronquinn.app.smartspacer.sdk.model.SmartspaceAction
 import com.kieronquinn.app.smartspacer.sdk.model.SmartspaceTarget
+import android.graphics.drawable.Icon
 
 import com.kieronquinn.app.smartspacer.plugin.food.data.FoodItemDao
 import kotlinx.coroutines.flow.first
@@ -38,7 +39,8 @@ class FoodProvider : SmartspacerTargetProvider(), KoinComponent {
                     headerAction = SmartspaceAction(
                         id = "food_header_${foodItem.id}",
                         title = "${foodItem.name} - Expires in $expiresInDays days",
-                        intent = Intent(context, com.kieronquinn.app.smartspacer.plugin.food.ui.activities.SettingsActivity::class.java)
+                        intent = Intent(context, com.kieronquinn.app.smartspacer.plugin.food.ui.activities.SettingsActivity::class.java),
+                        icon = Icon.createWithResource(context, R.drawable.ic_kitchen)
                     ),
                     featureType = SmartspaceTarget.FEATURE_REMINDER,
                     componentName = ComponentName(context, FoodProvider::class.java)
@@ -50,7 +52,7 @@ class FoodProvider : SmartspacerTargetProvider(), KoinComponent {
         return Config(
             label = "Food Shelf Life Reminder",
             description = "Track the shelf life of your food",
-            icon = android.graphics.drawable.Icon.createWithResource(context, R.drawable.ic_launcher_foreground),
+            icon = android.graphics.drawable.Icon.createWithResource(context, R.drawable.ic_kitchen),
             configActivity = Intent(context, com.kieronquinn.app.smartspacer.plugin.food.ui.activities.SettingsActivity::class.java)
         )
     }

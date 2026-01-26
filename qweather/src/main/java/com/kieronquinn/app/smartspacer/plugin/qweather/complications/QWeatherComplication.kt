@@ -13,6 +13,7 @@ import com.kieronquinn.app.smartspacer.plugin.qweather.providers.SettingsReposit
 import com.kieronquinn.app.smartspacer.plugin.qweather.providers.getBlocking
 import com.kieronquinn.app.smartspacer.plugin.qweather.receivers.UpdateReceiver
 import com.kieronquinn.app.smartspacer.plugin.qweather.ui.activities.SettingsActivity
+import com.kieronquinn.app.smartspacer.plugin.qweather.utils.AdviceGenerator
 import com.kieronquinn.app.smartspacer.sdk.model.SmartspaceAction
 import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Icon
 import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.TapAction
@@ -44,30 +45,33 @@ class QWeatherComplication : SmartspacerComplicationProvider() {
         }
 
         val weatherData = runBlocking { qWeatherRepository.weatherData.first() }
-        val previousWeatherData = runBlocking { qWeatherRepository.previousWeatherData.first() }
+            ?: return listOf(getSetupAction("Loading weather data..."))
 
-        if (weatherData == null) {
-            return listOf(getSetupAction("Loading weather data..."))
+        val actions = mutableListOf<SmartspaceAction>()
+
+        AdviceGenerator.generateActivityAdvice(weatherData.daily)?.let {
+            actions.add(createAction("qweather_activity_advice", it))
         }
 
-        return weatherData.daily.map { daily ->
-            val previousDaily = previousWeatherData?.daily?.find { it.type == daily.type }
-            val (primaryText, secondaryText) = com.kieronquinn.app.smartspacer.plugin.qweather.utils.AdviceGenerator.generateAdvice(daily, previousDaily)
+        AdviceGenerator.generateStatusAdvice(weatherData.daily)?.let {
+            actions.add(createAction("qweather_status_advice", it))
+        }
 
-            // 确保 SmartspaceAction.Builder 被正确导入
-            SmartspaceAction(
-                id = "qweather_${daily.type}",
-                title = primaryText,
-                subtitle = secondaryText,
-                icon = AndroidIcon.createWithResource(provideContext(), R.drawable.ic_launcher_foreground),
-                pendingIntent = PendingIntent.getActivity(
-                    provideContext(),
-                    0,
-                    Intent(),
-                    PendingIntent.FLAG_IMMUTABLE
-                )
+        return actions
+    }
+
+    private fun createAction(id: String, title: String): SmartspaceAction {
+        return SmartspaceAction(
+            id = id,
+            title = title,
+            icon = AndroidIcon.createWithResource(provideContext(), R.drawable.ic_cloud),
+            pendingIntent = PendingIntent.getActivity(
+                provideContext(),
+                0,
+                Intent(),
+                PendingIntent.FLAG_IMMUTABLE
             )
-        }
+        )
     }
 
     private fun getSetupAction(secondaryText: String = "Tap to configure"): SmartspaceAction {
@@ -76,7 +80,7 @@ class QWeatherComplication : SmartspacerComplicationProvider() {
             id ="qweather_setup",
             title = "Set up QWeather",
             subtitle = secondaryText,
-            icon = AndroidIcon.createWithResource(provideContext(), R.drawable.ic_launcher_foreground),
+            icon = AndroidIcon.createWithResource(provideContext(), R.drawable.ic_cloud),
             pendingIntent = PendingIntent.getActivity(
                 provideContext(),
                 0,
@@ -92,7 +96,7 @@ class QWeatherComplication : SmartspacerComplicationProvider() {
         return Config(
             label = provideContext().getString(R.string.complication_qweather_label),
             description = provideContext().getString(R.string.complication_qweather_description),
-            icon = AndroidIcon.createWithResource(provideContext(), R.drawable.ic_launcher_foreground),
+            icon = AndroidIcon.createWithResource(provideContext(), R.drawable.ic_cloud),
             configActivity = Intent(provideContext(), SettingsActivity::class.java).apply {
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             }

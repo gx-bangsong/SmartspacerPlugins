@@ -4,13 +4,16 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -32,16 +35,26 @@ fun WaterSettingsScreen(viewModel: WaterSettingsViewModel) {
     val uiState by viewModel.uiState.collectAsState(viewModel.initialState)
     val context = LocalContext.current as androidx.fragment.app.FragmentActivity
 
-    Column(modifier = Modifier.padding(16.dp)) {
-        Text("Daily Goal: ${uiState.dailyGoalMl}ml")
-        Slider(
-            value = uiState.dailyGoalMl.toFloat(),
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = MaterialTheme.colorScheme.background
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text(
+                "Daily Goal: ${uiState.dailyGoalMl}ml",
+                color = MaterialTheme.colorScheme.onBackground
+            )
+            Slider(
+                value = uiState.dailyGoalMl.toFloat(),
             onValueChange = { viewModel.onDailyGoalChanged(it) },
             valueRange = 500f..5000f,
             steps = 9
         )
 
-        Text("Cup Size: ${uiState.cupSizeMl}ml")
+        Text(
+            "Cup Size: ${uiState.cupSizeMl}ml",
+            color = MaterialTheme.colorScheme.onBackground
+        )
         Slider(
             value = uiState.cupSizeMl.toFloat(),
             onValueChange = { viewModel.onCupSizeChanged(it) },
@@ -50,7 +63,10 @@ fun WaterSettingsScreen(viewModel: WaterSettingsViewModel) {
         )
 
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Text("Start Time: ${uiState.startTimeHour}:${uiState.startTimeMinute}")
+            Text(
+                "Start Time: ${uiState.startTimeHour}:${uiState.startTimeMinute}",
+                color = MaterialTheme.colorScheme.onBackground
+            )
             Spacer(Modifier.width(8.dp))
             Button(onClick = {
                 MaterialTimePicker.Builder()
@@ -65,12 +81,15 @@ fun WaterSettingsScreen(viewModel: WaterSettingsViewModel) {
                     }
                     .show(context.supportFragmentManager, "start_time_picker")
             }) {
-                Text("Change")
+                Text("Change", color = MaterialTheme.colorScheme.onPrimary)
             }
         }
 
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Text("End Time: ${uiState.endTimeHour}:${uiState.endTimeMinute}")
+            Text(
+                "End Time: ${uiState.endTimeHour}:${uiState.endTimeMinute}",
+                color = MaterialTheme.colorScheme.onBackground
+            )
             Spacer(Modifier.width(8.dp))
             Button(onClick = {
                 MaterialTimePicker.Builder()
@@ -85,14 +104,17 @@ fun WaterSettingsScreen(viewModel: WaterSettingsViewModel) {
                     }
                     .show(context.supportFragmentManager, "end_time_picker")
             }) {
-                Text("Change")
+                Text("Change", color = MaterialTheme.colorScheme.onPrimary)
             }
         }
 
         var expanded by remember { mutableStateOf(false) }
-        Text("Display Mode: ${uiState.displayMode}")
+        Text(
+            "Display Mode: ${uiState.displayMode}",
+            color = MaterialTheme.colorScheme.onBackground
+        )
         Button(onClick = { expanded = true }) {
-            Text("Change")
+            Text("Change", color = MaterialTheme.colorScheme.onPrimary)
         }
         DropdownMenu(
             expanded = expanded,
@@ -102,7 +124,7 @@ fun WaterSettingsScreen(viewModel: WaterSettingsViewModel) {
                 DropdownMenuItem(onClick = {
                     viewModel.onDisplayModeChanged(it)
                     expanded = false
-                }, text = { Text(it.name) })
+                }, text = { Text(it.name, color = MaterialTheme.colorScheme.onBackground) })
             }
         }
 
@@ -110,7 +132,10 @@ fun WaterSettingsScreen(viewModel: WaterSettingsViewModel) {
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text("Reset at Active Start")
+            Text(
+                "Reset at Active Start",
+                color = MaterialTheme.colorScheme.onBackground
+            )
             Spacer(Modifier.weight(1f))
             Switch(
                 checked = uiState.resetAtActiveStart,
@@ -122,7 +147,10 @@ fun WaterSettingsScreen(viewModel: WaterSettingsViewModel) {
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text("Smart Adjust")
+            Text(
+                "Smart Adjust",
+                color = MaterialTheme.colorScheme.onBackground
+            )
             Spacer(Modifier.weight(1f))
             Switch(
                 checked = uiState.smartAdjust,
@@ -130,7 +158,10 @@ fun WaterSettingsScreen(viewModel: WaterSettingsViewModel) {
             )
         }
 
-        Text("Snooze: ${uiState.snoozeMinutes} minutes")
+        Text(
+            "Snooze: ${uiState.snoozeMinutes} minutes",
+            color = MaterialTheme.colorScheme.onBackground
+        )
         Slider(
             value = uiState.snoozeMinutes.toFloat(),
             onValueChange = { viewModel.onSnoozeMinutesChanged(it) },
@@ -139,7 +170,8 @@ fun WaterSettingsScreen(viewModel: WaterSettingsViewModel) {
         )
 
         Button(onClick = { viewModel.saveChanges(context) }) {
-            Text("Save")
+            Text("Save", color = MaterialTheme.colorScheme.onPrimary)
         }
     }
+}
 }
