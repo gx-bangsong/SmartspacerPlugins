@@ -174,4 +174,3 @@ fun WaterSettingsScreen(viewModel: WaterSettingsViewModel) {
         }
     }
 }
-}

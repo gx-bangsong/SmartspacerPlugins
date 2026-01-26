@@ -6,7 +6,7 @@ import com.kieronquinn.app.smartspacer.plugin.food.R
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider
 import com.kieronquinn.app.smartspacer.sdk.model.SmartspaceAction
 import com.kieronquinn.app.smartspacer.sdk.model.SmartspaceTarget
-import android.graphics.drawable.Icon as AndroidIcon
+import android.graphics.drawable.Icon
 
 import com.kieronquinn.app.smartspacer.plugin.food.data.FoodItemDao
 import kotlinx.coroutines.flow.first
@@ -40,7 +40,7 @@ class FoodProvider : SmartspacerTargetProvider(), KoinComponent {
                         id = "food_header_${foodItem.id}",
                         title = "${foodItem.name} - Expires in $expiresInDays days",
                         intent = Intent(context, com.kieronquinn.app.smartspacer.plugin.food.ui.activities.SettingsActivity::class.java),
-                        icon = AndroidIcon.createWithResource(context, R.drawable.ic_kitchen)
+                        icon = Icon.createWithResource(context, R.drawable.ic_kitchen)
                     ),
                     featureType = SmartspaceTarget.FEATURE_REMINDER,
                     componentName = ComponentName(context, FoodProvider::class.java)
