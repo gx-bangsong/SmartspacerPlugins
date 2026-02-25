@@ -19,6 +19,7 @@ import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Icon
 import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.TapAction
 import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Text
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerComplicationProvider
+import com.kieronquinn.app.smartspacer.sdk.utils.ComplicationTemplate
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.koin.android.ext.android.inject
@@ -60,36 +61,30 @@ class QWeatherComplication : SmartspacerComplicationProvider() {
         return actions
     }
 
-    private fun createAction(id: String, title: String): SmartspaceAction {
-        return SmartspaceAction(
+    private fun createAction(id: String, text: String): SmartspaceAction {
+        return ComplicationTemplate.Basic(
             id = id,
-            title = title,
-            icon = AndroidIcon.createWithResource(provideContext(), R.drawable.ic_cloud),
-            pendingIntent = PendingIntent.getActivity(
-                provideContext(),
-                0,
-                Intent(),
-                PendingIntent.FLAG_IMMUTABLE
+            content = Text(text),
+            icon = Icon(AndroidIcon.createWithResource(provideContext(), R.drawable.ic_cloud)),
+            onClick = TapAction(
+                intent = Intent(provideContext(), SettingsActivity::class.java).apply {
+                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                }
             )
-        )
+        ).create()
     }
 
-    private fun getSetupAction(secondaryText: String = "Tap to configure"): SmartspaceAction {
-        // 确保 SmartspaceAction.Builder 被正确导入
-        return SmartspaceAction(
+    private fun getSetupAction(text: String = "Set up QWeather"): SmartspaceAction {
+        return ComplicationTemplate.Basic(
             id ="qweather_setup",
-            title = "Set up QWeather",
-            subtitle = secondaryText,
-            icon = AndroidIcon.createWithResource(provideContext(), R.drawable.ic_cloud),
-            pendingIntent = PendingIntent.getActivity(
-                provideContext(),
-                0,
-                Intent(provideContext(), SettingsActivity::class.java).apply {
+            content = Text(text),
+            icon = Icon(AndroidIcon.createWithResource(provideContext(), R.drawable.ic_cloud)),
+            onClick = TapAction(
+                intent = Intent(provideContext(), SettingsActivity::class.java).apply {
                     addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                },
-                PendingIntent.FLAG_IMMUTABLE
+                }
             )
-        )
+        ).create()
     }
 
     override fun getConfig(smartspacerId: String?): Config {
