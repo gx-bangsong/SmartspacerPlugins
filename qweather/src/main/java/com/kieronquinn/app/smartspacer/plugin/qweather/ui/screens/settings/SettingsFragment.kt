@@ -7,6 +7,7 @@ import androidx.preference.EditTextPreference
 import androidx.preference.MultiSelectListPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
+import androidx.preference.SwitchPreference
 import com.kieronquinn.app.smartspacer.plugin.qweather.R
 import com.kieronquinn.app.smartspacer.plugin.qweather.complications.QWeatherComplication
 import com.kieronquinn.app.smartspacer.plugin.qweather.providers.SettingsRepository
@@ -28,6 +29,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         setupApiHostPreference()
         setupLocationNamePreference()
         setupIndicesPreference()
+        setupUseEmojiPreference()
     }
 
     override fun onDestroyView() {
@@ -43,6 +45,21 @@ class SettingsFragment : PreferenceFragmentCompat() {
         apiKeyPreference.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, newValue ->
             scope.launch {
                 settingsRepository.setApiKey(newValue as String)
+                triggerUpdate()
+            }
+            true
+        }
+    }
+
+    private fun setupUseEmojiPreference() {
+        val useEmojiPreference = findPreference<SwitchPreference>("use_emoji") ?: return
+        scope.launch {
+            useEmojiPreference.isChecked = settingsRepository.useEmoji.first()
+        }
+        useEmojiPreference.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, newValue ->
+            val checked = newValue as Boolean
+            scope.launch {
+                settingsRepository.setUseEmoji(checked)
                 triggerUpdate()
             }
             true

@@ -26,4 +26,10 @@
         android:entries="@array/indices_entries"
         android:entryValues="@array/indices_values" />
 
+    <SwitchPreference
+        android:key="use_emoji"
+        android:title="@string/settings_use_emoji_title"
+        android:summary="@string/settings_use_emoji_summary"
+        android:defaultValue="false" />
+
 </PreferenceScreen>

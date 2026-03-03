@@ -37,19 +37,27 @@ object AdviceGenerator {
         )
     )
 
+    private val EMOJI_MAP = mapOf(
+        "运动" to "🏃",
+        "洗车" to "🚗",
+        "钓鱼" to "🎣",
+        "旅游" to "✈️",
+        "晾晒" to "👕"
+    )
+
     /**
      * Generates a summary of "Good for" and "Bad for" activities.
      */
-    fun generateActivityAdvice(dailyItems: List<Daily>): String? {
+    fun generateActivityAdvice(dailyItems: List<Daily>, useEmoji: Boolean): String? {
         val goodFor = mutableListOf<String>()
         val badFor = mutableListOf<String>()
 
         dailyItems.forEach { daily ->
             val activityName = daily.name.replace("指数", "")
             if (GOOD_ACTIVITIES[daily.name]?.contains(daily.level) == true) {
-                goodFor.add(activityName)
+                goodFor.add(if (useEmoji) EMOJI_MAP[activityName] ?: activityName else activityName)
             } else if (BAD_ACTIVITIES[daily.name]?.contains(daily.level) == true) {
-                badFor.add(activityName)
+                badFor.add(if (useEmoji) EMOJI_MAP[activityName] ?: activityName else activityName)
             }
         }
 
@@ -57,10 +65,15 @@ object AdviceGenerator {
             return null
         }
 
-        val goodStr = if (goodFor.isNotEmpty()) "宜: ${goodFor.joinToString("、 ")}" else ""
-        val badStr = if (badFor.isNotEmpty()) "不宜: ${badFor.joinToString("、 ")}" else ""
-
-        return listOf(goodStr, badStr).filter { it.isNotBlank() }.joinToString(" | ")
+        return if (useEmoji) {
+            val goodStr = if (goodFor.isNotEmpty()) "✅ ${goodFor.joinToString(" ")}" else ""
+            val badStr = if (badFor.isNotEmpty()) "❌ ${badFor.joinToString(" ")}" else ""
+            listOf(goodStr, badStr).filter { it.isNotBlank() }.joinToString(" ")
+        } else {
+            val goodStr = if (goodFor.isNotEmpty()) "宜:${goodFor.joinToString(" ")}" else ""
+            val badStr = if (badFor.isNotEmpty()) "不宜:${badFor.joinToString(" ")}" else ""
+            listOf(goodStr, badStr).filter { it.isNotBlank() }.joinToString(" | ")
+        }
     }
 
     /**
@@ -72,10 +85,10 @@ object AdviceGenerator {
         dailyItems.forEach { daily ->
             STATUS_MAP[daily.name]?.get(daily.level)?.let { category ->
                 val prefix = daily.name.replace("指数", "")
-                statusList.add("$prefix: $category")
+                statusList.add("$prefix:$category")
             }
         }
 
-        return if (statusList.isEmpty()) null else statusList.joinToString("， ")
+        return if (statusList.isEmpty()) null else statusList.joinToString(" ")
     }
 }
