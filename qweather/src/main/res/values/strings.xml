@@ -14,5 +14,5 @@
     <string name="settings_select_indices_title">Select Indices</string>
     <string name="settings_select_indices_summary">Choose which lifestyle indices to display</string>
     <string name="settings_use_emoji_title">Use Emoji</string>
-    <string name="settings_use_emoji_summary">Replace activities with emojis: ✅宜 ❌不宜 🏃运动 🚗洗车 🎣钓鱼 ✈️旅游 👕晾晒</string>
+    <string name="settings_use_emoji_summary">Replace with emojis: ✅宜 ❌不宜 🏃运动 🚗洗车 🎣钓鱼 ✈️旅游 👕晾晒 👔穿衣 ☀️紫外线 💄化妆 🤒感冒</string>
 </resources>

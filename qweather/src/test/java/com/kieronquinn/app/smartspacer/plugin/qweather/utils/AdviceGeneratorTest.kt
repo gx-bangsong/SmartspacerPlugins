@@ -16,18 +16,24 @@ class AdviceGeneratorTest {
     @Test
     fun `generateActivityAdvice without emoji`() {
         val advice = AdviceGenerator.generateActivityAdvice(dailyItems, false)
-        assertEquals("宜:运动 | 不宜:洗车", advice)
+        assertEquals(listOf("宜:运动", "不宜:洗车"), advice)
     }
 
     @Test
     fun `generateActivityAdvice with emoji`() {
         val advice = AdviceGenerator.generateActivityAdvice(dailyItems, true)
-        assertEquals("✅ 🏃 ❌ 🚗", advice)
+        assertEquals(listOf("✅ 🏃", "❌ 🚗"), advice)
     }
 
     @Test
-    fun `generateStatusAdvice`() {
-        val advice = AdviceGenerator.generateStatusAdvice(dailyItems)
-        assertEquals("穿衣:舒适 紫外线:弱", advice)
+    fun `generateStatusAdvice without emoji`() {
+        val advice = AdviceGenerator.generateStatusAdvice(dailyItems, false)
+        assertEquals(listOf("穿衣:舒适", "紫外线:弱"), advice)
+    }
+
+    @Test
+    fun `generateStatusAdvice with emoji`() {
+        val advice = AdviceGenerator.generateStatusAdvice(dailyItems, true)
+        assertEquals(listOf("👔 舒适", "☀️ 弱"), advice)
     }
 }
