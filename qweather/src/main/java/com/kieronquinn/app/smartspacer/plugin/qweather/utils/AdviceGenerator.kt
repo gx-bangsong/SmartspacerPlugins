@@ -34,48 +34,68 @@ object AdviceGenerator {
         "化妆指数" to mapOf(
             "1" to "保湿", "2" to "保湿防晒", "3" to "去油防晒", "4" to "防脱水防晒",
             "5" to "去油", "6" to "防脱水", "7" to "防晒", "8" to "滋润保湿"
+        ),
+        "感冒指数" to mapOf(
+            "1" to "少发", "2" to "较易发", "3" to "易发", "4" to "极易发"
         )
     )
 
+    private val EMOJI_MAP = mapOf(
+        "运动" to "🏃",
+        "洗车" to "🚗",
+        "钓鱼" to "🎣",
+        "旅游" to "✈️",
+        "晾晒" to "👕",
+        "穿衣" to "👔",
+        "紫外线" to "☀️",
+        "化妆" to "💄",
+        "感冒" to "🤒"
+    )
+
     /**
-     * Generates a summary of "Good for" and "Bad for" activities.
+     * Generates a list of summaries for "Good for" and "Bad for" activities.
      */
-    fun generateActivityAdvice(dailyItems: List<Daily>): String? {
+    fun generateActivityAdvice(dailyItems: List<Daily>, useEmoji: Boolean): List<String> {
         val goodFor = mutableListOf<String>()
         val badFor = mutableListOf<String>()
 
         dailyItems.forEach { daily ->
             val activityName = daily.name.replace("指数", "")
             if (GOOD_ACTIVITIES[daily.name]?.contains(daily.level) == true) {
-                goodFor.add(activityName)
+                goodFor.add(if (useEmoji) EMOJI_MAP[activityName] ?: activityName else activityName)
             } else if (BAD_ACTIVITIES[daily.name]?.contains(daily.level) == true) {
-                badFor.add(activityName)
+                badFor.add(if (useEmoji) EMOJI_MAP[activityName] ?: activityName else activityName)
             }
         }
 
-        if (goodFor.isEmpty() && badFor.isEmpty()) {
-            return null
+        val result = mutableListOf<String>()
+        if (useEmoji) {
+            if (goodFor.isNotEmpty()) result.add("✅ ${goodFor.joinToString(" ")}")
+            if (badFor.isNotEmpty()) result.add("❌ ${badFor.joinToString(" ")}")
+        } else {
+            if (goodFor.isNotEmpty()) result.add("宜:${goodFor.joinToString(" ")}")
+            if (badFor.isNotEmpty()) result.add("不宜:${badFor.joinToString(" ")}")
         }
-
-        val goodStr = if (goodFor.isNotEmpty()) "宜: ${goodFor.joinToString("、 ")}" else ""
-        val badStr = if (badFor.isNotEmpty()) "不宜: ${badFor.joinToString("、 ")}" else ""
-
-        return listOf(goodStr, badStr).filter { it.isNotBlank() }.joinToString(" | ")
+        return result
     }
 
     /**
-     * Generates a summary of status-based advice (clothing, UV, makeup).
+     * Generates a list of status-based advice (clothing, UV, makeup, flu).
      */
-    fun generateStatusAdvice(dailyItems: List<Daily>): String? {
+    fun generateStatusAdvice(dailyItems: List<Daily>, useEmoji: Boolean): List<String> {
         val statusList = mutableListOf<String>()
 
         dailyItems.forEach { daily ->
             STATUS_MAP[daily.name]?.get(daily.level)?.let { category ->
                 val prefix = daily.name.replace("指数", "")
-                statusList.add("$prefix: $category")
+                if (useEmoji && EMOJI_MAP.containsKey(prefix)) {
+                    statusList.add("${EMOJI_MAP[prefix]} $category")
+                } else {
+                    statusList.add("$prefix:$category")
+                }
             }
         }
 
-        return if (statusList.isEmpty()) null else statusList.joinToString("， ")
+        return statusList
     }
 }

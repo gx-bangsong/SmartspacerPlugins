@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
@@ -18,24 +19,265 @@
         android:layout_marginTop="8dp"
         android:hint="Dosage (optional)" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Reminder Times" />
-
-    <LinearLayout
-        android:id="@+id/container_reminder_times"
+    <com.google.android.material.button.MaterialButtonToggleGroup
+        android:id="@+id/toggle_group_schedule_type"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical" />
+        android:layout_marginTop="16dp"
+        app:singleSelection="true"
+        app:checkedButton="@+id/button_schedule_specific_times">
 
-    <Button
-        android:id="@+id/button_add_time"
-        android:layout_width="wrap_content"
+        <Button
+            android:id="@+id/button_schedule_specific_times"
+            style="?attr/materialButtonOutlinedStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Times"
+            android:textSize="12sp"
+            android:padding="0dp" />
+
+        <Button
+            android:id="@+id/button_schedule_interval_hours"
+            style="?attr/materialButtonOutlinedStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Hours"
+            android:textSize="12sp"
+            android:padding="0dp" />
+
+        <Button
+            android:id="@+id/button_schedule_interval_days"
+            style="?attr/materialButtonOutlinedStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Days"
+            android:textSize="12sp"
+            android:padding="0dp" />
+
+        <Button
+            android:id="@+id/button_schedule_weekdays"
+            style="?attr/materialButtonOutlinedStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Week"
+            android:textSize="12sp"
+            android:padding="0dp" />
+
+    </com.google.android.material.button.MaterialButtonToggleGroup>
+
+    <!-- Dynamic Config Area -->
+    <FrameLayout
+        android:id="@+id/container_dynamic_config"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="Add Time" />
+        android:layout_marginTop="16dp">
+
+        <!-- Specific Times Config -->
+        <LinearLayout
+            android:id="@+id/layout_config_specific_times"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Reminder Times" />
+
+            <LinearLayout
+                android:id="@+id/container_reminder_times"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+
+            <Button
+                android:id="@+id/button_add_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Add Time" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Shortcuts"
+                android:textAppearance="?attr/textAppearanceTitleMedium" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/button_shortcut_1_time"
+                    style="@style/Widget.Material3.Button.TonalButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="1 time/day" />
+
+                <Button
+                    android:id="@+id/button_shortcut_2_times"
+                    style="@style/Widget.Material3.Button.TonalButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="8dp"
+                    android:text="2 times/day" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/button_shortcut_3_times"
+                    style="@style/Widget.Material3.Button.TonalButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="3 times/day" />
+
+                <Button
+                    android:id="@+id/button_shortcut_4_times"
+                    style="@style/Widget.Material3.Button.TonalButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="8dp"
+                    android:text="4 times/day" />
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Interval Hours Config -->
+        <LinearLayout
+            android:id="@+id/layout_config_interval_hours"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <EditText
+                android:id="@+id/edit_text_interval_hours"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Every X hours"
+                android:inputType="number" />
+
+            <Button
+                android:id="@+id/button_select_start_time_hours"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Select Start Time" />
+        </LinearLayout>
+
+        <!-- Interval Days Config -->
+        <LinearLayout
+            android:id="@+id/layout_config_interval_days"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <EditText
+                android:id="@+id/edit_text_interval_days"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Every X days"
+                android:inputType="number" />
+
+            <Button
+                android:id="@+id/button_select_start_time_days"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Select Start Time" />
+        </LinearLayout>
+
+        <!-- Specific Weekdays Config -->
+        <LinearLayout
+            android:id="@+id/layout_config_weekdays"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Select Weekdays" />
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chip_group_weekdays"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_monday"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Mon" />
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_tuesday"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tue" />
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_wednesday"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Wed" />
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_thursday"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Thu" />
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_friday"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Fri" />
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_saturday"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Sat" />
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_sunday"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Sun" />
+            </com.google.android.material.chip.ChipGroup>
+
+            <Button
+                android:id="@+id/button_select_time_weekdays"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Select Time" />
+        </LinearLayout>
+
+    </FrameLayout>
 
     <EditText
         android:id="@+id/edit_text_start_date"

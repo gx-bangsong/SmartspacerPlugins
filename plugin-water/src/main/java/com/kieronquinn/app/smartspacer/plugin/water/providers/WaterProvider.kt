@@ -17,6 +17,7 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import java.time.LocalDate
 import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 import kotlin.math.ceil
 import android.graphics.drawable.Icon as AndroidIcon
 
@@ -30,24 +31,45 @@ class WaterProvider : SmartspacerTargetProvider(), KoinComponent {
         val drinks = runBlocking { waterDataRepository.getDrinksForDate(today) }
         val fulfilledCount = drinks.size
         val cupsTotal = ceil(waterDataRepository.dailyGoalMl.toDouble() / waterDataRepository.cupMl).toInt()
+        val totalMlDrank = drinks.sumOf { it.amount }
+        val goalMl = waterDataRepository.dailyGoalMl
+        val progressPercent = if (goalMl > 0) (totalMlDrank * 100 / goalMl) else 0
 
         val activeStart = LocalTime.ofSecondOfDay(waterDataRepository.activeStartMinutes * 60L)
         val activeEnd = LocalTime.ofSecondOfDay(waterDataRepository.activeEndMinutes * 60L)
         val now = LocalTime.now()
 
-        val text = if (now.isBefore(activeStart) || now.isAfter(activeEnd)) {
-            // Outside active hours, show progress
-            "Water: $fulfilledCount / $cupsTotal cups"
-        } else {
-            // Inside active hours, calculate next reminder
-            val activeDuration = (waterDataRepository.activeEndMinutes - waterDataRepository.activeStartMinutes).toLong()
-            val interval = activeDuration / cupsTotal
-            val nextDrinkTime = activeStart.plusMinutes(interval * (fulfilledCount + 1))
+        val progressText = "Water: $totalMlDrank / $goalMl ml ($progressPercent%)"
 
-            if (now.isAfter(nextDrinkTime)) {
-                "Time for a glass of water!"
-            } else {
-                "Water: $fulfilledCount / $cupsTotal cups"
+        val text = when (waterDataRepository.displayMode) {
+            DisplayMode.PROGRESS -> progressText
+            DisplayMode.REMINDER -> {
+                if (now.isBefore(activeStart) || now.isAfter(activeEnd)) {
+                    "Reminder active ${activeStart} - ${activeEnd}"
+                } else {
+                    val activeDuration = (waterDataRepository.activeEndMinutes - waterDataRepository.activeStartMinutes).toLong()
+                    val interval = activeDuration / cupsTotal
+                    val nextDrinkTime = activeStart.plusMinutes(interval * (fulfilledCount + 1))
+                    if (now.isAfter(nextDrinkTime)) {
+                        "Time for a glass of water!"
+                    } else {
+                        "Next reminder at ${nextDrinkTime.format(DateTimeFormatter.ofPattern("HH:mm"))}"
+                    }
+                }
+            }
+            DisplayMode.DYNAMIC -> {
+                if (now.isBefore(activeStart) || now.isAfter(activeEnd)) {
+                    progressText
+                } else {
+                    val activeDuration = (waterDataRepository.activeEndMinutes - waterDataRepository.activeStartMinutes).toLong()
+                    val interval = activeDuration / cupsTotal
+                    val nextDrinkTime = activeStart.plusMinutes(interval * (fulfilledCount + 1))
+                    if (now.isAfter(nextDrinkTime)) {
+                        "Time for a glass of water!"
+                    } else {
+                        progressText
+                    }
+                }
             }
         }
 

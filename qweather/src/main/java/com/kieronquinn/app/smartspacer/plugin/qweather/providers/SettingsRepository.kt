@@ -17,6 +17,7 @@ interface SettingsRepository : BaseSettingsRepository {
     val apiHost: Flow<String>
     val locationName: Flow<String>
     val selectedIndices: Flow<String>
+    val useEmoji: Flow<Boolean>
     val cityLookupFailed: Flow<Boolean>
     var locationId: String?
 
@@ -24,6 +25,7 @@ interface SettingsRepository : BaseSettingsRepository {
     suspend fun setApiHost(value: String)
     suspend fun setLocationName(value: String)
     suspend fun setSelectedIndices(value: String)
+    suspend fun setUseEmoji(value: Boolean)
     suspend fun setCityLookupFailed(value: Boolean)
 }
 
@@ -34,6 +36,7 @@ class SettingsRepositoryImpl(context: Context) : BaseSettingsRepositoryImpl(), S
         private const val API_HOST_KEY = "api_host"
         private const val LOCATION_NAME_KEY = "location_name"
         private const val SELECTED_INDICES_KEY = "selected_indices"
+        private const val USE_EMOJI_KEY = "use_emoji"
         private const val CITY_LOOKUP_FAILED_KEY = "city_lookup_failed"
     }
 
@@ -44,12 +47,14 @@ class SettingsRepositoryImpl(context: Context) : BaseSettingsRepositoryImpl(), S
     private val _apiHost = MutableStateFlow(sharedPreferences.getString(API_HOST_KEY, "") ?: "")
     private val _locationName = MutableStateFlow(sharedPreferences.getString(LOCATION_NAME_KEY, "") ?: "")
     private val _selectedIndices = MutableStateFlow(sharedPreferences.getString(SELECTED_INDICES_KEY, "1,2,3,5,9") ?: "1,2,3,5,9")
+    private val _useEmoji = MutableStateFlow(sharedPreferences.getBoolean(USE_EMOJI_KEY, false))
     private val _cityLookupFailed = MutableStateFlow(sharedPreferences.getBoolean(CITY_LOOKUP_FAILED_KEY, false))
 
     override val apiKey: Flow<String> = _apiKey.asStateFlow()
     override val apiHost: Flow<String> = _apiHost.asStateFlow()
     override val locationName: Flow<String> = _locationName.asStateFlow()
     override val selectedIndices: Flow<String> = _selectedIndices.asStateFlow()
+    override val useEmoji: Flow<Boolean> = _useEmoji.asStateFlow()
     override val cityLookupFailed: Flow<Boolean> = _cityLookupFailed.asStateFlow()
     override var locationId: String? = null
 
@@ -60,6 +65,7 @@ class SettingsRepositoryImpl(context: Context) : BaseSettingsRepositoryImpl(), S
                 API_HOST_KEY -> _apiHost.value = sharedPreferences.getString(API_HOST_KEY, "") ?: ""
                 LOCATION_NAME_KEY -> _locationName.value = sharedPreferences.getString(LOCATION_NAME_KEY, "") ?: ""
                 SELECTED_INDICES_KEY -> _selectedIndices.value = sharedPreferences.getString(SELECTED_INDICES_KEY, "1,2,3,5,9") ?: "1,2,3,5,9"
+                USE_EMOJI_KEY -> _useEmoji.value = sharedPreferences.getBoolean(USE_EMOJI_KEY, false)
                 CITY_LOOKUP_FAILED_KEY -> _cityLookupFailed.value = sharedPreferences.getBoolean(CITY_LOOKUP_FAILED_KEY, false)
             }
         }
@@ -88,6 +94,11 @@ class SettingsRepositoryImpl(context: Context) : BaseSettingsRepositoryImpl(), S
     override suspend fun setSelectedIndices(value: String) = withContext(Dispatchers.IO) {
         sharedPreferences.edit().putString(SELECTED_INDICES_KEY, value).commit()
         _selectedIndices.value = value
+    }
+
+    override suspend fun setUseEmoji(value: Boolean) = withContext(Dispatchers.IO) {
+        sharedPreferences.edit().putBoolean(USE_EMOJI_KEY, value).commit()
+        _useEmoji.value = value
     }
 
     override suspend fun setCityLookupFailed(value: Boolean) = withContext(Dispatchers.IO) {

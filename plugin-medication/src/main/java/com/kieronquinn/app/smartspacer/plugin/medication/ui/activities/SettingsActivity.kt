@@ -25,7 +25,11 @@ class SettingsActivity : AppCompatActivity() {
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
         lifecycleScope.launch {
             medicationDao.getAll().collect { medications ->
-                binding.recyclerView.adapter = MedicationAdapter(medications)
+                binding.recyclerView.adapter = MedicationAdapter(medications) { medication ->
+                    lifecycleScope.launch {
+                        medicationDao.delete(medication)
+                    }
+                }
             }
         }
 

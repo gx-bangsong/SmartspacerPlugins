@@ -48,14 +48,16 @@ class QWeatherComplication : SmartspacerComplicationProvider() {
         val weatherData = runBlocking { qWeatherRepository.weatherData.first() }
             ?: return listOf(getSetupAction("Loading weather data..."))
 
+        val useEmoji = settingsRepository.useEmoji.getBlocking()
+
         val actions = mutableListOf<SmartspaceAction>()
 
-        AdviceGenerator.generateActivityAdvice(weatherData.daily)?.let {
-            actions.add(createAction("qweather_activity_advice", it))
+        AdviceGenerator.generateActivityAdvice(weatherData.daily, useEmoji).forEachIndexed { index, advice ->
+            actions.add(createAction("qweather_activity_advice_$index", advice))
         }
 
-        AdviceGenerator.generateStatusAdvice(weatherData.daily)?.let {
-            actions.add(createAction("qweather_status_advice", it))
+        AdviceGenerator.generateStatusAdvice(weatherData.daily, useEmoji).forEachIndexed { index, advice ->
+            actions.add(createAction("qweather_status_advice_$index", advice))
         }
 
         return actions
