@@ -9,8 +9,10 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-class MedicationAdapter(private val medications: List<Medication>) :
-    RecyclerView.Adapter<MedicationAdapter.ViewHolder>() {
+class MedicationAdapter(
+    private val medications: List<Medication>,
+    private val onDelete: (Medication) -> Unit
+) : RecyclerView.Adapter<MedicationAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = ItemMedicationBinding.inflate(
@@ -28,7 +30,7 @@ class MedicationAdapter(private val medications: List<Medication>) :
 
     override fun getItemCount() = medications.size
 
-    class ViewHolder(private val binding: ItemMedicationBinding) :
+    inner class ViewHolder(private val binding: ItemMedicationBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         private val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
@@ -36,6 +38,9 @@ class MedicationAdapter(private val medications: List<Medication>) :
         fun bind(medication: Medication) {
             binding.textViewMedicationName.text = medication.name
             binding.textViewNextDose.text = "Next dose: ${dateFormat.format(Date(medication.nextDoseTs))}"
+            binding.buttonDelete.setOnClickListener {
+                onDelete(medication)
+            }
         }
     }
 }

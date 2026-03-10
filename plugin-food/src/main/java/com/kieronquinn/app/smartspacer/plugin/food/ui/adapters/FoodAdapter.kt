@@ -9,8 +9,10 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-class FoodAdapter(private val foodItems: List<FoodItem>) :
-    RecyclerView.Adapter<FoodAdapter.ViewHolder>() {
+class FoodAdapter(
+    private val foodItems: List<FoodItem>,
+    private val onDelete: (FoodItem) -> Unit
+) : RecyclerView.Adapter<FoodAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = ItemFoodBinding.inflate(
@@ -28,7 +30,7 @@ class FoodAdapter(private val foodItems: List<FoodItem>) :
 
     override fun getItemCount() = foodItems.size
 
-    class ViewHolder(private val binding: ItemFoodBinding) :
+    inner class ViewHolder(private val binding: ItemFoodBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         private val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
@@ -36,6 +38,9 @@ class FoodAdapter(private val foodItems: List<FoodItem>) :
         fun bind(foodItem: FoodItem) {
             binding.textViewFoodName.text = foodItem.name
             binding.textViewExpiryDate.text = "Expires on: ${dateFormat.format(Date(foodItem.expiryDate))}"
+            binding.buttonDelete.setOnClickListener {
+                onDelete(foodItem)
+            }
         }
     }
 }

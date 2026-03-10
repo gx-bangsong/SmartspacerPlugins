@@ -56,6 +56,23 @@ class AddFoodItemFragment : DialogFragment() {
         binding.buttonShelfLife36Months.setOnClickListener {
             binding.editTextShelfLife.setText("1095")
         }
+
+        binding.buttonShortcutFrozenFood.setOnClickListener {
+            binding.editTextStorageMethod.setText("Frozen")
+            binding.editTextShelfLife.setText("365")
+        }
+        binding.buttonShortcutMeat.setOnClickListener {
+            binding.editTextStorageMethod.setText("Frozen")
+            binding.editTextShelfLife.setText("90")
+        }
+        binding.buttonShortcutSeafood.setOnClickListener {
+            binding.editTextStorageMethod.setText("Frozen")
+            binding.editTextShelfLife.setText("30")
+        }
+        binding.buttonShortcutProcessed.setOnClickListener {
+            binding.editTextStorageMethod.setText("Frozen")
+            binding.editTextShelfLife.setText("90")
+        }
     }
 
     private fun createFoodItemFromInput(): FoodItem? {

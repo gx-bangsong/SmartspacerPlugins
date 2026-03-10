@@ -25,7 +25,11 @@ class SettingsActivity : AppCompatActivity() {
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
         lifecycleScope.launch {
             foodItemDao.getAll().collect { foodItems ->
-                binding.recyclerView.adapter = FoodAdapter(foodItems)
+                binding.recyclerView.adapter = FoodAdapter(foodItems) { foodItem ->
+                    lifecycleScope.launch {
+                        foodItemDao.delete(foodItem)
+                    }
+                }
             }
         }
 

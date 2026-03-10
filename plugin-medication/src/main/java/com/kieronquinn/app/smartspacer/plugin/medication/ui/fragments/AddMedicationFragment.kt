@@ -33,6 +33,8 @@ class AddMedicationFragment : DialogFragment() {
             showTimePicker()
         }
 
+        setupShortcutButtons()
+
         return MaterialAlertDialogBuilder(requireContext())
             .setTitle("Add Medication")
             .setView(binding.root)
@@ -68,6 +70,41 @@ class AddMedicationFragment : DialogFragment() {
             textSize = 16f
         }
         binding.containerReminderTimes.addView(textView)
+    }
+
+    private fun setupShortcutButtons() {
+        binding.buttonShortcut1Time.setOnClickListener {
+            clearTimes()
+            addTime("08:00")
+        }
+        binding.buttonShortcut2Times.setOnClickListener {
+            clearTimes()
+            addTime("08:00")
+            addTime("20:00")
+        }
+        binding.buttonShortcut3Times.setOnClickListener {
+            clearTimes()
+            addTime("08:00")
+            addTime("14:00")
+            addTime("20:00")
+        }
+        binding.buttonShortcut4Times.setOnClickListener {
+            clearTimes()
+            addTime("08:00")
+            addTime("12:00")
+            addTime("16:00")
+            addTime("20:00")
+        }
+    }
+
+    private fun clearTimes() {
+        reminderTimes.clear()
+        binding.containerReminderTimes.removeAllViews()
+    }
+
+    private fun addTime(time: String) {
+        reminderTimes.add(time)
+        addReminderTimeView(time)
     }
 
     private fun createMedicationFromInput(): Medication? {
