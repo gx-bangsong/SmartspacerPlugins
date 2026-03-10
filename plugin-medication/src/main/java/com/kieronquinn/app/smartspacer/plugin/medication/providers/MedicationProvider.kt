@@ -5,6 +5,8 @@ import android.content.Intent
 import com.kieronquinn.app.smartspacer.plugin.medication.R
 import com.kieronquinn.app.smartspacer.plugin.medication.data.MedicationDao
 import com.kieronquinn.app.smartspacer.plugin.medication.ui.fragments.RecordDoseFragment
+import com.kieronquinn.app.smartspacer.plugin.medication.data.Medication
+import com.kieronquinn.app.smartspacer.plugin.medication.data.ScheduleType
 import com.kieronquinn.app.smartspacer.plugin.medication.ui.activities.SettingsActivity
 import com.kieronquinn.app.smartspacer.plugin.shared.ui.activities.DialogLauncherActivity
 import com.kieronquinn.app.smartspacer.sdk.model.SmartspaceTarget
@@ -19,6 +21,7 @@ import org.koin.core.component.inject
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import java.util.Calendar
 import android.graphics.drawable.Icon as AndroidIcon
 
 class MedicationProvider : SmartspacerTargetProvider(), KoinComponent {
@@ -31,7 +34,22 @@ class MedicationProvider : SmartspacerTargetProvider(), KoinComponent {
         val now = System.currentTimeMillis()
 
         return medications
-            .filter { it.enabled && now >= it.nextDoseTs }
+            .filter { medication ->
+                if (!medication.enabled) return@filter false
+                if (now < medication.nextDoseTs) return@filter false
+
+                // For specific weekdays, ensure today is one of the allowed days
+                if (medication.scheduleType == ScheduleType.SPECIFIC_WEEKDAYS) {
+                    val today = Calendar.getInstance().get(Calendar.DAY_OF_WEEK)
+                    if ((medication.weekdays!! and (1 shl today)) == 0) return@filter false
+                }
+
+                // Ensure within start/end dates
+                if (now < medication.startDate) return@filter false
+                if (!medication.isUnlimited && medication.endDate != null && now > medication.endDate) return@filter false
+
+                true
+            }
             .map { medication ->
                 val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
                 val time = timeFormat.format(Date(medication.nextDoseTs))
