@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Parcel Tracker</string>
+    <string name="plugin_description">Extracts pickup codes from SMS and displays them in Smart Space.</string>
+    <string name="mark_as_picked_up">Mark as Picked Up</string>
+    <string name="pickup_code">Pickup Code: %s</string>
+    <string name="station_location">Location: %s</string>
+    <string name="no_pending_parcels">No pending parcels</string>
+</resources>
