@@ -36,3 +36,4 @@ jobs:
         ./gradlew :plugin-water:test
         ./gradlew :plugin-food:test
         ./gradlew :plugin-medication:test
+        ./gradlew :plugin-parcel:test
