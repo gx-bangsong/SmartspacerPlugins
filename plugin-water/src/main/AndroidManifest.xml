@@ -9,7 +9,7 @@
         android:name=".WaterPlugin"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
-        android.label="@string/app_name"
+        android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/Theme.Smartspacer">
@@ -43,6 +43,10 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
             </intent-filter>
         </receiver>
+
+        <receiver
+            android:name=".receivers.WaterReminderReceiver"
+            android:exported="false" />
 
     </application>
 

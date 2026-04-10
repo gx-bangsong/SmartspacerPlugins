@@ -1,0 +1,62 @@
+package com.kieronquinn.app.smartspacer.plugin.medication.ui.fragments
+
+import android.os.Bundle
+import android.view.View
+import androidx.core.view.isVisible
+import androidx.lifecycle.lifecycleScope
+import com.google.android.material.progressindicator.LinearProgressIndicator
+import com.kieronquinn.app.smartspacer.plugin.medication.data.MedicationDao
+import com.kieronquinn.app.smartspacer.plugin.medication.databinding.FragmentMedicationSettingsBinding
+import com.kieronquinn.app.smartspacer.plugin.medication.ui.adapters.MedicationAdapter
+import com.kieronquinn.app.smartspacer.plugin.shared.ui.base.settings.BaseFragment
+import com.kieronquinn.app.smartspacer.plugin.shared.ui.base.settings.BaseSettingsAdapter
+import com.kieronquinn.app.smartspacer.plugin.shared.ui.views.LifecycleAwareRecyclerView
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
+
+class MedicationSettingsFragment : BaseFragment<FragmentMedicationSettingsBinding>(FragmentMedicationSettingsBinding::inflate) {
+
+    private val medicationDao by inject<MedicationDao>()
+
+    override val adapter by lazy {
+        object : BaseSettingsAdapter(recyclerView, emptyList()) {}
+    }
+
+    override val recyclerView: LifecycleAwareRecyclerView
+        get() = binding.settingsBaseRecyclerView
+
+    override val loadingView: LinearProgressIndicator
+        get() = binding.settingsBaseLoadingProgress
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setupMedicationList()
+        setupFab()
+    }
+
+    private fun setupMedicationList() {
+        lifecycleScope.launch {
+            medicationDao.getAll().collect { medications ->
+                binding.settingsBaseLoading.isVisible = false
+                recyclerView.adapter = MedicationAdapter(medications) { medication ->
+                    lifecycleScope.launch {
+                        medicationDao.delete(medication)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun setupFab() {
+        binding.fabAdd.setOnClickListener {
+            val addMedicationFragment = AddMedicationFragment()
+            addMedicationFragment.setOnMedicationAddedListener { medication ->
+                lifecycleScope.launch {
+                    medicationDao.insert(medication)
+                }
+            }
+            addMedicationFragment.show(childFragmentManager, "AddMedicationFragment")
+        }
+    }
+}

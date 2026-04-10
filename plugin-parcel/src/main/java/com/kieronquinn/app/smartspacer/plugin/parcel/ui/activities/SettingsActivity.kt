@@ -1,16 +1,20 @@
 package com.kieronquinn.app.smartspacer.plugin.parcel.ui.activities
 
-import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import com.kieronquinn.app.smartspacer.plugin.parcel.ui.fragments.SettingsFragment
+import androidx.annotation.NavigationRes
+import com.kieronquinn.app.smartspacer.plugin.parcel.R
+import com.kieronquinn.app.smartspacer.plugin.shared.repositories.NavGraphRepository
+import com.kieronquinn.app.smartspacer.plugin.shared.ui.activities.BaseConfigurationActivity
 
-class SettingsActivity : AppCompatActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        if (savedInstanceState == null) {
-            supportFragmentManager.beginTransaction()
-                .replace(android.R.id.content, SettingsFragment())
-                .commit()
-        }
+class SettingsActivity : BaseConfigurationActivity() {
+
+    enum class NavGraphMapping(
+        override val className: String,
+        @NavigationRes override val graph: Int
+    ): NavGraphRepository.NavGraphMapping {
+        SETTINGS(
+            ".ui.activities.SettingsActivity",
+            R.navigation.nav_graph_configuration
+        )
     }
+
 }

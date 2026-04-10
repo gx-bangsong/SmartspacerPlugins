@@ -3,23 +3,28 @@ package com.kieronquinn.app.smartspacer.plugin.parcel.ui.fragments
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import com.kieronquinn.app.smartspacer.plugin.parcel.databinding.FragmentSettingsBinding
+import com.kieronquinn.app.smartspacer.plugin.parcel.R
 import com.kieronquinn.app.smartspacer.plugin.parcel.engine.InboxScanner
 import com.kieronquinn.app.smartspacer.plugin.parcel.engine.RuleManager
+import com.kieronquinn.app.smartspacer.plugin.shared.model.settings.BaseSettingsItem
+import com.kieronquinn.app.smartspacer.plugin.shared.model.settings.GenericSettingsItem.Setting
+import com.kieronquinn.app.smartspacer.plugin.shared.ui.base.settings.BaseSettingsFragment
+import com.kieronquinn.app.smartspacer.plugin.shared.ui.base.settings.BaseSettingsAdapter
 import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SettingsFragment : Fragment() {
+class SettingsFragment : BaseSettingsFragment() {
 
-    private var _binding: FragmentSettingsBinding? = null
-    private val binding get() = _binding!!
+    private val viewModel by viewModel<SettingsViewModel>()
+
+    override val adapter by lazy {
+        object : BaseSettingsAdapter(recyclerView, emptyList()) {}
+    }
 
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
@@ -44,24 +49,33 @@ class SettingsFragment : Fragment() {
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentSettingsBinding.inflate(inflater, container, false)
-        return binding.root
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupSettings()
+    }
 
-        binding.btnScanInbox.setOnClickListener {
-            checkPermissionsAndScan()
-        }
-
-        binding.btnImportRules.setOnClickListener {
-            importRulesLauncher.launch("application/json")
-        }
+    private fun setupSettings() {
+        val items = listOf<BaseSettingsItem>(
+            Setting(
+                getString(R.string.plugin_description),
+                "Privacy: All SMS processing is local.",
+                ContextCompat.getDrawable(requireContext(), com.kieronquinn.app.shared.R.drawable.ic_info),
+                onClick = {}
+            ),
+            Setting(
+                "Scan Inbox",
+                "Scan historical SMS for parcels",
+                ContextCompat.getDrawable(requireContext(), com.kieronquinn.app.shared.R.drawable.ic_smartspacer),
+                onClick = { checkPermissionsAndScan() }
+            ),
+            Setting(
+                "Import Rules",
+                "Load custom JSON parsing rules",
+                ContextCompat.getDrawable(requireContext(), com.kieronquinn.app.shared.R.drawable.ic_smartspacer),
+                onClick = { importRulesLauncher.launch("application/json") }
+            )
+        )
+        adapter.update(items)
     }
 
     private fun checkPermissionsAndScan() {
@@ -75,14 +89,8 @@ class SettingsFragment : Fragment() {
 
     private fun scanInbox() {
         lifecycleScope.launch {
-            binding.btnScanInbox.isEnabled = false
             InboxScanner(requireContext()).scan()
-            binding.btnScanInbox.isEnabled = true
+            Toast.makeText(requireContext(), "Inbox scan complete", Toast.LENGTH_SHORT).show()
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }
