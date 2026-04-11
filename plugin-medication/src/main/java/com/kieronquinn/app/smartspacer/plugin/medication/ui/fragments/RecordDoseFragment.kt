@@ -1,11 +1,11 @@
 package com.kieronquinn.app.smartspacer.plugin.medication.ui.fragments
 
+import android.app.Dialog
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
-import androidx.fragment.app.DialogFragment
+import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.lifecycle.lifecycleScope
 import com.kieronquinn.app.smartspacer.plugin.medication.R
 import com.kieronquinn.app.smartspacer.plugin.medication.data.Medication
@@ -16,36 +16,29 @@ import com.kieronquinn.app.smartspacer.plugin.medication.data.ScheduleType
 import com.kieronquinn.app.smartspacer.plugin.medication.databinding.FragmentRecordDoseBinding
 import com.kieronquinn.app.smartspacer.plugin.medication.providers.MedicationProvider
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.gson.Gson
 import java.util.Calendar
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 
-class RecordDoseFragment : DialogFragment() {
+class RecordDoseFragment : AppCompatDialogFragment() {
 
-    private lateinit var binding: FragmentRecordDoseBinding
     private val medicationDao by inject<MedicationDao>()
     private val doseHistoryDao by inject<DoseHistoryDao>()
     private val gson = Gson()
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentRecordDoseBinding.inflate(inflater, container, false)
-        dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val medicationId = requireArguments().getInt("medicationId", -1)
         if (medicationId == -1) {
             dismiss()
-            return
         }
+
+        val binding = FragmentRecordDoseBinding.inflate(LayoutInflater.from(context))
+        val dialog = MaterialAlertDialogBuilder(requireContext())
+            .setView(binding.root)
+            .create()
+
         lifecycleScope.launch {
             val medication = medicationDao.getById(medicationId)
             if (medication == null) {
@@ -62,6 +55,8 @@ class RecordDoseFragment : DialogFragment() {
                 handleDose(medication, DoseHistory.Status.SKIPPED)
             }
         }
+
+        return dialog
     }
 
     private fun handleDose(medication: Medication, status: DoseHistory.Status) {
@@ -86,7 +81,6 @@ class RecordDoseFragment : DialogFragment() {
     }
 
     private fun calculateNextDose(medication: Medication): Long {
-        val now = Calendar.getInstance()
         val currentDoseTime = Calendar.getInstance().apply { timeInMillis = medication.nextDoseTs }
 
         return when (medication.scheduleType) {
@@ -138,5 +132,15 @@ class RecordDoseFragment : DialogFragment() {
                 0L
             }
         }
+    }
+
+    override fun onDismiss(dialog: DialogInterface) {
+        super.onDismiss(dialog)
+        activity?.finish()
+    }
+
+    override fun onCancel(dialog: DialogInterface) {
+        super.onCancel(dialog)
+        activity?.finish()
     }
 }

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/plugin_description"
+        android:layout_marginBottom="16dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Privacy: All SMS processing is done locally on your device. No data is uploaded to the cloud."
+        android:textSize="12sp"
+        android:textColor="?android:attr/textColorSecondary"
+        android:layout_marginBottom="24dp" />
+
+    <Button
+        android:id="@+id/btn_scan_inbox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Scan Inbox for Parcels"
+        android:layout_marginBottom="8dp" />
+
+    <Button
+        android:id="@+id/btn_import_rules"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Import Custom Rules (JSON)" />
+
+</LinearLayout>

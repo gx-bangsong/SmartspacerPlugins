@@ -1,25 +1,20 @@
 package com.kieronquinn.app.smartspacer.plugin.water.ui.activities
 
-import android.os.Bundle
-import androidx.activity.compose.setContent
-import androidx.fragment.app.FragmentActivity
-import com.kieronquinn.app.smartspacer.plugin.water.ui.screens.settings.WaterSettingsScreen
-import com.kieronquinn.app.smartspacer.plugin.water.ui.screens.settings.WaterSettingsViewModel
-import com.kieronquinn.app.smartspacer.plugin.water.ui.screens.settings.WaterSettingsViewModelImpl
-import com.kieronquinn.app.smartspacer.plugin.water.ui.theme.WaterTheme
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import androidx.annotation.NavigationRes
+import com.kieronquinn.app.smartspacer.plugin.shared.repositories.NavGraphRepository
+import com.kieronquinn.app.smartspacer.plugin.shared.ui.activities.BaseConfigurationActivity
+import com.kieronquinn.app.smartspacer.plugin.water.R
 
-class SettingsActivity : FragmentActivity() {
+class SettingsActivity : BaseConfigurationActivity() {
 
-    private val viewModel: WaterSettingsViewModel by viewModel<WaterSettingsViewModelImpl>()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            WaterTheme {
-                WaterSettingsScreen(viewModel)
-            }
-        }
+    enum class NavGraphMapping(
+        override val className: String,
+        @NavigationRes override val graph: Int
+    ): NavGraphRepository.NavGraphMapping {
+        SETTINGS(
+            ".ui.activities.SettingsActivity",
+            R.navigation.nav_graph_configuration
+        )
     }
 
 }

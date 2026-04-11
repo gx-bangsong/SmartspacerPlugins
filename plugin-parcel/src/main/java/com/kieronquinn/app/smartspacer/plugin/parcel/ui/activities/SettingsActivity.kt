@@ -1,7 +1,7 @@
-package com.kieronquinn.app.smartspacer.plugin.medication.ui.activities
+package com.kieronquinn.app.smartspacer.plugin.parcel.ui.activities
 
 import androidx.annotation.NavigationRes
-import com.kieronquinn.app.smartspacer.plugin.medication.R
+import com.kieronquinn.app.smartspacer.plugin.parcel.R
 import com.kieronquinn.app.smartspacer.plugin.shared.repositories.NavGraphRepository
 import com.kieronquinn.app.smartspacer.plugin.shared.ui.activities.BaseConfigurationActivity
 

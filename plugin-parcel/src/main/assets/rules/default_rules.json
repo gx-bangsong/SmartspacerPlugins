@@ -1,0 +1,30 @@
+{
+  "rules": [
+    {
+      "provider": "菜鸟驿站",
+      "priority": 10,
+      "match_keywords": ["菜鸟驿站", "取件码"],
+      "rules": {
+        "pickup_code": "(?:取件码|取件码为)\\s*[:：]?\\s*([A-Z0-9-]+)",
+        "location": "地址[:：]\\s*([^，。！\\s]+)"
+      }
+    },
+    {
+      "provider": "丰巢",
+      "priority": 10,
+      "match_keywords": ["丰巢", "取件码"],
+      "rules": {
+        "pickup_code": "(?:取件码|取件码为)\\s*[:：]?\\s*([0-9]{6,8})",
+        "location": "位于\\s*([^，。！\\s]+)"
+      }
+    },
+    {
+      "provider": "通用快递",
+      "priority": 1,
+      "match_keywords": ["取件码"],
+      "rules": {
+        "pickup_code": "(?:取件码|验证码|取货码)\\s*[:：]?\\s*([A-Z0-9-]+)"
+      }
+    }
+  ]
+}

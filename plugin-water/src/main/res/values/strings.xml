@@ -1,10 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Water Reminder Plugin</string>
+    <string name="app_name">Water Reminder</string>
     <string name="settings_title">Water Reminder Settings</string>
     <string name="record_drink_title">记录喝水情况</string>
     <string name="water_record_drink">记录喝水</string>
     <string name="action_skip">跳过</string>
     <string name="action_drank">已喝</string>
     <string name="water_record_success">喝水记录成功</string>
+
+    <string name="setting_daily_goal">Daily Goal</string>
+    <string name="setting_cup_size">Cup Size</string>
+    <string name="setting_auto_reset">Automatic Progress Reset</string>
+    <string name="setting_auto_reset_desc">Reset daily progress at start time</string>
+    <string name="setting_smart_adjust">Smart Adjustments</string>
+    <string name="setting_smart_adjust_desc">Adjust next reminder based on progress</string>
+    <string name="setting_display_mode">Display Mode</string>
+    <string name="setting_save">Save Changes</string>
+    <string name="setting_save_desc">Apply new settings and reschedule</string>
+
+    <string name="display_mode_progress">Progress</string>
+    <string name="display_mode_reminder">Reminder</string>
+    <string name="display_mode_dynamic">Dynamic</string>
 </resources>
