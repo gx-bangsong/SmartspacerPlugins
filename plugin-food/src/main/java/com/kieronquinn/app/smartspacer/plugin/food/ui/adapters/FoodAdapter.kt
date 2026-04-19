@@ -12,7 +12,7 @@ import java.util.Locale
 class FoodAdapter(
     private val foodItems: List<FoodItem>,
     private val onDelete: (FoodItem) -> Unit
-) : RecyclerView.Adapter<FoodAdapter.ViewHolder>() {
+) : androidx.recyclerview.widget.RecyclerView.Adapter<FoodAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = ItemFoodBinding.inflate(
@@ -31,7 +31,7 @@ class FoodAdapter(
     override fun getItemCount() = foodItems.size
 
     inner class ViewHolder(private val binding: ItemFoodBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+        com.kieronquinn.app.smartspacer.plugin.shared.ui.views.LifecycleAwareRecyclerView.ViewHolder(binding.root) {
 
         private val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
 

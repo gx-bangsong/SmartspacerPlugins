@@ -1,0 +1,10 @@
+<<<<<<< SEARCH
+                    override fun onBindViewHolder(holder: FoodAdapter.ViewHolder, position: Int) {
+                        innerAdapter.onBindViewHolder(holder, position)
+                        holder.handleLifecycleEvent(androidx.lifecycle.Lifecycle.Event.ON_RESUME)
+                    }
+=======
+                    override fun onBindViewHolder(holder: FoodAdapter.ViewHolder, position: Int) {
+                        innerAdapter.onBindViewHolder(holder, position)
+                    }
+>>>>>>> REPLACE

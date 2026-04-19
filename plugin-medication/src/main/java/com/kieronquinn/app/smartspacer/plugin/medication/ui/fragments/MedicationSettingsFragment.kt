@@ -2,6 +2,7 @@ package com.kieronquinn.app.smartspacer.plugin.medication.ui.fragments
 
 import android.os.Bundle
 import android.view.View
+import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.progressindicator.LinearProgressIndicator
@@ -39,11 +40,23 @@ class MedicationSettingsFragment : BaseFragment<FragmentMedicationSettingsBindin
         lifecycleScope.launch {
             medicationDao.getAll().collect { medications ->
                 binding.settingsBaseLoading.isVisible = false
-                recyclerView.adapter = MedicationAdapter(medications) { medication ->
-                    lifecycleScope.launch {
-                        medicationDao.delete(medication)
-                        com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider.notifyChange(requireContext(), com.kieronquinn.app.smartspacer.plugin.medication.providers.MedicationProvider::class.java)
+                recyclerView.adapter = object : com.kieronquinn.app.smartspacer.plugin.shared.ui.views.LifecycleAwareRecyclerView.Adapter<MedicationAdapter.ViewHolder>(recyclerView) {
+                    private val innerAdapter = MedicationAdapter(medications) { medication ->
+                        lifecycleScope.launch {
+                            medicationDao.delete(medication)
+                            com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider.notifyChange(requireContext(), com.kieronquinn.app.smartspacer.plugin.medication.providers.MedicationProvider::class.java)
+                        }
                     }
+
+                    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MedicationAdapter.ViewHolder {
+                        return innerAdapter.onCreateViewHolder(parent, viewType)
+                    }
+
+                    override fun onBindViewHolder(holder: MedicationAdapter.ViewHolder, position: Int) {
+                        innerAdapter.onBindViewHolder(holder, position)
+                    }
+
+                    override fun getItemCount(): Int = innerAdapter.itemCount
                 }
             }
         }

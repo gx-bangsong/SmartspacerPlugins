@@ -1,0 +1,15 @@
+<<<<<<< SEARCH
+class FoodAdapter(
+    private val foodItems: List<FoodItem>,
+    private val onDelete: (FoodItem) -> Unit
+) : com.kieronquinn.app.smartspacer.plugin.shared.ui.views.LifecycleAwareRecyclerView.Adapter<FoodAdapter.ViewHolder>(null!!) {
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+=======
+class FoodAdapter(
+    private val foodItems: List<FoodItem>,
+    private val onDelete: (FoodItem) -> Unit
+) : androidx.recyclerview.widget.RecyclerView.Adapter<FoodAdapter.ViewHolder>() {
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+>>>>>>> REPLACE

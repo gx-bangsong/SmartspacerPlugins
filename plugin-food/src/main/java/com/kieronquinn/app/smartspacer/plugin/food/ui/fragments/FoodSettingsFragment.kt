@@ -2,6 +2,7 @@ package com.kieronquinn.app.smartspacer.plugin.food.ui.fragments
 
 import android.os.Bundle
 import android.view.View
+import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.progressindicator.LinearProgressIndicator
@@ -39,11 +40,23 @@ class FoodSettingsFragment : BaseFragment<FragmentFoodSettingsBinding>(FragmentF
         lifecycleScope.launch {
             foodItemDao.getAll().collect { foodItems ->
                 binding.settingsBaseLoading.isVisible = false
-                recyclerView.adapter = FoodAdapter(foodItems) { foodItem ->
-                    lifecycleScope.launch {
-                        foodItemDao.delete(foodItem)
-                        com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider.notifyChange(requireContext(), com.kieronquinn.app.smartspacer.plugin.food.providers.FoodProvider::class.java)
+                recyclerView.adapter = object : com.kieronquinn.app.smartspacer.plugin.shared.ui.views.LifecycleAwareRecyclerView.Adapter<FoodAdapter.ViewHolder>(recyclerView) {
+                    private val innerAdapter = FoodAdapter(foodItems) { foodItem ->
+                        lifecycleScope.launch {
+                            foodItemDao.delete(foodItem)
+                            com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider.notifyChange(requireContext(), com.kieronquinn.app.smartspacer.plugin.food.providers.FoodProvider::class.java)
+                        }
                     }
+
+                    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FoodAdapter.ViewHolder {
+                        return innerAdapter.onCreateViewHolder(parent, viewType)
+                    }
+
+                    override fun onBindViewHolder(holder: FoodAdapter.ViewHolder, position: Int) {
+                        innerAdapter.onBindViewHolder(holder, position)
+                    }
+
+                    override fun getItemCount(): Int = innerAdapter.itemCount
                 }
             }
         }
