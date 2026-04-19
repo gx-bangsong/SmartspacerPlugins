@@ -42,6 +42,7 @@ class MedicationSettingsFragment : BaseFragment<FragmentMedicationSettingsBindin
                 recyclerView.adapter = MedicationAdapter(medications) { medication ->
                     lifecycleScope.launch {
                         medicationDao.delete(medication)
+                        com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider.notifyChange(requireContext(), com.kieronquinn.app.smartspacer.plugin.medication.providers.MedicationProvider::class.java)
                     }
                 }
             }
@@ -54,6 +55,7 @@ class MedicationSettingsFragment : BaseFragment<FragmentMedicationSettingsBindin
             addMedicationFragment.setOnMedicationAddedListener { medication ->
                 lifecycleScope.launch {
                     medicationDao.insert(medication)
+                    com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider.notifyChange(requireContext(), com.kieronquinn.app.smartspacer.plugin.medication.providers.MedicationProvider::class.java)
                 }
             }
             addMedicationFragment.show(childFragmentManager, "AddMedicationFragment")

@@ -1,0 +1,52 @@
+<<<<<<< SEARCH
+        return medications
+            .filter { medication ->
+                if (!medication.enabled) return@filter false
+                if (now < medication.nextDoseTs) return@filter false
+
+                // For specific weekdays, ensure today is one of the allowed days
+                if (medication.scheduleType == ScheduleType.SPECIFIC_WEEKDAYS) {
+                    val today = Calendar.getInstance().get(Calendar.DAY_OF_WEEK)
+                    if ((medication.weekdays!! and (1 shl today)) == 0) return@filter false
+                }
+
+                // Ensure within start/end dates
+                if (now < medication.startDate) return@filter false
+                if (!medication.isUnlimited && medication.endDate != null && now > medication.endDate) return@filter false
+
+                true
+            }
+            .map { medication ->
+                val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
+                val time = timeFormat.format(Date(medication.nextDoseTs))
+                val title = "${medication.name} ${medication.dosage ?: ""} - Take at $time"
+
+                val intent = Intent(context, DialogLauncherActivity::class.java).apply {
+=======
+        return medications
+            .filter { medication ->
+                if (!medication.enabled) return@filter false
+
+                // For specific weekdays, ensure today is one of the allowed days
+                if (medication.scheduleType == ScheduleType.SPECIFIC_WEEKDAYS) {
+                    val today = Calendar.getInstance().get(Calendar.DAY_OF_WEEK)
+                    if ((medication.weekdays!! and (1 shl today)) == 0) return@filter false
+                }
+
+                // Ensure within start/end dates
+                if (now < medication.startDate) return@filter false
+                if (!medication.isUnlimited && medication.endDate != null && now > medication.endDate) return@filter false
+
+                true
+            }
+            .map { medication ->
+                val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
+                val time = timeFormat.format(Date(medication.nextDoseTs))
+                val title = if (now >= medication.nextDoseTs) {
+                    "${medication.name} ${medication.dosage ?: ""} - Take now ($time)"
+                } else {
+                    "${medication.name} ${medication.dosage ?: ""} - Next dose at $time"
+                }
+
+                val intent = Intent(context, DialogLauncherActivity::class.java).apply {
+>>>>>>> REPLACE

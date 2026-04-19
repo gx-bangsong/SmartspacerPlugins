@@ -42,6 +42,7 @@ class FoodSettingsFragment : BaseFragment<FragmentFoodSettingsBinding>(FragmentF
                 recyclerView.adapter = FoodAdapter(foodItems) { foodItem ->
                     lifecycleScope.launch {
                         foodItemDao.delete(foodItem)
+                        com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider.notifyChange(requireContext(), com.kieronquinn.app.smartspacer.plugin.food.providers.FoodProvider::class.java)
                     }
                 }
             }
@@ -54,6 +55,7 @@ class FoodSettingsFragment : BaseFragment<FragmentFoodSettingsBinding>(FragmentF
             addFoodItemFragment.setOnFoodItemAddedListener { foodItem ->
                 lifecycleScope.launch {
                     foodItemDao.insert(foodItem)
+                    com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider.notifyChange(requireContext(), com.kieronquinn.app.smartspacer.plugin.food.providers.FoodProvider::class.java)
                 }
             }
             addFoodItemFragment.show(childFragmentManager, "AddFoodItemFragment")
