@@ -1,0 +1,8 @@
+<<<<<<< SEARCH
+    private fun setupSettings() {
+        val items = listOf<BaseSettingsItem>(
+=======
+    private fun setupSettings() {
+        binding.settingsBaseLoading.visibility = View.GONE
+        val items = listOf<BaseSettingsItem>(
+>>>>>>> REPLACE
