@@ -39,24 +39,23 @@ class MedicationSettingsFragment : BaseFragment<FragmentMedicationSettingsBindin
     private fun setupMedicationList() {
         lifecycleScope.launch {
             medicationDao.getAll().collect { medications ->
-                binding.settingsBaseLoading.isVisible = false
-                recyclerView.adapter = object : com.kieronquinn.app.smartspacer.plugin.shared.ui.views.LifecycleAwareRecyclerView.Adapter<MedicationAdapter.ViewHolder>(recyclerView) {
-                    private val innerAdapter = MedicationAdapter(medications) { medication ->
-                        lifecycleScope.launch {
-                            medicationDao.delete(medication)
-                            com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider.notifyChange(requireContext(), com.kieronquinn.app.smartspacer.plugin.medication.providers.MedicationProvider::class.java)
-                        }
+                binding.settingsBaseLoading.visibility = View.GONE
+                val medicationAdapter = MedicationAdapter(medications) { medication ->
+                    lifecycleScope.launch {
+                        medicationDao.delete(medication)
+                        com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider.notifyChange(requireContext(), com.kieronquinn.app.smartspacer.plugin.medication.providers.MedicationProvider::class.java)
                     }
-
+                }
+                recyclerView.adapter = object : com.kieronquinn.app.smartspacer.plugin.shared.ui.views.LifecycleAwareRecyclerView.Adapter<MedicationAdapter.ViewHolder>(recyclerView) {
                     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MedicationAdapter.ViewHolder {
-                        return innerAdapter.onCreateViewHolder(parent, viewType)
+                        return medicationAdapter.onCreateViewHolder(parent, viewType)
                     }
 
                     override fun onBindViewHolder(holder: MedicationAdapter.ViewHolder, position: Int) {
-                        innerAdapter.onBindViewHolder(holder, position)
+                        medicationAdapter.onBindViewHolder(holder, position)
                     }
 
-                    override fun getItemCount(): Int = innerAdapter.itemCount
+                    override fun getItemCount(): Int = medicationAdapter.itemCount
                 }
             }
         }

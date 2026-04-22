@@ -2,7 +2,7 @@
     private fun setupFoodList() {
         lifecycleScope.launch {
             foodItemDao.getAll().collect { foodItems ->
-                binding.settingsBaseLoading.isVisible = false
+                binding.settingsBaseLoading.visibility = View.GONE
                 recyclerView.adapter = object : com.kieronquinn.app.smartspacer.plugin.shared.ui.views.LifecycleAwareRecyclerView.Adapter<FoodAdapter.ViewHolder>(recyclerView) {
                     private val innerAdapter = FoodAdapter(foodItems) { foodItem ->
                         lifecycleScope.launch {
@@ -28,7 +28,7 @@
     private fun setupFoodList() {
         lifecycleScope.launch {
             foodItemDao.getAll().collect { foodItems ->
-                binding.settingsBaseLoading.isVisible = false
+                binding.settingsBaseLoading.visibility = View.GONE
                 val foodAdapter = FoodAdapter(foodItems) { foodItem ->
                     lifecycleScope.launch {
                         foodItemDao.delete(foodItem)

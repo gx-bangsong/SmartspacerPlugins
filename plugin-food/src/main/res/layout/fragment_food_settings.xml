@@ -8,8 +8,8 @@
 
     <com.kieronquinn.app.smartspacer.plugin.shared.ui.views.LifecycleAwareRecyclerView
         android:id="@+id/settings_base_recycler_view"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:clipToPadding="false"
         android:paddingBottom="104dp"
         app:layout_constraintBottom_toBottomOf="parent"

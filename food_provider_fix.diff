@@ -1,61 +1,9 @@
 <<<<<<< SEARCH
-    override fun getSmartspaceTargets(smartspacerId: String): List<SmartspaceTarget> {
-        val context = this.context ?: return emptyList()
-        val foodItems = runBlocking { foodItemDao.getAll().first() }
-        val now = System.currentTimeMillis()
-
-        return foodItems
-            .filter { it.enabled }
-            .mapNotNull { foodItem ->
-                val expiresInMillis = foodItem.expiryDate - now
-
-
-                SmartspaceTarget(
-                    smartspaceTargetId = "food_${foodItem.id}",
-                    headerAction = SmartspaceAction(
-                        id = "food_header_${foodItem.id}",
-                        title = "${foodItem.name} - Expires in $expiresInDays days",
-                        intent = Intent(context, com.kieronquinn.app.smartspacer.plugin.food.ui.activities.SettingsActivity::class.java),
-                        icon = Icon.createWithResource(context, R.drawable.ic_kitchen)
-                    ),
-                    featureType = SmartspaceTarget.FEATURE_REMINDER,
-                    componentName = ComponentName(context, FoodProvider::class.java)
-                )
-            }
-    }
-=======
-    override fun getSmartspaceTargets(smartspacerId: String): List<SmartspaceTarget> {
-        val context = this.context ?: return emptyList()
-        val foodItems = runBlocking { foodItemDao.getAll().first() }
-        val now = System.currentTimeMillis()
-
         return foodItems
             .filter { it.enabled }
             .map { foodItem ->
-                val expiresInMillis = foodItem.expiryDate - now
-                val title = if (expiresInMillis <= 0) {
-                    "${foodItem.name} - Expired"
-                } else {
-                    val expiresInDays = TimeUnit.MILLISECONDS.toDays(expiresInMillis)
-                    if (expiresInDays > 0) {
-                        "${foodItem.name} - Expires in $expiresInDays days"
-                    } else {
-                        val expiresInHours = TimeUnit.MILLISECONDS.toHours(expiresInMillis)
-                        "${foodItem.name} - Expires in $expiresInHours hours"
-                    }
-                }
-
-                SmartspaceTarget(
-                    smartspaceTargetId = "food_${foodItem.id}",
-                    headerAction = SmartspaceAction(
-                        id = "food_header_${foodItem.id}",
-                        title = title,
-                        intent = Intent(context, com.kieronquinn.app.smartspacer.plugin.food.ui.activities.SettingsActivity::class.java),
-                        icon = Icon.createWithResource(context, R.drawable.ic_kitchen)
-                    ),
-                    featureType = SmartspaceTarget.FEATURE_REMINDER,
-                    componentName = ComponentName(context, FoodProvider::class.java)
-                )
-            }
-    }
+=======
+        return foodItems
+            .filter { it.enabled }
+            .map { foodItem ->
 >>>>>>> REPLACE

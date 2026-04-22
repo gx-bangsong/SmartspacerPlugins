@@ -1,0 +1,12 @@
+<<<<<<< SEARCH
+class WaterSettingsViewModelImpl(
+    private val waterDataRepository: WaterDataRepository
+) : WaterSettingsViewModel(), KoinComponent {
+
+    private val waterScheduler by inject<WaterScheduler>()
+=======
+class WaterSettingsViewModelImpl(
+    private val waterDataRepository: WaterDataRepository,
+    private val waterScheduler: WaterScheduler
+) : WaterSettingsViewModel(), KoinComponent {
+>>>>>>> REPLACE

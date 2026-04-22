@@ -39,24 +39,23 @@ class FoodSettingsFragment : BaseFragment<FragmentFoodSettingsBinding>(FragmentF
     private fun setupFoodList() {
         lifecycleScope.launch {
             foodItemDao.getAll().collect { foodItems ->
-                binding.settingsBaseLoading.isVisible = false
-                recyclerView.adapter = object : com.kieronquinn.app.smartspacer.plugin.shared.ui.views.LifecycleAwareRecyclerView.Adapter<FoodAdapter.ViewHolder>(recyclerView) {
-                    private val innerAdapter = FoodAdapter(foodItems) { foodItem ->
-                        lifecycleScope.launch {
-                            foodItemDao.delete(foodItem)
-                            com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider.notifyChange(requireContext(), com.kieronquinn.app.smartspacer.plugin.food.providers.FoodProvider::class.java)
-                        }
+                binding.settingsBaseLoading.visibility = View.GONE
+                val foodAdapter = FoodAdapter(foodItems) { foodItem ->
+                    lifecycleScope.launch {
+                        foodItemDao.delete(foodItem)
+                        com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider.notifyChange(requireContext(), com.kieronquinn.app.smartspacer.plugin.food.providers.FoodProvider::class.java)
                     }
-
+                }
+                recyclerView.adapter = object : com.kieronquinn.app.smartspacer.plugin.shared.ui.views.LifecycleAwareRecyclerView.Adapter<FoodAdapter.ViewHolder>(recyclerView) {
                     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FoodAdapter.ViewHolder {
-                        return innerAdapter.onCreateViewHolder(parent, viewType)
+                        return foodAdapter.onCreateViewHolder(parent, viewType)
                     }
 
                     override fun onBindViewHolder(holder: FoodAdapter.ViewHolder, position: Int) {
-                        innerAdapter.onBindViewHolder(holder, position)
+                        foodAdapter.onBindViewHolder(holder, position)
                     }
 
-                    override fun getItemCount(): Int = innerAdapter.itemCount
+                    override fun getItemCount(): Int = foodAdapter.itemCount
                 }
             }
         }

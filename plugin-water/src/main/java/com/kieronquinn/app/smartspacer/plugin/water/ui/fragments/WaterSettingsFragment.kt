@@ -79,6 +79,7 @@ class WaterSettingsFragment : BaseFragment<FragmentSettingsBaseBinding>(Fragment
                 ) { viewModel.saveChanges(requireContext()) })
 
                 adapter.update(items)
+                binding.settingsBaseLoading.visibility = View.GONE
             }
         }
     }

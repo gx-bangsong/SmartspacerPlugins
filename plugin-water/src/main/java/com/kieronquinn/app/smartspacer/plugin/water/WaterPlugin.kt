@@ -24,7 +24,7 @@ class WaterPlugin: SmartspacerPlugin() {
         single<WaterDataRepository> { WaterDataRepositoryImpl(get(), get()) }
         single { WaterScheduler() }
         single<NavGraphRepository> { NavGraphRepositoryImpl() }
-        viewModel<WaterSettingsViewModel> { WaterSettingsViewModelImpl(get()) }
+        viewModel<WaterSettingsViewModel> { WaterSettingsViewModelImpl(get(), get()) }
     }
 
 }

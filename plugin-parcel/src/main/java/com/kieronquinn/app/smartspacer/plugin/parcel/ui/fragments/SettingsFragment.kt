@@ -77,6 +77,7 @@ class SettingsFragment : BaseSettingsFragment() {
             )
         )
         adapter.update(items)
+        binding.settingsBaseLoading.visibility = View.GONE
     }
 
     private fun checkPermissionsAndScan() {
