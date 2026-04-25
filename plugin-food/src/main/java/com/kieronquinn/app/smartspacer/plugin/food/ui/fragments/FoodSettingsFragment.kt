@@ -2,6 +2,7 @@ package com.kieronquinn.app.smartspacer.plugin.food.ui.fragments
 
 import android.os.Bundle
 import android.view.View
+import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.progressindicator.LinearProgressIndicator
@@ -38,11 +39,23 @@ class FoodSettingsFragment : BaseFragment<FragmentFoodSettingsBinding>(FragmentF
     private fun setupFoodList() {
         lifecycleScope.launch {
             foodItemDao.getAll().collect { foodItems ->
-                binding.settingsBaseLoading.isVisible = false
-                recyclerView.adapter = FoodAdapter(foodItems) { foodItem ->
+                binding.settingsBaseLoading.visibility = View.GONE
+                val foodAdapter = FoodAdapter(foodItems) { foodItem ->
                     lifecycleScope.launch {
                         foodItemDao.delete(foodItem)
+                        com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider.notifyChange(requireContext(), com.kieronquinn.app.smartspacer.plugin.food.providers.FoodProvider::class.java)
                     }
+                }
+                recyclerView.adapter = object : com.kieronquinn.app.smartspacer.plugin.shared.ui.views.LifecycleAwareRecyclerView.Adapter<FoodAdapter.ViewHolder>(recyclerView) {
+                    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FoodAdapter.ViewHolder {
+                        return foodAdapter.onCreateViewHolder(parent, viewType)
+                    }
+
+                    override fun onBindViewHolder(holder: FoodAdapter.ViewHolder, position: Int) {
+                        foodAdapter.onBindViewHolder(holder, position)
+                    }
+
+                    override fun getItemCount(): Int = foodAdapter.itemCount
                 }
             }
         }
@@ -54,6 +67,7 @@ class FoodSettingsFragment : BaseFragment<FragmentFoodSettingsBinding>(FragmentF
             addFoodItemFragment.setOnFoodItemAddedListener { foodItem ->
                 lifecycleScope.launch {
                     foodItemDao.insert(foodItem)
+                    com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider.notifyChange(requireContext(), com.kieronquinn.app.smartspacer.plugin.food.providers.FoodProvider::class.java)
                 }
             }
             addFoodItemFragment.show(childFragmentManager, "AddFoodItemFragment")

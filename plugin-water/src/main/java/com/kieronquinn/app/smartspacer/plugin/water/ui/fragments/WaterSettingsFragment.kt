@@ -13,13 +13,12 @@ import com.kieronquinn.app.smartspacer.plugin.shared.utils.extensions.whenResume
 import com.kieronquinn.app.smartspacer.plugin.water.R
 import com.kieronquinn.app.smartspacer.plugin.water.repositories.DisplayMode
 import com.kieronquinn.app.smartspacer.plugin.water.ui.screens.settings.WaterSettingsViewModel
-import com.kieronquinn.app.smartspacer.plugin.water.ui.screens.settings.WaterSettingsViewModelImpl
 import com.kieronquinn.app.shared.databinding.FragmentSettingsBaseBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class WaterSettingsFragment : BaseFragment<FragmentSettingsBaseBinding>(FragmentSettingsBaseBinding::inflate) {
 
-    private val viewModel: WaterSettingsViewModel by viewModel<WaterSettingsViewModelImpl>()
+    private val viewModel: WaterSettingsViewModel by viewModel<WaterSettingsViewModel>()
 
     override val adapter by lazy {
         object : BaseSettingsAdapter(recyclerView, emptyList()) {}
@@ -80,6 +79,7 @@ class WaterSettingsFragment : BaseFragment<FragmentSettingsBaseBinding>(Fragment
                 ) { viewModel.saveChanges(requireContext()) })
 
                 adapter.update(items)
+                binding.settingsBaseLoading.visibility = View.GONE
             }
         }
     }

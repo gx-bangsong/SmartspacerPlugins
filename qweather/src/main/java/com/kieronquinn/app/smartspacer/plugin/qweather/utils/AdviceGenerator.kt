@@ -70,11 +70,37 @@ object AdviceGenerator {
 
         val result = mutableListOf<String>()
         if (useEmoji) {
-            if (goodFor.isNotEmpty()) result.add("✅ ${goodFor.joinToString(" ")}")
-            if (badFor.isNotEmpty()) result.add("❌ ${badFor.joinToString(" ")}")
+            result.addAll(splitAdvice("✅ ", goodFor))
+            result.addAll(splitAdvice("❌ ", badFor))
         } else {
-            if (goodFor.isNotEmpty()) result.add("宜:${goodFor.joinToString(" ")}")
-            if (badFor.isNotEmpty()) result.add("不宜:${badFor.joinToString(" ")}")
+            result.addAll(splitAdvice("宜:", goodFor))
+            result.addAll(splitAdvice("不宜:", badFor))
+        }
+        return result
+    }
+
+    private fun splitAdvice(prefix: String, items: List<String>): List<String> {
+        if (items.isEmpty()) return emptyList()
+        val result = mutableListOf<String>()
+        var currentBuilder = StringBuilder(prefix)
+        items.forEach { item ->
+            val potential = if (currentBuilder.length == prefix.length) item else " $item"
+            if (currentBuilder.length + potential.length > 8) {
+                if (currentBuilder.length > prefix.length) {
+                    result.add(currentBuilder.toString())
+                    currentBuilder = StringBuilder(prefix).append(item)
+                } else {
+                    // Even a single item is too long
+                    currentBuilder.append(item)
+                    result.add(currentBuilder.toString())
+                    currentBuilder = StringBuilder(prefix)
+                }
+            } else {
+                currentBuilder.append(potential)
+            }
+        }
+        if (currentBuilder.length > prefix.length) {
+            result.add(currentBuilder.toString())
         }
         return result
     }

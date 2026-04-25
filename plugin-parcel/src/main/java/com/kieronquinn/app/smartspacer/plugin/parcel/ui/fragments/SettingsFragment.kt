@@ -55,6 +55,7 @@ class SettingsFragment : BaseSettingsFragment() {
     }
 
     private fun setupSettings() {
+        binding.settingsBaseLoading.visibility = View.GONE
         val items = listOf<BaseSettingsItem>(
             Setting(
                 getString(R.string.plugin_description),
@@ -76,6 +77,7 @@ class SettingsFragment : BaseSettingsFragment() {
             )
         )
         adapter.update(items)
+        binding.settingsBaseLoading.visibility = View.GONE
     }
 
     private fun checkPermissionsAndScan() {

@@ -1,0 +1,17 @@
+<<<<<<< SEARCH
+    override fun getModule(context: Context) = module {
+        single { WaterDatabase.getDatabase(get()).drinkHistoryDao() }
+        single<WaterDataRepository> { WaterDataRepositoryImpl(get(), get()) }
+        single { WaterScheduler() }
+        single<NavGraphRepository> { NavGraphRepositoryImpl() }
+        viewModel<WaterSettingsViewModel> { WaterSettingsViewModelImpl(get()) }
+    }
+=======
+    override fun getModule(context: Context) = module {
+        single { WaterDatabase.getDatabase(get()).drinkHistoryDao() }
+        single<WaterDataRepository> { WaterDataRepositoryImpl(get(), get()) }
+        single { WaterScheduler() }
+        single<NavGraphRepository> { NavGraphRepositoryImpl() }
+        viewModel<WaterSettingsViewModel> { WaterSettingsViewModelImpl(get(), get()) }
+    }
+>>>>>>> REPLACE

@@ -36,7 +36,6 @@ class MedicationProvider : SmartspacerTargetProvider(), KoinComponent {
         return medications
             .filter { medication ->
                 if (!medication.enabled) return@filter false
-                if (now < medication.nextDoseTs) return@filter false
 
                 // For specific weekdays, ensure today is one of the allowed days
                 if (medication.scheduleType == ScheduleType.SPECIFIC_WEEKDAYS) {
@@ -53,7 +52,11 @@ class MedicationProvider : SmartspacerTargetProvider(), KoinComponent {
             .map { medication ->
                 val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
                 val time = timeFormat.format(Date(medication.nextDoseTs))
-                val title = "${medication.name} ${medication.dosage ?: ""} - Take at $time"
+                val title = if (now >= medication.nextDoseTs) {
+                    "${medication.name} ${medication.dosage ?: ""} - Take now ($time)"
+                } else {
+                    "${medication.name} ${medication.dosage ?: ""} - Next dose at $time"
+                }
 
                 val intent = Intent(context, DialogLauncherActivity::class.java).apply {
                     putExtra(DialogLauncherActivity.EXTRA_FRAGMENT_CLASS, RecordDoseFragment::class.java.name)

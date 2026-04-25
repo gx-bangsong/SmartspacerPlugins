@@ -44,10 +44,9 @@ abstract class WaterSettingsViewModel : ViewModel() {
 }
 
 class WaterSettingsViewModelImpl(
-    private val waterDataRepository: WaterDataRepository
+    private val waterDataRepository: WaterDataRepository, private val waterScheduler: WaterScheduler
 ) : WaterSettingsViewModel(), KoinComponent {
 
-    private val waterScheduler by inject<WaterScheduler>()
 
     private val _uiState = MutableStateFlow(
         UiState(

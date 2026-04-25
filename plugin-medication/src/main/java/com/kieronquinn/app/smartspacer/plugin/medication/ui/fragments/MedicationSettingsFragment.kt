@@ -2,6 +2,7 @@ package com.kieronquinn.app.smartspacer.plugin.medication.ui.fragments
 
 import android.os.Bundle
 import android.view.View
+import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.progressindicator.LinearProgressIndicator
@@ -38,11 +39,23 @@ class MedicationSettingsFragment : BaseFragment<FragmentMedicationSettingsBindin
     private fun setupMedicationList() {
         lifecycleScope.launch {
             medicationDao.getAll().collect { medications ->
-                binding.settingsBaseLoading.isVisible = false
-                recyclerView.adapter = MedicationAdapter(medications) { medication ->
+                binding.settingsBaseLoading.visibility = View.GONE
+                val medicationAdapter = MedicationAdapter(medications) { medication ->
                     lifecycleScope.launch {
                         medicationDao.delete(medication)
+                        com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider.notifyChange(requireContext(), com.kieronquinn.app.smartspacer.plugin.medication.providers.MedicationProvider::class.java)
                     }
+                }
+                recyclerView.adapter = object : com.kieronquinn.app.smartspacer.plugin.shared.ui.views.LifecycleAwareRecyclerView.Adapter<MedicationAdapter.ViewHolder>(recyclerView) {
+                    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MedicationAdapter.ViewHolder {
+                        return medicationAdapter.onCreateViewHolder(parent, viewType)
+                    }
+
+                    override fun onBindViewHolder(holder: MedicationAdapter.ViewHolder, position: Int) {
+                        medicationAdapter.onBindViewHolder(holder, position)
+                    }
+
+                    override fun getItemCount(): Int = medicationAdapter.itemCount
                 }
             }
         }
@@ -54,6 +67,7 @@ class MedicationSettingsFragment : BaseFragment<FragmentMedicationSettingsBindin
             addMedicationFragment.setOnMedicationAddedListener { medication ->
                 lifecycleScope.launch {
                     medicationDao.insert(medication)
+                    com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider.notifyChange(requireContext(), com.kieronquinn.app.smartspacer.plugin.medication.providers.MedicationProvider::class.java)
                 }
             }
             addMedicationFragment.show(childFragmentManager, "AddMedicationFragment")

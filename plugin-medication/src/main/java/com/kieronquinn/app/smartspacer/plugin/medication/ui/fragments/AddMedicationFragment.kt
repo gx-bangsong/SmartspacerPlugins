@@ -35,17 +35,26 @@ class AddMedicationFragment : DialogFragment() {
         setupTimePickers()
         setupShortcutButtons()
 
-        return MaterialAlertDialogBuilder(requireContext())
+        val dialog = MaterialAlertDialogBuilder(requireContext())
             .setTitle("Add Medication")
             .setView(binding.root)
-            .setPositiveButton("Save") { _, _ ->
-                val medication = createMedicationFromInput()
-                medication?.let {
-                    listener?.invoke(it)
-                }
-            }
+            .setPositiveButton("Save", null)
             .setNegativeButton("Cancel", null)
             .create()
+
+        dialog.setOnShowListener {
+            dialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE).setOnClickListener {
+                val medication = createMedicationFromInput()
+                if (medication != null) {
+                    listener?.invoke(medication)
+                    dialog.dismiss()
+                } else {
+                    android.widget.Toast.makeText(requireContext(), "Please fill in all required fields", android.widget.Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+
+        return dialog
     }
 
     private fun setupScheduleTypeToggle() {

@@ -27,17 +27,26 @@ class AddFoodItemFragment : DialogFragment() {
 
         setupQuickFillButtons()
 
-        return MaterialAlertDialogBuilder(requireContext())
+        val dialog = MaterialAlertDialogBuilder(requireContext())
             .setTitle("Add Food Item")
             .setView(binding.root)
-            .setPositiveButton("Save") { _, _ ->
-                val foodItem = createFoodItemFromInput()
-                foodItem?.let {
-                    listener?.invoke(it)
-                }
-            }
+            .setPositiveButton("Save", null)
             .setNegativeButton("Cancel", null)
             .create()
+
+        dialog.setOnShowListener {
+            dialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE).setOnClickListener {
+                val foodItem = createFoodItemFromInput()
+                if (foodItem != null) {
+                    listener?.invoke(foodItem)
+                    dialog.dismiss()
+                } else {
+                    android.widget.Toast.makeText(requireContext(), "Please fill in all required fields", android.widget.Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+
+        return dialog
     }
 
     private fun setupQuickFillButtons() {

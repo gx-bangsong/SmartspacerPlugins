@@ -26,19 +26,25 @@ class FoodProvider : SmartspacerTargetProvider(), KoinComponent {
 
         return foodItems
             .filter { it.enabled }
-            .mapNotNull { foodItem ->
+            .map { foodItem ->
                 val expiresInMillis = foodItem.expiryDate - now
-                if (expiresInMillis <= 0) return@mapNotNull null
+                val title = if (expiresInMillis <= 0) {
+                    "${foodItem.name} - Expired"
+                } else {
+                    val expiresInDays = TimeUnit.MILLISECONDS.toDays(expiresInMillis)
+                    if (expiresInDays > 0) {
+                        "${foodItem.name} - Expires in $expiresInDays days"
+                    } else {
+                        val expiresInHours = TimeUnit.MILLISECONDS.toHours(expiresInMillis)
+                        "${foodItem.name} - Expires in $expiresInHours hours"
+                    }
+                }
 
-                val reminderThreshold = TimeUnit.DAYS.toMillis(foodItem.reminderOffsetDays.toLong())
-                if (expiresInMillis > reminderThreshold) return@mapNotNull null
-
-                val expiresInDays = TimeUnit.MILLISECONDS.toDays(expiresInMillis)
                 SmartspaceTarget(
                     smartspaceTargetId = "food_${foodItem.id}",
                     headerAction = SmartspaceAction(
                         id = "food_header_${foodItem.id}",
-                        title = "${foodItem.name} - Expires in $expiresInDays days",
+                        title = title,
                         intent = Intent(context, com.kieronquinn.app.smartspacer.plugin.food.ui.activities.SettingsActivity::class.java),
                         icon = Icon.createWithResource(context, R.drawable.ic_kitchen)
                     ),

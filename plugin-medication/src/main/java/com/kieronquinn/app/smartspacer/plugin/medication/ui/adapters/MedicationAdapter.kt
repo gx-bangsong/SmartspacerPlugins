@@ -12,7 +12,7 @@ import java.util.Locale
 class MedicationAdapter(
     private val medications: List<Medication>,
     private val onDelete: (Medication) -> Unit
-) : RecyclerView.Adapter<MedicationAdapter.ViewHolder>() {
+) : androidx.recyclerview.widget.RecyclerView.Adapter<MedicationAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = ItemMedicationBinding.inflate(
@@ -31,7 +31,7 @@ class MedicationAdapter(
     override fun getItemCount() = medications.size
 
     inner class ViewHolder(private val binding: ItemMedicationBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+        com.kieronquinn.app.smartspacer.plugin.shared.ui.views.LifecycleAwareRecyclerView.ViewHolder(binding.root) {
 
         private val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
 
