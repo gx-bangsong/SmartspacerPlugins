@@ -5,26 +5,47 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-    <EditText
-        android:id="@+id/edit_text_food_name"
+    <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Food Name" />
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+        android:hint="Food Name">
 
-    <EditText
-        android:id="@+id/edit_text_storage_method"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_text_food_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:hint="Storage Method (e.g., refrigerated)" />
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+        android:hint="Storage Method (e.g., refrigerated)">
 
-    <EditText
-        android:id="@+id/edit_text_shelf_life"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_text_storage_method"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:inputType="number"
-        android:hint="Shelf Life (in days)" />
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+        android:hint="Shelf Life (in days)">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_text_shelf_life"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="number" />
+
+    </com.google.android.material.textfield.TextInputLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -51,6 +72,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:orientation="horizontal">
 
         <Button

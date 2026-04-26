@@ -129,7 +129,7 @@ class ComplicationSetupFragment: BaseSettingsFabFragment(), BackAvailable {
             Setting(
                 getString(R.string.complication_setup_name_id_title),
                 smartspacerId,
-                ContextCompat.getDrawable(requireContext(), SharedR.drawable.ic_smartspacer),
+                ContextCompat.getDrawable(requireContext(), SharedR.drawable.ic_info),
                 isEnabled = false
             ){}
         )

@@ -6,25 +6,47 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-    <EditText
-        android:id="@+id/edit_text_medication_name"
+    <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Medication Name" />
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+        android:hint="Medication Name">
 
-    <EditText
-        android:id="@+id/edit_text_dosage"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_text_medication_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:hint="Dosage (optional)" />
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+        android:hint="Dosage (e.g. 1 pill)">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_text_dosage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Schedule Type"
+        android:textAppearance="?attr/textAppearanceTitleMedium" />
 
     <com.google.android.material.button.MaterialButtonToggleGroup
         android:id="@+id/toggle_group_schedule_type"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         app:singleSelection="true"
+        app:selectionRequired="true"
         app:checkedButton="@+id/button_schedule_specific_times">
 
         <Button
@@ -165,12 +187,19 @@
             android:orientation="vertical"
             android:visibility="gone">
 
-            <EditText
-                android:id="@+id/edit_text_interval_hours"
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Every X hours"
-                android:inputType="number" />
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                android:hint="Every X hours">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edit_text_interval_hours"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number" />
+
+            </com.google.android.material.textfield.TextInputLayout>
 
             <Button
                 android:id="@+id/button_select_start_time_hours"
@@ -189,12 +218,19 @@
             android:orientation="vertical"
             android:visibility="gone">
 
-            <EditText
-                android:id="@+id/edit_text_interval_days"
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Every X days"
-                android:inputType="number" />
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                android:hint="Every X days">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edit_text_interval_days"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number" />
+
+            </com.google.android.material.textfield.TextInputLayout>
 
             <Button
                 android:id="@+id/button_select_start_time_days"
@@ -279,18 +315,32 @@
 
     </FrameLayout>
 
-    <EditText
-        android:id="@+id/edit_text_start_date"
+    <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:hint="Start Date (YYYY-MM-DD)" />
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+        android:hint="Start Date (YYYY-MM-DD)">
 
-    <EditText
-        android:id="@+id/edit_text_end_date"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_text_start_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:hint="End Date (YYYY-MM-DD, optional)" />
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+        android:hint="End Date (YYYY-MM-DD, optional)">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_text_end_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </com.google.android.material.textfield.TextInputLayout>
 
 </LinearLayout>
