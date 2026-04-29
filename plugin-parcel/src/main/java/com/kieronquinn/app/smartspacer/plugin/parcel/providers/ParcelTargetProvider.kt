@@ -64,7 +64,7 @@ class ParcelTargetProvider : SmartspacerTargetProvider(), KoinComponent {
             featureType = SmartspaceTarget.FEATURE_REMINDER,
             title = Text(title),
             subtitle = Text(subtitle),
-            icon = SmartspaceIcon(AndroidIcon.createWithResource(context, R.drawable.ic_launcher_foreground)),
+            icon = SmartspaceIcon(AndroidIcon.createWithResource(context, R.drawable.ic_launcher_foreground), shouldTint = false),
             onClick = TapAction(intent = detailIntent)
         ).create()
     }
