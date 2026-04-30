@@ -17,6 +17,7 @@ import com.kieronquinn.app.smartspacer.plugin.shared.ui.base.settings.BaseSettin
 import com.kieronquinn.app.smartspacer.plugin.shared.ui.base.settings.BaseSettingsAdapter
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import com.kieronquinn.app.shared.R as SharedR
 
 class SettingsFragment : BaseSettingsFragment() {
 
@@ -60,19 +61,19 @@ class SettingsFragment : BaseSettingsFragment() {
             Setting(
                 getString(R.string.plugin_description),
                 "Privacy: All SMS processing is local.",
-                ContextCompat.getDrawable(requireContext(), com.kieronquinn.app.shared.R.drawable.ic_info),
+                ContextCompat.getDrawable(requireContext(), SharedR.drawable.ic_info),
                 onClick = {}
             ),
             Setting(
                 "Scan Inbox",
                 "Scan historical SMS for parcels",
-                ContextCompat.getDrawable(requireContext(), com.kieronquinn.app.shared.R.drawable.ic_smartspacer),
+                ContextCompat.getDrawable(requireContext(), SharedR.drawable.ic_search),
                 onClick = { checkPermissionsAndScan() }
             ),
             Setting(
                 "Import Rules",
                 "Load custom JSON parsing rules",
-                ContextCompat.getDrawable(requireContext(), com.kieronquinn.app.shared.R.drawable.ic_smartspacer),
+                ContextCompat.getDrawable(requireContext(), SharedR.drawable.ic_libraries),
                 onClick = { importRulesLauncher.launch("application/json") }
             )
         )

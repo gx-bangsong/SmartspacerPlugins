@@ -3,16 +3,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:transitionGroup="true">
 
     <com.kieronquinn.app.smartspacer.plugin.shared.ui.views.LifecycleAwareRecyclerView
         android:id="@+id/settings_base_recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:clipToPadding="false"
         android:paddingBottom="@dimen/margin_16"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         tools:listitem="@layout/item_settings_text_item" />
 
     <com.google.android.material.progressindicator.LinearProgressIndicator

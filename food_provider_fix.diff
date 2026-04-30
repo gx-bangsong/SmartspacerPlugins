@@ -1,9 +1,0 @@
-<<<<<<< SEARCH
-        return foodItems
-            .filter { it.enabled }
-            .map { foodItem ->
-=======
-        return foodItems
-            .filter { it.enabled }
-            .map { foodItem ->
->>>>>>> REPLACE

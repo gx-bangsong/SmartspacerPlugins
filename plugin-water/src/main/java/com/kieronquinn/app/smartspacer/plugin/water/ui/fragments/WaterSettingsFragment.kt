@@ -15,6 +15,7 @@ import com.kieronquinn.app.smartspacer.plugin.water.repositories.DisplayMode
 import com.kieronquinn.app.smartspacer.plugin.water.ui.screens.settings.WaterSettingsViewModel
 import com.kieronquinn.app.shared.databinding.FragmentSettingsBaseBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import com.kieronquinn.app.shared.R as SharedR
 
 class WaterSettingsFragment : BaseFragment<FragmentSettingsBaseBinding>(FragmentSettingsBaseBinding::inflate) {
 
@@ -43,13 +44,13 @@ class WaterSettingsFragment : BaseFragment<FragmentSettingsBaseBinding>(Fragment
                 items.add(Slider(
                     state.dailyGoalMl.toFloat(), 500f, 5000f, 100f,
                     "Daily Goal", "${state.dailyGoalMl}ml",
-                    ContextCompat.getDrawable(requireContext(), com.kieronquinn.app.shared.R.drawable.ic_smartspacer)
+                    ContextCompat.getDrawable(requireContext(), R.drawable.ic_local_drink)
                 ) { viewModel.onDailyGoalChanged(it) })
 
                 items.add(Slider(
                     state.cupSizeMl.toFloat(), 100f, 1000f, 50f,
                     "Cup Size", "${state.cupSizeMl}ml",
-                    ContextCompat.getDrawable(requireContext(), com.kieronquinn.app.shared.R.drawable.ic_smartspacer)
+                    ContextCompat.getDrawable(requireContext(), R.drawable.ic_local_drink)
                 ) { viewModel.onCupSizeChanged(it) })
 
                 items.add(SwitchSetting(
@@ -71,11 +72,17 @@ class WaterSettingsFragment : BaseFragment<FragmentSettingsBaseBinding>(Fragment
                     null, state.displayMode,
                     { viewModel.onDisplayModeChanged(it) },
                     DisplayMode.values().toList()
-                ) { it.ordinal })
+                ) {
+                    when(it) {
+                        DisplayMode.PROGRESS -> R.string.display_mode_progress
+                        DisplayMode.REMINDER -> R.string.display_mode_reminder
+                        else -> R.string.display_mode_dynamic
+                    }
+                })
 
                 items.add(Setting(
                     "Save Changes", "Apply new settings and reschedule",
-                    ContextCompat.getDrawable(requireContext(), com.kieronquinn.app.shared.R.drawable.ic_smartspacer)
+                    ContextCompat.getDrawable(requireContext(), SharedR.drawable.ic_info)
                 ) { viewModel.saveChanges(requireContext()) })
 
                 adapter.update(items)

@@ -1,131 +1,136 @@
 package com.kieronquinn.app.smartspacer.plugin.qweather.ui.screens.settings
 
-import android.content.Intent // 新增导入
+import android.content.Context
 import android.os.Bundle
-import android.util.Log // 新增导入
-import androidx.preference.EditTextPreference
-import androidx.preference.MultiSelectListPreference
-import androidx.preference.Preference
-import androidx.preference.PreferenceFragmentCompat
-import androidx.preference.SwitchPreference
+import android.view.View
+import android.widget.EditText
+import android.widget.FrameLayout
+import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.kieronquinn.app.smartspacer.plugin.qweather.R
-import com.kieronquinn.app.smartspacer.plugin.qweather.complications.QWeatherComplication
-import com.kieronquinn.app.smartspacer.plugin.qweather.providers.SettingsRepository
-import com.kieronquinn.app.smartspacer.plugin.qweather.receivers.UpdateReceiver // 确保导入你的 Receiver
-import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerComplicationProvider
-import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.first
-import org.koin.android.ext.android.inject
+import com.kieronquinn.app.smartspacer.plugin.shared.model.settings.BaseSettingsItem
+import com.kieronquinn.app.smartspacer.plugin.shared.model.settings.GenericSettingsItem.Setting
+import com.kieronquinn.app.smartspacer.plugin.shared.model.settings.GenericSettingsItem.SwitchSetting
+import com.kieronquinn.app.smartspacer.plugin.shared.ui.base.settings.BaseSettingsAdapter
+import com.kieronquinn.app.smartspacer.plugin.shared.ui.base.settings.BaseSettingsFragment
+import com.kieronquinn.app.smartspacer.plugin.shared.utils.extensions.whenResumed
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import com.kieronquinn.app.shared.R as SharedR
+import com.kieronquinn.app.smartspacer.plugin.qweather.R as QWeatherR
 
-class SettingsFragment : PreferenceFragmentCompat() {
+class SettingsFragment : BaseSettingsFragment() {
 
-    private val settingsRepository by inject<SettingsRepository>()
-    private val scope = CoroutineScope(Dispatchers.Main + Job())
+    private val viewModel by viewModel<SettingsViewModel>()
 
-    override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-        setPreferencesFromResource(R.xml.preferences, rootKey)
-
-        setupApiKeyPreference()
-        setupApiHostPreference()
-        setupLocationNamePreference()
-        setupIndicesPreference()
-        setupUseEmojiPreference()
+    override val adapter by lazy {
+        object : BaseSettingsAdapter(recyclerView, emptyList()) {}
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        scope.cancel()
+    override val additionalPadding by lazy {
+        resources.getDimension(SharedR.dimen.margin_8)
     }
 
-    private fun setupApiKeyPreference() {
-        val apiKeyPreference = findPreference<EditTextPreference>("api_key") ?: return
-        scope.launch {
-            apiKeyPreference.text = settingsRepository.apiKey.first()
-        }
-        apiKeyPreference.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, newValue ->
-            scope.launch {
-                settingsRepository.setApiKey(newValue as String)
-                triggerUpdate()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setupState()
+    }
+
+    private fun setupState() {
+        handleState(viewModel.state.value)
+        whenResumed {
+            viewModel.state.collect {
+                handleState(it)
             }
-            true
         }
     }
 
-    private fun setupUseEmojiPreference() {
-        val useEmojiPreference = findPreference<SwitchPreference>("use_emoji") ?: return
-        scope.launch {
-            useEmojiPreference.isChecked = settingsRepository.useEmoji.first()
-        }
-        useEmojiPreference.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, newValue ->
-            val checked = newValue as Boolean
-            scope.launch {
-                settingsRepository.setUseEmoji(checked)
-                triggerUpdate()
+    private fun handleState(state: SettingsViewModel.State) = with(binding) {
+        when (state) {
+            is SettingsViewModel.State.Loading -> {
+                settingsBaseLoading.isVisible = true
+                settingsBaseRecyclerView.isVisible = false
             }
-            true
-        }
-    }
-
-    private fun setupApiHostPreference() {
-        val apiHostPreference = findPreference<EditTextPreference>("api_host") ?: return
-        scope.launch {
-            apiHostPreference.text = settingsRepository.apiHost.first()
-        }
-        apiHostPreference.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, newValue ->
-            scope.launch {
-                settingsRepository.setApiHost(newValue as String)
-                triggerUpdate()
+            is SettingsViewModel.State.Loaded -> {
+                settingsBaseLoading.isVisible = false
+                settingsBaseRecyclerView.isVisible = true
+                adapter.update(state.loadItems(), settingsBaseRecyclerView)
             }
-            true
         }
     }
 
-    private fun setupLocationNamePreference() {
-        val locationNamePreference = findPreference<EditTextPreference>("location_name") ?: return
-        scope.launch {
-            locationNamePreference.text = settingsRepository.locationName.first()
+    private fun SettingsViewModel.State.Loaded.loadItems(): List<BaseSettingsItem> {
+        return listOf(
+            Setting(
+                getString(R.string.settings_api_key_title),
+                apiKey.ifEmpty { getString(R.string.settings_api_key_summary) },
+                ContextCompat.getDrawable(requireContext(), QWeatherR.drawable.ic_key),
+                onClick = { showInputDialog(requireContext(), getString(R.string.settings_api_key_title), apiKey) { viewModel.onApiKeyChanged(it) } }
+            ),
+            Setting(
+                getString(R.string.settings_api_host_title),
+                apiHost.ifEmpty { getString(R.string.settings_api_host_summary) },
+                ContextCompat.getDrawable(requireContext(), QWeatherR.drawable.ic_web),
+                onClick = { showInputDialog(requireContext(), getString(R.string.settings_api_host_title), apiHost) { viewModel.onApiHostChanged(it) } }
+            ),
+            Setting(
+                getString(R.string.settings_location_name_title),
+                locationName.ifEmpty { getString(R.string.settings_location_name_summary) },
+                ContextCompat.getDrawable(requireContext(), QWeatherR.drawable.ic_cloud),
+                onClick = { showInputDialog(requireContext(), getString(R.string.settings_location_name_title), locationName) { viewModel.onLocationNameChanged(it) } }
+            ),
+            Setting(
+                getString(R.string.settings_select_indices_title),
+                getString(R.string.settings_select_indices_summary),
+                ContextCompat.getDrawable(requireContext(), QWeatherR.drawable.ic_list),
+                onClick = { showMultiSelectDialog(requireContext(), selectedIndices) { viewModel.onIndicesChanged(it) } }
+            ),
+            SwitchSetting(
+                useEmoji,
+                getString(R.string.settings_use_emoji_title),
+                getString(R.string.settings_use_emoji_summary),
+                ContextCompat.getDrawable(requireContext(), QWeatherR.drawable.ic_face),
+                onChanged = viewModel::onUseEmojiChanged
+            )
+        )
+    }
+
+    private fun showInputDialog(context: Context, title: String, initialValue: String, onValueConfirmed: (String) -> Unit) {
+        val editText = EditText(context).apply {
+            setText(initialValue)
+            setSelection(initialValue.length)
         }
-        locationNamePreference.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, newValue ->
-            scope.launch {
-                settingsRepository.setLocationName(newValue as String)
-                triggerUpdate()
+        val container = FrameLayout(context).apply {
+            val margin = resources.getDimensionPixelSize(SharedR.dimen.margin_16)
+            setPadding(margin, margin / 2, margin, 0)
+            addView(editText)
+        }
+
+        MaterialAlertDialogBuilder(context)
+            .setTitle(title)
+            .setView(container)
+            .setPositiveButton(android.R.string.ok) { _, _ ->
+                onValueConfirmed(editText.text.toString())
             }
-            true
-        }
+            .setNegativeButton(android.R.string.cancel, null)
+            .show()
     }
 
-    private fun setupIndicesPreference() {
-        val indicesPreference = findPreference<MultiSelectListPreference>("selected_indices") ?: return
-        scope.launch {
-            val currentValues = settingsRepository.selectedIndices.first()
-            indicesPreference.values = currentValues.split(",").filter { it.isNotEmpty() }.toSet()
-        }
-        indicesPreference.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, newValue ->
-            @Suppress("UNCHECKED_CAST")
-            val selected = newValue as? Set<String> ?: return@OnPreferenceChangeListener false
-            val commaSeparated = selected.joinToString(",")
-            scope.launch {
-                settingsRepository.setSelectedIndices(commaSeparated)
-                triggerUpdate()
+    private fun showMultiSelectDialog(context: Context, selectedIndices: Set<String>, onIndicesConfirmed: (Set<String>) -> Unit) {
+        val entries = resources.getStringArray(R.array.indices_entries)
+        val entryValues = resources.getStringArray(R.array.indices_values)
+        val checkedItems = BooleanArray(entryValues.size) { entryValues[it] in selectedIndices }
+
+        MaterialAlertDialogBuilder(context)
+            .setTitle(R.string.settings_select_indices_title)
+            .setMultiChoiceItems(entries, checkedItems) { _, which, isChecked ->
+                checkedItems[which] = isChecked
             }
-            true
-        }
-    }
-
-    // 【关键修改】这里改动了
-    private suspend fun triggerUpdate() {
-        val context = context ?: return
-        
-        // 1. 通知 Smartspacer 宿主刷新 UI (保持原样)
-        withContext(Dispatchers.IO) {
-            SmartspacerComplicationProvider.notifyChange(context, QWeatherComplication::class.java)
-        }
-
-        // 2. 【新增】手动发送广播，强制唤醒 UpdateReceiver 进行网络请求
-        Log.d("QWeatherSettings", "正在手动触发 UpdateReceiver...")
-        val intent = Intent(context, UpdateReceiver::class.java)
-        // 传入一个标记，告诉 Receiver 这是手动更新（可选）
-        intent.putExtra(UpdateReceiver.EXTRA_SMARTSPACER_ID, "manual_update")
-        context.sendBroadcast(intent)
+            .setPositiveButton(android.R.string.ok) { _, _ ->
+                val selected = entryValues.filterIndexed { index, _ -> checkedItems[index] }.toSet()
+                onIndicesConfirmed(selected)
+            }
+            .setNegativeButton(android.R.string.cancel, null)
+            .show()
     }
 }
