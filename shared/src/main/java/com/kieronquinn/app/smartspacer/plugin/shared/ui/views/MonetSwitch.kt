@@ -1,5 +1,7 @@
 package com.kieronquinn.app.smartspacer.plugin.shared.ui.views
 
+import androidx.core.content.ContextCompat
+import com.kieronquinn.app.smartspacer.plugin.shared.utils.extensions.isDarkMode
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.ColorStateList
@@ -136,7 +138,7 @@ open class MonetSwitch: FrameLayout, MonetColorsChangedListener {
 
     private fun applyMonet() = with(monet) {
         val checkedThumbColor = monet.getPrimaryColor(context, false)
-        val uncheckedThumbColor = monet.getSecondaryColor(context, false)
+        val uncheckedThumbColor = if (root.context.isDarkMode) Color.parseColor("#1E1B20") else Color.parseColor("#E3E2E6")
         setTint(uncheckedThumbColor, checkedThumbColor)
     }
 
