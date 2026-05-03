@@ -7,7 +7,10 @@ import com.kieronquinn.app.smartspacer.plugin.qweather.providers.SettingsReposit
 import com.kieronquinn.app.smartspacer.plugin.qweather.providers.SettingsRepositoryImpl
 import com.kieronquinn.app.smartspacer.plugin.qweather.retrofit.QWeatherClient
 import com.kieronquinn.app.smartspacer.plugin.shared.SmartspacerPlugin
+import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
+import com.kieronquinn.app.smartspacer.plugin.qweather.ui.screens.settings.SettingsViewModel
+import com.kieronquinn.app.smartspacer.plugin.qweather.ui.screens.settings.SettingsViewModelImpl
 
 class QWeatherPlugin : SmartspacerPlugin() {
 
@@ -15,6 +18,7 @@ class QWeatherPlugin : SmartspacerPlugin() {
         single<SettingsRepository> { SettingsRepositoryImpl(get()) }
         single { QWeatherClient(get()) }
         single<QWeatherRepository> { QWeatherRepositoryImpl() }
+        viewModel<SettingsViewModel> { SettingsViewModelImpl(get(), get()) }
     }
 
 }
