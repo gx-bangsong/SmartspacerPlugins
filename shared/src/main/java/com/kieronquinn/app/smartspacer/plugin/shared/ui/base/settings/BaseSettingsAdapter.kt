@@ -301,12 +301,17 @@ abstract class BaseSettingsAdapter(
         }
     }
 
-    private fun <T> View.showDropdown(
+private fun <T> View.showDropdown(
         item: GenericSettingsItem.Dropdown<T>
     ) {
         val popup = PopupMenu(context, this)
         item.options.forEachIndexed { index, option ->
-            popup.menu.add(Menu.NONE, index, Menu.NONE, item.adapter(option))
+            val title = item.adapter(option)
+            if (title is Int && title != 0) {
+                popup.menu.add(Menu.NONE, index, Menu.NONE, title)
+            } else {
+                popup.menu.add(Menu.NONE, index, Menu.NONE, title.toString())
+            }
         }
         popup.setOnMenuItemClickListener {
             item.onSet(item.options[it.itemId])

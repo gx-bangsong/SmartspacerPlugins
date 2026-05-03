@@ -11,11 +11,10 @@
         android:id="@+id/configuration_container_app_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
+        android:background="?attr/colorSurface"
         android:fitsSystemWindows="true"
         app:elevation="0dp"
-        app:layout_behavior="com.kieronquinn.app.smartspacer.plugin.shared.utils.appbar.DragOptionalAppBarLayoutBehaviour"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_behavior="com.kieronquinn.app.smartspacer.plugin.shared.utils.appbar.DragOptionalAppBarLayoutBehaviour">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:id="@+id/configuration_container_collapsing_toolbar"
@@ -23,7 +22,7 @@
             android:layout_height="@dimen/app_bar_height"
             android:clipToPadding="false"
             app:collapsedTitleTextAppearance="@style/CollapsingToolbarTitle.Collapsed"
-            app:contentScrim="?attr/colorPrimaryVariant"
+            app:contentScrim="?attr/colorSurface"
             app:expandedTitleMarginEnd="@dimen/expanded_title_margin_end"
             app:expandedTitleMarginStart="@dimen/expanded_title_margin_start"
             app:expandedTitleTextAppearance="@style/CollapsingToolbarTitle.Expanded"
