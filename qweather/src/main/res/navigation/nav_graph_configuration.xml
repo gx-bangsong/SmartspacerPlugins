@@ -8,6 +8,6 @@
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.kieronquinn.app.smartspacer.plugin.qweather.ui.screens.settings.SettingsFragment"
-        android:label="@string/app_name" />
+        android:label="@string/settings_title" />
 
 </navigation>
