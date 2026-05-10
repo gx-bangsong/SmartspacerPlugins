@@ -3,12 +3,12 @@ package com.kieronquinn.app.smartspacer.plugin.food.ui.fragments
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.progressindicator.LinearProgressIndicator
 import com.kieronquinn.app.smartspacer.plugin.food.data.FoodItemDao
 import com.kieronquinn.app.smartspacer.plugin.food.databinding.FragmentFoodSettingsBinding
 import com.kieronquinn.app.smartspacer.plugin.food.ui.adapters.FoodAdapter
+import com.kieronquinn.app.smartspacer.plugin.food.work.FoodWorker
 import com.kieronquinn.app.smartspacer.plugin.shared.ui.base.settings.BaseFragment
 import com.kieronquinn.app.smartspacer.plugin.shared.ui.base.settings.BaseSettingsAdapter
 import com.kieronquinn.app.smartspacer.plugin.shared.ui.views.LifecycleAwareRecyclerView
@@ -32,8 +32,11 @@ class FoodSettingsFragment : BaseFragment<FragmentFoodSettingsBinding>(FragmentF
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.settingsBaseLoading.visibility = View.GONE
         setupFoodList()
         setupFab()
+        // 确保定期刷新任务已启动
+        FoodWorker.enqueuePeriodic(requireContext())
     }
 
     private fun setupFoodList() {
@@ -43,7 +46,8 @@ class FoodSettingsFragment : BaseFragment<FragmentFoodSettingsBinding>(FragmentF
                 val foodAdapter = FoodAdapter(foodItems) { foodItem ->
                     lifecycleScope.launch {
                         foodItemDao.delete(foodItem)
-                        com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider.notifyChange(requireContext(), com.kieronquinn.app.smartspacer.plugin.food.providers.FoodProvider::class.java)
+                        // 数据变更时触发立即刷新
+                        FoodWorker.enqueueImmediate(requireContext())
                     }
                 }
                 recyclerView.adapter = object : com.kieronquinn.app.smartspacer.plugin.shared.ui.views.LifecycleAwareRecyclerView.Adapter<FoodAdapter.ViewHolder>(recyclerView) {
@@ -67,7 +71,8 @@ class FoodSettingsFragment : BaseFragment<FragmentFoodSettingsBinding>(FragmentF
             addFoodItemFragment.setOnFoodItemAddedListener { foodItem ->
                 lifecycleScope.launch {
                     foodItemDao.insert(foodItem)
-                    com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider.notifyChange(requireContext(), com.kieronquinn.app.smartspacer.plugin.food.providers.FoodProvider::class.java)
+                    // 添加新项后即时刷新
+                    FoodWorker.enqueueImmediate(requireContext())
                 }
             }
             addFoodItemFragment.show(childFragmentManager, "AddFoodItemFragment")

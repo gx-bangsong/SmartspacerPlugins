@@ -3,12 +3,12 @@ package com.kieronquinn.app.smartspacer.plugin.medication.ui.fragments
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.progressindicator.LinearProgressIndicator
 import com.kieronquinn.app.smartspacer.plugin.medication.data.MedicationDao
 import com.kieronquinn.app.smartspacer.plugin.medication.databinding.FragmentMedicationSettingsBinding
 import com.kieronquinn.app.smartspacer.plugin.medication.ui.adapters.MedicationAdapter
+import com.kieronquinn.app.smartspacer.plugin.medication.work.MedicationWorker
 import com.kieronquinn.app.smartspacer.plugin.shared.ui.base.settings.BaseFragment
 import com.kieronquinn.app.smartspacer.plugin.shared.ui.base.settings.BaseSettingsAdapter
 import com.kieronquinn.app.smartspacer.plugin.shared.ui.views.LifecycleAwareRecyclerView
@@ -32,8 +32,12 @@ class MedicationSettingsFragment : BaseFragment<FragmentMedicationSettingsBindin
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        // 显式隐藏加载 UI
+        binding.settingsBaseLoading.visibility = View.GONE
         setupMedicationList()
         setupFab()
+        // 确保定期任务已启动
+        MedicationWorker.enqueuePeriodic(requireContext())
     }
 
     private fun setupMedicationList() {
@@ -43,7 +47,8 @@ class MedicationSettingsFragment : BaseFragment<FragmentMedicationSettingsBindin
                 val medicationAdapter = MedicationAdapter(medications) { medication ->
                     lifecycleScope.launch {
                         medicationDao.delete(medication)
-                        com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider.notifyChange(requireContext(), com.kieronquinn.app.smartspacer.plugin.medication.providers.MedicationProvider::class.java)
+                        // 数据变更时触发立即刷新
+                        MedicationWorker.enqueueImmediate(requireContext())
                     }
                 }
                 recyclerView.adapter = object : com.kieronquinn.app.smartspacer.plugin.shared.ui.views.LifecycleAwareRecyclerView.Adapter<MedicationAdapter.ViewHolder>(recyclerView) {
@@ -67,7 +72,8 @@ class MedicationSettingsFragment : BaseFragment<FragmentMedicationSettingsBindin
             addMedicationFragment.setOnMedicationAddedListener { medication ->
                 lifecycleScope.launch {
                     medicationDao.insert(medication)
-                    com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider.notifyChange(requireContext(), com.kieronquinn.app.smartspacer.plugin.medication.providers.MedicationProvider::class.java)
+                    // 添加新药后立即刷新
+                    MedicationWorker.enqueueImmediate(requireContext())
                 }
             }
             addMedicationFragment.show(childFragmentManager, "AddMedicationFragment")
