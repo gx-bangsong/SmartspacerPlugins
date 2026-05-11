@@ -25,7 +25,9 @@ jobs:
       uses: android-actions/setup-android@v3
 
     - name: Create local.properties
-      run: echo "sdk.dir=${ANDROID_HOME}" > local.properties
+      run: |
+        echo "sdk.dir=${ANDROID_HOME}" > local.properties
+        echo "MAPS_API_KEY=dummy" >> local.properties
 
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
@@ -37,3 +39,17 @@ jobs:
         ./gradlew :plugin-food:test
         ./gradlew :plugin-medication:test
         ./gradlew :plugin-parcel:test
+
+    - name: Build Debug APKs
+      run: |
+        ./gradlew :qweather:assembleDebug
+        ./gradlew :plugin-water:assembleDebug
+        ./gradlew :plugin-food:assembleDebug
+        ./gradlew :plugin-medication:assembleDebug
+
+    - name: Upload APKs
+      uses: actions/upload-artifact@v4
+      with:
+        name: smartspacer-plugins-debug-apks
+        path: |
+          apks/*.apk
