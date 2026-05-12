@@ -51,7 +51,6 @@ class FoodWorker(
          */
         fun enqueueImmediate(context: Context) {
             val request = OneTimeWorkRequestBuilder<FoodWorker>()
-                .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
                 .build()
 
             WorkManager.getInstance(context).enqueueUniqueWork(

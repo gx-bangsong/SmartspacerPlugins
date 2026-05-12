@@ -40,7 +40,6 @@ class MedicationWorker(
          */
         fun enqueueImmediate(context: Context) {
             val request = OneTimeWorkRequestBuilder<MedicationWorker>()
-                .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
                 .build()
 
             WorkManager.getInstance(context).enqueueUniqueWork(

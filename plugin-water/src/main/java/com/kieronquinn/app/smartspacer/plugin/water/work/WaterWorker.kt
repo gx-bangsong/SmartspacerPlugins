@@ -39,7 +39,6 @@ class WaterWorker(
          */
         fun enqueueImmediate(context: Context) {
             val request = OneTimeWorkRequestBuilder<WaterWorker>()
-                .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
                 .build()
 
             WorkManager.getInstance(context).enqueueUniqueWork(
