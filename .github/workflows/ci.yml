@@ -51,5 +51,4 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: smartspacer-plugins-debug-apks
-        path: |
-          apks/*.apk
+        path: **/build/outputs/apk/debug/*.apk

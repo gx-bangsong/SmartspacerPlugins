@@ -9,6 +9,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.kieronquinn.app.smartspacer.plugin.medication.data.DoseHistory
 import com.kieronquinn.app.smartspacer.plugin.medication.data.DoseHistoryDao
 import com.kieronquinn.app.smartspacer.plugin.medication.data.MedicationDao
+import com.kieronquinn.app.smartspacer.plugin.medication.data.MedicationUtils
 import com.kieronquinn.app.smartspacer.plugin.medication.databinding.FragmentRecordDoseBinding
 import com.kieronquinn.app.smartspacer.plugin.medication.work.MedicationWorker
 import kotlinx.coroutines.launch
@@ -45,7 +46,12 @@ class RecordDoseFragment : BottomSheetDialogFragment() {
                     )
                     doseHistoryDao.insert(history)
 
-                    // 下一次服药时间的计算逻辑在 Medication 类中缺失，先占位更新
+                    // 计算并更新下一次服药时间
+                    val updatedMedication = medication.copy(
+                        nextDoseTs = MedicationUtils.calculateNextDose(medication)
+                    )
+                    medicationDao.update(updatedMedication)
+
                     // 记录服药后立即刷新 Smartspace
                     MedicationWorker.enqueueImmediate(requireContext())
                     dismiss()
@@ -61,6 +67,12 @@ class RecordDoseFragment : BottomSheetDialogFragment() {
                         status = DoseHistory.Status.SKIPPED
                     )
                     doseHistoryDao.insert(history)
+
+                    // 跳过时也更新下一次服药时间
+                    val updatedMedication = medication.copy(
+                        nextDoseTs = MedicationUtils.calculateNextDose(medication)
+                    )
+                    medicationDao.update(updatedMedication)
 
                     // 跳过服药后也立即刷新
                     MedicationWorker.enqueueImmediate(requireContext())
