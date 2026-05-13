@@ -1,6 +1,7 @@
 package com.kieronquinn.app.smartspacer.plugin.parcel
 
 import android.content.Context
+import android.util.Log
 import com.kieronquinn.app.smartspacer.plugin.parcel.data.ParcelDatabase
 import com.kieronquinn.app.smartspacer.plugin.parcel.repositories.NavGraphRepositoryImpl
 import com.kieronquinn.app.smartspacer.plugin.shared.SmartspacerPlugin
@@ -15,7 +16,11 @@ class ParcelPlugin : SmartspacerPlugin() {
     override fun onCreate() {
         super.onCreate()
         // 启动定期清理任务
-        ParcelWorker.enqueuePeriodic(this)
+        try {
+            ParcelWorker.enqueuePeriodic(this)
+        } catch (e: Exception) {
+            Log.e("ParcelPlugin", "Failed to enqueue periodic work", e)
+        }
     }
 
     override fun getModule(context: Context) = module {

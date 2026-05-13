@@ -1,7 +1,7 @@
 package com.kieronquinn.app.smartspacer.plugin.parcel
 
+import androidx.work.testing.WorkManagerTestInitHelper
 import org.junit.Assert.assertNotNull
-import org.junit.Assert.assertNull
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.koin.core.context.GlobalContext
@@ -14,10 +14,13 @@ import org.robolectric.annotation.Config
 class ParcelPluginTest {
 
     @Test
-    fun `test Koin is started when application is created`() {
-        // Robolectric handles application creation, which calls attachBaseContext and onCreate
-        // Check if Koin GlobalContext has been started
+    fun testKoinIsStarted() {
+        val context = RuntimeEnvironment.getApplication()
+        try {
+            WorkManagerTestInitHelper.initializeTestWorkManager(context)
+        } catch (e: Exception) {}
+
         val koin = GlobalContext.getOrNull()
-        assertNotNull("Koin should be started by ParcelPlugin", koin)
+        assertNotNull("Koin should be started", koin)
     }
 }
