@@ -15,6 +15,9 @@ import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
+/**
+ * 实时监听短信广播并解析快递取件信息
+ */
 class SmsReceiver : BroadcastReceiver(), KoinComponent {
     private val scope = CoroutineScope(Dispatchers.IO)
     private val parcelDao by inject<ParcelDao>()
@@ -34,6 +37,7 @@ class SmsReceiver : BroadcastReceiver(), KoinComponent {
             val result = engine.parse(text)
 
             if (result != null) {
+                // 检查是否已存在相同文本或取件码的记录
                 val existingRaw = parcelDao.getParcelByRawText(text)
                 val duplicate = parcelDao.findDuplicate(result.pickupCode, result.location ?: result.provider)
 
@@ -45,6 +49,7 @@ class SmsReceiver : BroadcastReceiver(), KoinComponent {
                         timestamp = System.currentTimeMillis()
                     )
                     parcelDao.insertParcel(parcel)
+                    // 通知 Smartspacer 刷新显示
                     SmartspacerTargetProvider.notifyChange(context, ParcelTargetProvider::class.java)
                 }
             }

@@ -52,11 +52,12 @@ class SettingsFragment : BaseSettingsFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        // 显式隐藏加载 UI
+        binding.settingsBaseLoading.visibility = View.GONE
         setupSettings()
     }
 
     private fun setupSettings() {
-        binding.settingsBaseLoading.visibility = View.GONE
         val items = listOf<BaseSettingsItem>(
             Setting(
                 getString(R.string.plugin_description),
@@ -78,7 +79,6 @@ class SettingsFragment : BaseSettingsFragment() {
             )
         )
         adapter.update(items)
-        binding.settingsBaseLoading.visibility = View.GONE
     }
 
     private fun checkPermissionsAndScan() {
