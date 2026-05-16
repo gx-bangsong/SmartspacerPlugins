@@ -28,7 +28,7 @@ class ParcelTargetProvider : SmartspacerTargetProvider(), KoinComponent {
         return Config(
             label = "Parcel Tracker",
             description = "Track parcels from SMS",
-            icon = AndroidIcon.createWithResource(context, R.drawable.ic_launcher_foreground),
+            icon = AndroidIcon.createWithResource(context, R.mipmap.ic_launcher),
             configActivity = Intent(context, com.kieronquinn.app.smartspacer.plugin.parcel.ui.activities.SettingsActivity::class.java)
         )
     }
@@ -61,7 +61,7 @@ class ParcelTargetProvider : SmartspacerTargetProvider(), KoinComponent {
             featureType = SmartspaceTarget.FEATURE_REMINDER,
             title = Text(title),
             subtitle = Text(subtitle),
-            icon = SmartspaceIcon(AndroidIcon.createWithResource(context, R.drawable.ic_launcher_foreground), shouldTint = false),
+            icon = SmartspaceIcon(AndroidIcon.createWithResource(context, R.mipmap.ic_launcher), shouldTint = false),
             onClick = TapAction(intent = detailIntent)
         ).create()
     }

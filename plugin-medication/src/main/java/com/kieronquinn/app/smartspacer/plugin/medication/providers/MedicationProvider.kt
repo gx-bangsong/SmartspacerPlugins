@@ -12,6 +12,7 @@ import com.kieronquinn.app.smartspacer.plugin.shared.ui.activities.DialogLaunche
 import com.kieronquinn.app.smartspacer.sdk.model.SmartspaceTarget
 import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.TapAction
 import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Text
+import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Icon as SmartspaceIcon
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider
 import com.kieronquinn.app.smartspacer.sdk.utils.TargetTemplate
 import kotlinx.coroutines.flow.first
@@ -70,7 +71,7 @@ class MedicationProvider : SmartspacerTargetProvider(), KoinComponent {
                     featureType = SmartspaceTarget.FEATURE_REMINDER,
                     title = Text(title),
                     subtitle = Text(""),
-                    icon = com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Icon(AndroidIcon.createWithResource(context, R.drawable.ic_pill)),
+                    icon = SmartspaceIcon(AndroidIcon.createWithResource(context, R.mipmap.ic_launcher), shouldTint = false),
                     onClick = TapAction(intent = intent)
                 ).create()
             }
@@ -80,7 +81,7 @@ class MedicationProvider : SmartspacerTargetProvider(), KoinComponent {
         return Config(
             label = "Medication Reminder",
             description = "A medication reminder",
-            icon = android.graphics.drawable.Icon.createWithResource(context, R.drawable.ic_pill),
+            icon = AndroidIcon.createWithResource(context, R.mipmap.ic_launcher),
             configActivity = Intent(context, SettingsActivity::class.java)
         )
     }
