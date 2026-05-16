@@ -4,6 +4,8 @@ import android.content.Context
 import android.util.Log
 import com.kieronquinn.app.smartspacer.plugin.parcel.data.ParcelDatabase
 import com.kieronquinn.app.smartspacer.plugin.parcel.repositories.NavGraphRepositoryImpl
+import com.kieronquinn.app.smartspacer.plugin.parcel.repositories.SettingsRepository
+import com.kieronquinn.app.smartspacer.plugin.parcel.repositories.SettingsRepositoryImpl
 import com.kieronquinn.app.smartspacer.plugin.shared.SmartspacerPlugin
 import com.kieronquinn.app.smartspacer.plugin.shared.repositories.NavGraphRepository
 import com.kieronquinn.app.smartspacer.plugin.parcel.ui.fragments.SettingsViewModel
@@ -26,7 +28,8 @@ class ParcelPlugin : SmartspacerPlugin() {
     override fun getModule(context: Context) = module {
         single { ParcelDatabase.getInstance(get()).parcelDao() }
         single { ParcelDatabase.getInstance(get()).ruleDao() }
+        single<SettingsRepository> { SettingsRepositoryImpl(get()) }
         single<NavGraphRepository> { NavGraphRepositoryImpl() }
-        viewModel<SettingsViewModel> { SettingsViewModelImpl(get(), get()) }
+        viewModel<SettingsViewModel> { SettingsViewModelImpl(get(), get(), get()) }
     }
 }
