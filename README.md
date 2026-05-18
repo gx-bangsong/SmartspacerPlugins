@@ -12,11 +12,37 @@ This repository contains an unofficial collection of plugins developed for [Smar
 
 ## 目录 | Table of Contents
 
+- [快递取件提醒 (Parcel Tracker)](#快递取件提醒--parcel-tracker)
 - [饮水提醒 (Water Reminder)](#饮水提醒--water-reminder)
 - [用药提醒 (Medication Reminder)](#用药提醒--medication-reminder)
-- [食物保质期提醒 (Food Shelf Life Reminder)](#食物保질期提醒--food-shelf-life-reminder)
+- [食物保质期提醒 (Food Shelf Life Reminder)](#食物保质期提醒--food-shelf-life-reminder)
 - [和风天气生活指数 (QWeather Indices)](#和风天气生活指数--qweather-indices)
 
+---
+
+## 快递取件提醒 | Parcel Tracker
+
+“快递取件提醒”插件通过扫描您的短信，自动识别并提取快递取件码信息，将其直接展示在 Smartspace 上，让您无需翻找短信即可轻松取件。
+
+### 主要功能
+
+- **全自动识别**：实时监控新收到的快递短信，或扫描历史短信，自动提取取件码。
+- **智能规则引擎**：内置针对菜鸟、丰巢等主流快递服务的识别规则，并支持通过自定义 JSON 文件扩展识别逻辑。
+- **关键信息展示**：在 Smartspace 上直接展示取件码（如 3-4-1024）和快递站名称，一目了然。
+- **自动过期清理**：支持设定自动清理时长（默认 24 小时），确保已取出的快递不会长期占据显示空间。
+- **自定义规则**：对于特殊的快递短信格式，您可以通过 [取件码识别规则文档](DOCS_SMS_RULES.md) 自定义匹配逻辑。
+
+---
+
+The **Parcel Tracker** plugin scans your SMS messages to automatically identify and extract pickup codes, displaying them directly on your Smartspace for quick and easy access.
+
+### Features
+
+- **Automated Recognition**: Monitors incoming SMS messages in real-time or scans your inbox to extract pickup codes automatically.
+- **Intelligent Rule Engine**: Pre-configured with rules for major courier services (e.g., Cainiao, Hive Box) and supports extensions via custom JSON files.
+- **Essential Information**: Displays the pickup code (e.g., 3-4-1024) and the station name directly on Smartspace.
+- **Automatic Expiry**: Configurable cleanup duration (defaulting to 24 hours) ensures that old pickup codes don't clutter your view.
+- **Customizable Rules**: For unique SMS formats, you can define your own matching logic by following the [SMS Rules Documentation](DOCS_SMS_RULES.md).
 
 ---
 

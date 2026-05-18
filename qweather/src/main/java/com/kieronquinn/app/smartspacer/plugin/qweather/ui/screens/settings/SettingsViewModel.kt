@@ -1,13 +1,12 @@
 package com.kieronquinn.app.smartspacer.plugin.qweather.ui.screens.settings
 
 import android.content.Context
-import android.content.Intent
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kieronquinn.app.smartspacer.plugin.qweather.complications.QWeatherComplication
 import com.kieronquinn.app.smartspacer.plugin.qweather.providers.SettingsRepository
-import com.kieronquinn.app.smartspacer.plugin.qweather.receivers.UpdateReceiver
+import com.kieronquinn.app.smartspacer.plugin.qweather.work.QWeatherWorker
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerComplicationProvider
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
@@ -94,11 +93,8 @@ class SettingsViewModelImpl(
         withContext(Dispatchers.IO) {
             SmartspacerComplicationProvider.notifyChange(context, QWeatherComplication::class.java)
         }
-        Log.d("QWeatherSettings", "Triggering UpdateReceiver...")
-        val intent = Intent(context, UpdateReceiver::class.java).apply {
-            putExtra(UpdateReceiver.EXTRA_SMARTSPACER_ID, "manual_update")
-            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        }
-        context.sendBroadcast(intent)
+        Log.d("QWeatherSettings", "Triggering QWeatherWorker...")
+        QWeatherWorker.enqueueImmediate(context)
+        QWeatherWorker.enqueuePeriodic(context)
     }
 }

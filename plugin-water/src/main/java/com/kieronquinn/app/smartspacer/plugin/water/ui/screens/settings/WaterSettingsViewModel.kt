@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.kieronquinn.app.smartspacer.plugin.water.repositories.DisplayMode
 import com.kieronquinn.app.smartspacer.plugin.water.repositories.WaterDataRepository
 import com.kieronquinn.app.smartspacer.plugin.water.scheduling.WaterScheduler
+import com.kieronquinn.app.smartspacer.plugin.water.work.WaterWorker
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -131,5 +132,9 @@ class WaterSettingsViewModelImpl(
             totalCups
         )
         waterScheduler.scheduleAlarmsForDate(context, schedule)
+
+        // 触发 Smartspace 刷新
+        WaterWorker.enqueueImmediate(context)
+        WaterWorker.enqueuePeriodic(context)
     }
 }

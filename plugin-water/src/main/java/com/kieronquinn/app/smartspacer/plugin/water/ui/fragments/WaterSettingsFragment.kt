@@ -13,6 +13,7 @@ import com.kieronquinn.app.smartspacer.plugin.shared.utils.extensions.whenResume
 import com.kieronquinn.app.smartspacer.plugin.water.R
 import com.kieronquinn.app.smartspacer.plugin.water.repositories.DisplayMode
 import com.kieronquinn.app.smartspacer.plugin.water.ui.screens.settings.WaterSettingsViewModel
+import com.kieronquinn.app.smartspacer.plugin.water.work.WaterWorker
 import com.kieronquinn.app.shared.databinding.FragmentSettingsBaseBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import com.kieronquinn.app.shared.R as SharedR
@@ -33,7 +34,10 @@ class WaterSettingsFragment : BaseFragment<FragmentSettingsBaseBinding>(Fragment
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.settingsBaseLoading.visibility = View.GONE
         setupState()
+        // 确保定期刷新任务已启动
+        WaterWorker.enqueuePeriodic(requireContext())
     }
 
     private fun setupState() {

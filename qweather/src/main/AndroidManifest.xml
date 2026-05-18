@@ -26,7 +26,6 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".receivers.UpdateReceiver" android:exported="false" />
 
         <receiver android:name=".receivers.BootReceiver" android:exported="true">
             <intent-filter>

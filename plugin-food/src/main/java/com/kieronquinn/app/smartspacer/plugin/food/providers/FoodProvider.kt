@@ -4,9 +4,12 @@ import android.content.ComponentName
 import android.content.Intent
 import com.kieronquinn.app.smartspacer.plugin.food.R
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider
-import com.kieronquinn.app.smartspacer.sdk.model.SmartspaceAction
 import com.kieronquinn.app.smartspacer.sdk.model.SmartspaceTarget
-import android.graphics.drawable.Icon
+import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.TapAction
+import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Text
+import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Icon as SmartspaceIcon
+import com.kieronquinn.app.smartspacer.sdk.utils.TargetTemplate
+import android.graphics.drawable.Icon as AndroidIcon
 
 import com.kieronquinn.app.smartspacer.plugin.food.data.FoodItemDao
 import kotlinx.coroutines.flow.first
@@ -40,17 +43,19 @@ class FoodProvider : SmartspacerTargetProvider(), KoinComponent {
                     }
                 }
 
-                SmartspaceTarget(
-                    smartspaceTargetId = "food_${foodItem.id}",
-                    headerAction = SmartspaceAction(
-                        id = "food_header_${foodItem.id}",
-                        title = title,
-                        intent = Intent(context, com.kieronquinn.app.smartspacer.plugin.food.ui.activities.SettingsActivity::class.java),
-                        icon = Icon.createWithResource(context, R.drawable.ic_kitchen)
-                    ),
+                val intent = Intent(context, com.kieronquinn.app.smartspacer.plugin.food.ui.activities.SettingsActivity::class.java).apply {
+                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                }
+
+                TargetTemplate.Basic(
+                    id = "food_${foodItem.id}",
+                    componentName = ComponentName(context, FoodProvider::class.java),
                     featureType = SmartspaceTarget.FEATURE_REMINDER,
-                    componentName = ComponentName(context, FoodProvider::class.java)
-                )
+                    title = Text(title),
+                    subtitle = Text(""),
+                    icon = SmartspaceIcon(AndroidIcon.createWithResource(context, R.mipmap.ic_launcher), shouldTint = false),
+                    onClick = TapAction(intent = intent)
+                ).create()
             }
     }
 
@@ -58,7 +63,7 @@ class FoodProvider : SmartspacerTargetProvider(), KoinComponent {
         return Config(
             label = "Food Shelf Life Reminder",
             description = "Track the shelf life of your food",
-            icon = android.graphics.drawable.Icon.createWithResource(context, R.drawable.ic_kitchen),
+            icon = AndroidIcon.createWithResource(context, R.mipmap.ic_launcher),
             configActivity = Intent(context, com.kieronquinn.app.smartspacer.plugin.food.ui.activities.SettingsActivity::class.java)
         )
     }

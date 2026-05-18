@@ -1,8 +1,5 @@
 package com.kieronquinn.app.smartspacer.plugin.qweather.complications
 
-import android.app.AlarmManager
-import android.app.PendingIntent
-import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.Icon as AndroidIcon
 import android.os.Build
@@ -11,7 +8,6 @@ import com.kieronquinn.app.smartspacer.plugin.qweather.R
 import com.kieronquinn.app.smartspacer.plugin.qweather.providers.QWeatherRepository
 import com.kieronquinn.app.smartspacer.plugin.qweather.providers.SettingsRepository
 import com.kieronquinn.app.smartspacer.plugin.qweather.providers.getBlocking
-import com.kieronquinn.app.smartspacer.plugin.qweather.receivers.UpdateReceiver
 import com.kieronquinn.app.smartspacer.plugin.qweather.ui.activities.SettingsActivity
 import com.kieronquinn.app.smartspacer.plugin.qweather.utils.AdviceGenerator
 import com.kieronquinn.app.smartspacer.sdk.model.SmartspaceAction
@@ -23,14 +19,12 @@ import com.kieronquinn.app.smartspacer.sdk.utils.ComplicationTemplate
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.koin.android.ext.android.inject
-import java.util.concurrent.TimeUnit
 
 @RequiresApi(Build.VERSION_CODES.O)
 class QWeatherComplication : SmartspacerComplicationProvider() {
 
     private val settingsRepository by inject<SettingsRepository>()
     private val qWeatherRepository by inject<QWeatherRepository>()
-    private val alarmManager by lazy { provideContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager }
 
     override fun getSmartspaceActions(smartspacerId: String): List<SmartspaceAction> {
         val apiKey = settingsRepository.apiKey.getBlocking()
@@ -67,7 +61,7 @@ class QWeatherComplication : SmartspacerComplicationProvider() {
         return ComplicationTemplate.Basic(
             id = id,
             content = Text(text),
-            icon = Icon(AndroidIcon.createWithResource(provideContext(), R.drawable.ic_cloud)),
+            icon = Icon(AndroidIcon.createWithResource(provideContext(), R.mipmap.ic_launcher), shouldTint = false),
             onClick = TapAction(
                 intent = Intent(provideContext(), SettingsActivity::class.java).apply {
                     addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -80,7 +74,7 @@ class QWeatherComplication : SmartspacerComplicationProvider() {
         return ComplicationTemplate.Basic(
             id ="qweather_setup",
             content = Text(text),
-            icon = Icon(AndroidIcon.createWithResource(provideContext(), R.drawable.ic_cloud)),
+            icon = Icon(AndroidIcon.createWithResource(provideContext(), R.mipmap.ic_launcher), shouldTint = false),
             onClick = TapAction(
                 intent = Intent(provideContext(), SettingsActivity::class.java).apply {
                     addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -93,7 +87,7 @@ class QWeatherComplication : SmartspacerComplicationProvider() {
         return Config(
             label = provideContext().getString(R.string.complication_qweather_label),
             description = provideContext().getString(R.string.complication_qweather_description),
-            icon = AndroidIcon.createWithResource(provideContext(), R.drawable.ic_cloud),
+            icon = AndroidIcon.createWithResource(provideContext(), R.mipmap.ic_launcher),
             configActivity = Intent(provideContext(), SettingsActivity::class.java).apply {
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             }

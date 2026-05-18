@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">QWeather Plugin for Smartspacer</string>
+    <string name="settings_title">Qweather</string>
     <string name="save">Save</string>
 
     <string name="complication_qweather_label">QWeather Indices</string>

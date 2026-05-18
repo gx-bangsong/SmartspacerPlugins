@@ -13,6 +13,7 @@ import com.kieronquinn.app.smartspacer.plugin.parcel.engine.InboxScanner
 import com.kieronquinn.app.smartspacer.plugin.parcel.engine.RuleManager
 import com.kieronquinn.app.smartspacer.plugin.shared.model.settings.BaseSettingsItem
 import com.kieronquinn.app.smartspacer.plugin.shared.model.settings.GenericSettingsItem.Setting
+import com.kieronquinn.app.smartspacer.plugin.shared.model.settings.GenericSettingsItem.Dropdown
 import com.kieronquinn.app.smartspacer.plugin.shared.ui.base.settings.BaseSettingsFragment
 import com.kieronquinn.app.smartspacer.plugin.shared.ui.base.settings.BaseSettingsAdapter
 import kotlinx.coroutines.launch
@@ -52,17 +53,35 @@ class SettingsFragment : BaseSettingsFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupSettings()
+        // 显式隐藏加载 UI
+        binding.settingsBaseLoading.visibility = View.GONE
+
+        lifecycleScope.launchWhenStarted {
+            viewModel.cleanupDurationHours.collect {
+                setupSettings(it)
+            }
+        }
     }
 
-    private fun setupSettings() {
-        binding.settingsBaseLoading.visibility = View.GONE
+    private fun setupSettings(currentDuration: Int) {
+        val durationOptions = listOf(12, 24, 48, 72)
         val items = listOf<BaseSettingsItem>(
             Setting(
                 getString(R.string.plugin_description),
                 "Privacy: All SMS processing is local.",
                 ContextCompat.getDrawable(requireContext(), SharedR.drawable.ic_info),
                 onClick = {}
+            ),
+            Dropdown(
+                "Cleanup Duration",
+                "How long to keep pickup codes",
+                ContextCompat.getDrawable(requireContext(), SharedR.drawable.ic_smartspacer),
+                setting = currentDuration,
+                onSet = { hours ->
+                    viewModel.setCleanupDurationHours(hours)
+                },
+                options = durationOptions,
+                adapter = { "$it hours" }
             ),
             Setting(
                 "Scan Inbox",
@@ -78,7 +97,6 @@ class SettingsFragment : BaseSettingsFragment() {
             )
         )
         adapter.update(items)
-        binding.settingsBaseLoading.visibility = View.GONE
     }
 
     private fun checkPermissionsAndScan() {

@@ -10,6 +10,7 @@ import com.kieronquinn.app.smartspacer.plugin.shared.ui.activities.DialogLaunche
 import com.kieronquinn.app.smartspacer.sdk.model.SmartspaceTarget
 import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.TapAction
 import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Text
+import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Icon as SmartspaceIcon
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider
 import com.kieronquinn.app.smartspacer.sdk.utils.TargetTemplate
 import kotlinx.coroutines.runBlocking
@@ -85,7 +86,7 @@ class WaterProvider : SmartspacerTargetProvider(), KoinComponent {
             featureType = SmartspaceTarget.FEATURE_UNDEFINED,
             title = Text(text),
             subtitle = Text(""),
-            icon = com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Icon(AndroidIcon.createWithResource(context, R.drawable.ic_local_drink)),
+            icon = SmartspaceIcon(AndroidIcon.createWithResource(context, R.mipmap.ic_launcher), shouldTint = false),
             onClick = TapAction(intent = intent)
         ).create()
 
@@ -96,7 +97,7 @@ class WaterProvider : SmartspacerTargetProvider(), KoinComponent {
         return Config(
             label = "Water Reminder",
             description = "Track your water intake",
-            icon = android.graphics.drawable.Icon.createWithResource(context, R.drawable.ic_local_drink),
+            icon = AndroidIcon.createWithResource(context, R.mipmap.ic_launcher),
             configActivity = Intent(context, com.kieronquinn.app.smartspacer.plugin.water.ui.activities.SettingsActivity::class.java)
         )
     }

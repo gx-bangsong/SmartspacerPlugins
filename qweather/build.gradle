@@ -52,6 +52,8 @@ android {
 }
 
 dependencies {
+    // WorkManager
+    implementation "androidx.work:work-runtime-ktx:2.8.1"
     implementation project(path: ':shared')
         // Add or ensure this dependency is present with a recent version
     implementation("androidx.wear.watchface:watchface-complications-data:1.2.1")

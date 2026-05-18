@@ -28,18 +28,15 @@ class ParcelTargetProvider : SmartspacerTargetProvider(), KoinComponent {
         return Config(
             label = "Parcel Tracker",
             description = "Track parcels from SMS",
-            icon = AndroidIcon.createWithResource(context, R.drawable.ic_launcher_foreground),
+            icon = AndroidIcon.createWithResource(context, R.mipmap.ic_launcher),
             configActivity = Intent(context, com.kieronquinn.app.smartspacer.plugin.parcel.ui.activities.SettingsActivity::class.java)
         )
     }
 
     override fun getSmartspaceTargets(smartspacerId: String): List<SmartspaceTarget> {
         val context = this.context ?: return emptyList()
-        val now = System.currentTimeMillis()
 
-        // Mark parcels older than 24 hours as expired
-        runBlocking { parcelDao.markOldParcelsAsExpired(now - 24 * 60 * 60 * 1000) }
-
+        // 过期逻辑已移至 ParcelWorker，这里只负责显示
         val pendingParcels = runBlocking { parcelDao.getPendingParcelsList() }
 
         return pendingParcels.map { parcel ->
@@ -48,7 +45,7 @@ class ParcelTargetProvider : SmartspacerTargetProvider(), KoinComponent {
     }
 
     private fun createTarget(context: Context, parcel: ParcelItem): SmartspaceTarget {
-        // More prominent pickup code in the title
+        // 在标题中突出取件码
         val title = parcel.pickupCode
         val subtitle = parcel.stationName ?: context.getString(R.string.app_name)
 
@@ -64,7 +61,7 @@ class ParcelTargetProvider : SmartspacerTargetProvider(), KoinComponent {
             featureType = SmartspaceTarget.FEATURE_REMINDER,
             title = Text(title),
             subtitle = Text(subtitle),
-            icon = SmartspaceIcon(AndroidIcon.createWithResource(context, R.drawable.ic_launcher_foreground), shouldTint = false),
+            icon = SmartspaceIcon(AndroidIcon.createWithResource(context, R.mipmap.ic_launcher), shouldTint = false),
             onClick = TapAction(intent = detailIntent)
         ).create()
     }
