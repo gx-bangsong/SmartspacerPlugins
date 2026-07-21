@@ -44,6 +44,10 @@
             </intent-filter>
         </receiver>
 
+        <receiver
+            android:name=".receivers.MedicationAlarmReceiver"
+            android:exported="false" />
+
     </application>
 
 </manifest>

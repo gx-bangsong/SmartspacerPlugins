@@ -7,6 +7,7 @@ import androidx.lifecycle.lifecycleScope
 import com.google.android.material.progressindicator.LinearProgressIndicator
 import com.kieronquinn.app.smartspacer.plugin.food.data.FoodItemDao
 import com.kieronquinn.app.smartspacer.plugin.food.databinding.FragmentFoodSettingsBinding
+import com.kieronquinn.app.smartspacer.plugin.food.repositories.FoodScheduler
 import com.kieronquinn.app.smartspacer.plugin.food.ui.adapters.FoodAdapter
 import com.kieronquinn.app.smartspacer.plugin.food.work.FoodWorker
 import com.kieronquinn.app.smartspacer.plugin.shared.ui.base.settings.BaseFragment
@@ -19,6 +20,7 @@ import org.koin.android.ext.android.inject
 class FoodSettingsFragment : BaseFragment<FragmentFoodSettingsBinding>(FragmentFoodSettingsBinding::inflate) {
 
     private val foodItemDao by inject<FoodItemDao>()
+    private val foodScheduler by inject<FoodScheduler>()
 
     override val adapter by lazy {
         object : BaseSettingsAdapter(recyclerView, emptyList()) {}
@@ -46,6 +48,7 @@ class FoodSettingsFragment : BaseFragment<FragmentFoodSettingsBinding>(FragmentF
                 val foodAdapter = FoodAdapter(foodItems) { foodItem ->
                     lifecycleScope.launch {
                         foodItemDao.delete(foodItem)
+                        foodScheduler.cancelReminder(foodItem.id)
                         // 数据变更时触发立即刷新
                         FoodWorker.enqueueImmediate(requireContext())
                     }
@@ -71,6 +74,7 @@ class FoodSettingsFragment : BaseFragment<FragmentFoodSettingsBinding>(FragmentF
             addFoodItemFragment.setOnFoodItemAddedListener { foodItem ->
                 lifecycleScope.launch {
                     foodItemDao.insert(foodItem)
+                    foodScheduler.rescheduleAll()
                     // 添加新项后即时刷新
                     FoodWorker.enqueueImmediate(requireContext())
                 }
