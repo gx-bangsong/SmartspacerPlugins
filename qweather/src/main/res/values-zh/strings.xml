@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">和风天气生活指数插件</string>
+    <string name="settings_title">和风天气</string>
+    <string name="save">保存</string>
+
+    <string name="complication_qweather_label">和风天气生活指数</string>
+    <string name="complication_qweather_description">根据和风天气提供实用的每日生活建议</string>
+
+    <string name="settings_api_key_title">API 密钥</string>
+    <string name="settings_api_key_summary">从和风天气获取的个人 API 密钥</string>
+    <string name="settings_api_host_title">API 主机</string>
+    <string name="settings_api_host_summary">和风天气的自定义 API 主机地址</string>
+    <string name="settings_location_name_title">城市名称</string>
+    <string name="settings_location_name_summary">输入要查询天气指数的城市名称</string>
+    <string name="settings_select_indices_title">选择生活指数</string>
+    <string name="settings_select_indices_summary">选择你希望在 Smartspace 上展示的天气生活指数</string>
+    <string name="settings_use_emoji_title">使用 Emoji 表情</string>
+    <string name="settings_use_emoji_summary">替换为简短的 Emoji 标志：✅宜 ❌不宜 🏃运动 🚗洗车 🎣钓鱼 ✈️旅游 👕晾晒 👔穿衣 ☀️紫外线 💄化妆 🤒感冒</string>
+</resources>
