@@ -43,6 +43,10 @@
             </intent-filter>
         </receiver>
 
+        <receiver
+            android:name=".receivers.FoodAlarmReceiver"
+            android:exported="false" />
+
     </application>
 
 </manifest>

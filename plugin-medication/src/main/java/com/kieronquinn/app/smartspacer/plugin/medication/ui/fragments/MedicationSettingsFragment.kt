@@ -7,6 +7,7 @@ import androidx.lifecycle.lifecycleScope
 import com.google.android.material.progressindicator.LinearProgressIndicator
 import com.kieronquinn.app.smartspacer.plugin.medication.data.MedicationDao
 import com.kieronquinn.app.smartspacer.plugin.medication.databinding.FragmentMedicationSettingsBinding
+import com.kieronquinn.app.smartspacer.plugin.medication.repositories.MedicationScheduler
 import com.kieronquinn.app.smartspacer.plugin.medication.ui.adapters.MedicationAdapter
 import com.kieronquinn.app.smartspacer.plugin.medication.work.MedicationWorker
 import com.kieronquinn.app.smartspacer.plugin.shared.ui.base.settings.BaseFragment
@@ -19,6 +20,7 @@ import org.koin.android.ext.android.inject
 class MedicationSettingsFragment : BaseFragment<FragmentMedicationSettingsBinding>(FragmentMedicationSettingsBinding::inflate) {
 
     private val medicationDao by inject<MedicationDao>()
+    private val medicationScheduler by inject<MedicationScheduler>()
 
     override val adapter by lazy {
         object : BaseSettingsAdapter(recyclerView, emptyList()) {}
@@ -47,6 +49,7 @@ class MedicationSettingsFragment : BaseFragment<FragmentMedicationSettingsBindin
                 val medicationAdapter = MedicationAdapter(medications) { medication ->
                     lifecycleScope.launch {
                         medicationDao.delete(medication)
+                        medicationScheduler.cancelAlarm(medication.id)
                         // 数据变更时触发立即刷新
                         MedicationWorker.enqueueImmediate(requireContext())
                     }
@@ -72,6 +75,7 @@ class MedicationSettingsFragment : BaseFragment<FragmentMedicationSettingsBindin
             addMedicationFragment.setOnMedicationAddedListener { medication ->
                 lifecycleScope.launch {
                     medicationDao.insert(medication)
+                    medicationScheduler.rescheduleAll()
                     // 添加新药后立即刷新
                     MedicationWorker.enqueueImmediate(requireContext())
                 }

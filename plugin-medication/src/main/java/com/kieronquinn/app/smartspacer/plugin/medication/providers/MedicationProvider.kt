@@ -48,6 +48,11 @@ class MedicationProvider : SmartspacerTargetProvider(), KoinComponent {
                 if (now < medication.startDate) return@filter false
                 if (!medication.isUnlimited && medication.endDate != null && now > medication.endDate) return@filter false
 
+                // 只在服药时间前 60 分钟内，或已过服药时间但尚未记录时显示
+                val reminderWindowStart = medication.nextDoseTs - 60 * 60 * 1000L
+                val isDueOrUpcoming = now >= reminderWindowStart
+                if (!isDueOrUpcoming) return@filter false
+
                 true
             }
             .map { medication ->

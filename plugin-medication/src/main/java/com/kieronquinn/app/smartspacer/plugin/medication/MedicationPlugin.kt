@@ -2,6 +2,8 @@ package com.kieronquinn.app.smartspacer.plugin.medication
 
 import android.content.Context
 import com.kieronquinn.app.smartspacer.plugin.medication.data.MedicationDatabase
+import com.kieronquinn.app.smartspacer.plugin.medication.repositories.MedicationScheduler
+import com.kieronquinn.app.smartspacer.plugin.medication.repositories.MedicationSchedulerImpl
 import com.kieronquinn.app.smartspacer.plugin.medication.repositories.NavGraphRepositoryImpl
 import com.kieronquinn.app.smartspacer.plugin.shared.SmartspacerPlugin
 import com.kieronquinn.app.smartspacer.plugin.shared.repositories.NavGraphRepository
@@ -13,6 +15,7 @@ class MedicationPlugin: SmartspacerPlugin() {
         single { MedicationDatabase.getDatabase(get()).medicationDao() }
         single { MedicationDatabase.getDatabase(get()).doseHistoryDao() }
         single<NavGraphRepository> { NavGraphRepositoryImpl() }
+        single<MedicationScheduler> { MedicationSchedulerImpl(get(), get()) }
     }
 
 }

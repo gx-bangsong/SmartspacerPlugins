@@ -11,7 +11,10 @@ import com.kieronquinn.app.smartspacer.plugin.medication.data.DoseHistoryDao
 import com.kieronquinn.app.smartspacer.plugin.medication.data.MedicationDao
 import com.kieronquinn.app.smartspacer.plugin.medication.data.MedicationUtils
 import com.kieronquinn.app.smartspacer.plugin.medication.databinding.FragmentRecordDoseBinding
+import com.kieronquinn.app.smartspacer.plugin.medication.providers.MedicationProvider
+import com.kieronquinn.app.smartspacer.plugin.medication.repositories.MedicationScheduler
 import com.kieronquinn.app.smartspacer.plugin.medication.work.MedicationWorker
+import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 
@@ -19,6 +22,7 @@ class RecordDoseFragment : BottomSheetDialogFragment() {
 
     private val medicationDao by inject<MedicationDao>()
     private val doseHistoryDao by inject<DoseHistoryDao>()
+    private val medicationScheduler by inject<MedicationScheduler>()
 
     private var _binding: FragmentRecordDoseBinding? = null
     private val binding get() = _binding!!
@@ -52,6 +56,15 @@ class RecordDoseFragment : BottomSheetDialogFragment() {
                     )
                     medicationDao.update(updatedMedication)
 
+                    // 更新精确闹钟
+                    medicationScheduler.scheduleAlarm(updatedMedication)
+
+                    // 同步刷新 Smartspace Targets，让已服用卡片立即可靠地消失
+                    SmartspacerTargetProvider.notifyChange(
+                        requireContext(),
+                        MedicationProvider::class.java
+                    )
+
                     // 记录服药后立即刷新 Smartspace
                     MedicationWorker.enqueueImmediate(requireContext())
                     dismiss()
@@ -73,6 +86,15 @@ class RecordDoseFragment : BottomSheetDialogFragment() {
                         nextDoseTs = MedicationUtils.calculateNextDose(medication)
                     )
                     medicationDao.update(updatedMedication)
+
+                    // 更新精确闹钟
+                    medicationScheduler.scheduleAlarm(updatedMedication)
+
+                    // 同步刷新 Smartspace Targets，让已服用卡片立即可靠地消失
+                    SmartspacerTargetProvider.notifyChange(
+                        requireContext(),
+                        MedicationProvider::class.java
+                    )
 
                     // 跳过服药后也立即刷新
                     MedicationWorker.enqueueImmediate(requireContext())

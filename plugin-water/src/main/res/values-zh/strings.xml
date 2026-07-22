@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">饮水提醒插件</string>
+    <string name="settings_title">饮水提醒设置</string>
+    <string name="record_drink_title">记录喝水情况</string>
+    <string name="water_record_drink">记录喝水</string>
+    <string name="action_skip">跳过</string>
+    <string name="action_drank">已喝</string>
+    <string name="water_record_success">喝水记录成功</string>
+
+    <string name="setting_daily_goal">每日目标</string>
+    <string name="setting_cup_size">水杯容量</string>
+    <string name="setting_auto_reset">自动重置进度</string>
+    <string name="setting_auto_reset_desc">在提醒开始时间自动清零今日进度</string>
+    <string name="setting_smart_adjust">智能调整</string>
+    <string name="setting_smart_adjust_desc">根据当前饮水进度动态调整下次提醒时间</string>
+    <string name="setting_display_mode">显示模式</string>
+    <string name="setting_save">保存更改</string>
+    <string name="setting_save_desc">应用新设置并重新调度提醒</string>
+
+    <string name="display_mode_progress">进度模式</string>
+    <string name="display_mode_reminder">提醒模式</string>
+    <string name="display_mode_dynamic">动态模式</string>
+</resources>

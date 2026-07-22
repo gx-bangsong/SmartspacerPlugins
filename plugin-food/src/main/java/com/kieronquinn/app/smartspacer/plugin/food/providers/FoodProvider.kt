@@ -28,7 +28,11 @@ class FoodProvider : SmartspacerTargetProvider(), KoinComponent {
         val now = System.currentTimeMillis()
 
         return foodItems
-            .filter { it.enabled }
+            .filter { foodItem ->
+                // 只在到期前 reminderOffsetDays 天（包含过期后）才在 Smartspace 上显示该食物
+                val reminderStart = foodItem.expiryDate - TimeUnit.DAYS.toMillis(foodItem.reminderOffsetDays.toLong())
+                foodItem.enabled && now >= reminderStart
+            }
             .map { foodItem ->
                 val expiresInMillis = foodItem.expiryDate - now
                 val title = if (expiresInMillis <= 0) {
