@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Check-In</string>
+    <string name="settings_title">Check-In Settings</string>
+    <string name="settings_enable_reminder">Enable Reminders</string>
+    <string name="settings_enable_reminder_summary">Send a notification if you have not punched by the set times</string>
+    <string name="settings_work_start_time">Work Start Time</string>
+    <string name="settings_work_end_time">Work End Time</string>
+    <string name="settings_custom_reminder_text">Custom Reminder Text</string>
+    <string name="settings_custom_reminder_text_summary">Notification body to display for punch reminders</string>
+    <string name="settings_checkin_app">Attendance App Link</string>
+    <string name="settings_checkin_app_summary">Office app to open automatically after local punch-in</string>
+    <string name="settings_app_none">Local Only (Quick Punch)</string>
+    <string name="settings_app_wecom">WeCom (企业微信)</string>
+    <string name="settings_app_dingtalk">DingTalk (钉钉)</string>
+    <string name="settings_app_feishu">Feishu (飞书)</string>
+    <string name="settings_app_feilian">Feilian (飞连)</string>
+    <string name="settings_history_header">Check-In History</string>
+    <string name="settings_no_history">No check-in history found.</string>
+    <string name="notification_title">Check-In Reminder</string>
+    <string name="default_reminder_text">上班时间请记得打卡</string>
+    <string name="default_reminder_text_end">下班时间请记得打卡</string>
+    <string name="target_unpunched">今日未打卡，点击打卡</string>
+    <string name="target_punched_in">上班已打卡 %1$s</string>
+    <string name="target_punched_out">下班已打卡 %1$s</string>
+    <string name="settings_delete">Delete</string>
+    <string name="settings_delete_confirm">Are you sure you want to delete this check-in record?</string>
+</resources>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">考勤打卡</string>
+    <string name="settings_title">打卡设置</string>
+    <string name="settings_enable_reminder">启用打卡提醒</string>
+    <string name="settings_enable_reminder_summary">在设定时间仍未打卡时，接收系统通知提醒</string>
+    <string name="settings_work_start_time">上班打卡时间</string>
+    <string name="settings_work_end_time">下班打卡时间</string>
+    <string name="settings_custom_reminder_text">自定义提醒内容</string>
+    <string name="settings_custom_reminder_text_summary">收到上班打卡通知时的提醒文本</string>
+    <string name="settings_checkin_app">打卡联动 App</string>
+    <string name="settings_checkin_app_summary">点击卡片快速记录后自动拉起的办公应用</string>
+    <string name="settings_app_none">仅本地快速打卡</string>
+    <string name="settings_app_wecom">企业微信</string>
+    <string name="settings_app_dingtalk">钉钉</string>
+    <string name="settings_app_feishu">飞书</string>
+    <string name="settings_app_feilian">飞连</string>
+    <string name="settings_history_header">打卡历史记录</string>
+    <string name="settings_no_history">今日暂无打卡记录，点击下方添加或在 Smartspace 快速打卡。</string>
+    <string name="notification_title">打卡提醒</string>
+    <string name="default_reminder_text">上班时间请记得打卡</string>
+    <string name="default_reminder_text_end">下班时间请记得打卡</string>
+    <string name="target_unpunched">今日未打卡，点击打卡</string>
+    <string name="target_punched_in">上班已打卡 %1$s</string>
+    <string name="target_punched_out">下班已打卡 %1$s</string>
+    <string name="settings_delete">删除</string>
+    <string name="settings_delete_confirm">确定要删除此打卡记录吗？</string>
+</resources>

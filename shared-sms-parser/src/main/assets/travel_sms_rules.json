@@ -1,0 +1,38 @@
+[
+  {
+    "id": "12306_default",
+    "pattern": "【12306】([^购\\s，]+)?购票成功，(\\d+月\\d+日)([A-Z\\d]+)次，([^，开\\d]+(?:站|机场))?(\\d{1,2}:\\d{2})开",
+    "mappings": {
+      "passengerName": 1,
+      "departureDate": 2,
+      "trainNumber": 3,
+      "departureStation": 4,
+      "departureTime": 5
+    }
+  },
+  {
+    "id": "flight_default",
+    "pattern": "【(?:[^】]+)】您的航班([A-Z0-9]{2,6})，(\\d+月\\d+日)?(?:(\\d{4}-\\d{2}-\\d{2}))?([^至\\-→\\s，]+)(?:-|→|至)([^，\\s]+)，起飞时间(\\d{1,2}:\\d{2})，?座位?([A-Z0-9\\d#一二三四五等舱]+)?",
+    "mappings": {
+      "trainNumber": 1,
+      "departureDate": 2,
+      "fullDate": 3,
+      "departureStation": 4,
+      "arrivalStation": 5,
+      "departureTime": 6,
+      "seat": 7
+    }
+  },
+  {
+    "id": "manual_paste_general",
+    "pattern": "([A-Z\\d]+)\\s+([^→\\s]+)\\s*(?:→|\\s+)\\s*([^\\s]+)\\s+(\\d{4}-\\d{2}-\\d{2})\\s+(\\d{1,2}:\\d{2})(?:\\s+([A-Z0-9\\d]+))?",
+    "mappings": {
+      "trainNumber": 1,
+      "departureStation": 2,
+      "arrivalStation": 3,
+      "fullDate": 4,
+      "departureTime": 5,
+      "seat": 6
+    }
+  }
+]

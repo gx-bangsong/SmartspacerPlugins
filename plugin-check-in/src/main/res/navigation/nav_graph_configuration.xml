@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph_configuration"
+    app:startDestination="@id/checkInSettingsFragment">
+
+    <fragment
+        android:id="@+id/checkInSettingsFragment"
+        android:name="com.kieronquinn.app.smartspacer.plugin.checkin.ui.fragments.CheckInSettingsFragment"
+        android:label="@string/settings_title"
+        tools:layout="@layout/fragment_check_in_settings" />
+
+</navigation>

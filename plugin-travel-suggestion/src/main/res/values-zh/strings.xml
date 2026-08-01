@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">出行建议</string>
+    <string name="settings_title">出行建议设置</string>
+    <string name="settings_enable_sms">启用短信解析</string>
+    <string name="settings_enable_sms_summary">自动从收到的短信中提取出行信息</string>
+    <string name="settings_read_notif">使用通知读取短信</string>
+    <string name="settings_read_notif_summary">在无短信权限时，通过通知服务提取短信内容</string>
+    <string name="settings_manual_paste">手动粘贴解析</string>
+    <string name="settings_manual_paste_summary">手动粘贴包含行程的车票或航班文本并解析</string>
+    <string name="settings_jump_target">点击跳转目标</string>
+    <string name="settings_jump_target_summary">点击 Smartspace 行程卡片时拉起的应用</string>
+    <string name="settings_jump_none">仅展示（不跳转）</string>
+    <string name="settings_jump_12306">铁路 12306</string>
+    <string name="settings_jump_umetrip">航旅纵横</string>
+    <string name="settings_jump_maps">系统地图</string>
+    <string name="settings_manual_title">手动粘贴解析</string>
+    <string name="settings_manual_hint">请粘贴12306购票短信、航空公司航班通知，或者输入格式如 \"G123 北京南 → 上海虹桥 2026-08-01 14:30 05A\"</string>
+    <string name="settings_manual_parse">解析文本</string>
+    <string name="settings_manual_cancel">取消</string>
+    <string name="settings_manual_save">保存入库</string>
+    <string name="settings_manual_confirm_title">确认出行行程</string>
+    <string name="settings_manual_confirm_train">车次/航班：</string>
+    <string name="settings_manual_confirm_from">出发站：</string>
+    <string name="settings_manual_confirm_to">到达站：</string>
+    <string name="settings_manual_confirm_time">出发时间：</string>
+    <string name="settings_manual_confirm_seat">座位号：</string>
+    <string name="settings_manual_parse_success">解析成功！</string>
+    <string name="settings_manual_parse_failed">解析失败：%1$s</string>
+    <string name="settings_manual_save_success">行程已成功保存！</string>
+    <string name="settings_delete">删除</string>
+    <string name="settings_delete_confirm">确定要删除此行程吗？</string>
+    <string name="notification_title">即将出行提醒</string>
+    <string name="notification_content">您的车次/航班 %1$s 即将于 %3$s 从 %2$s 发车/起飞，请做好出行准备！</string>
+    <string name="target_format_with_to">%1$s %2$s → %3$s %4$s %5$s</string>
+    <string name="target_format_no_to">%1$s %2$s %3$s %4$s</string>
+    <string name="trip_list_header">已保存的行程</string>
+    <string name="no_trips">暂无即将出行的行程。请在上方手动粘贴，或启用短信自动解析。</string>
+</resources>

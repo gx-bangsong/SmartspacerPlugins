@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Travel Suggestions</string>
+    <string name="settings_title">Travel Suggestion Settings</string>
+    <string name="settings_enable_sms">Enable SMS Parsing</string>
+    <string name="settings_enable_sms_summary">Automatically parse travel info from incoming SMS</string>
+    <string name="settings_read_notif">Use Notification Listener</string>
+    <string name="settings_read_notif_summary">Read SMS notifications if SMS permission is not available</string>
+    <string name="settings_manual_paste">Manual Paste Entry</string>
+    <string name="settings_manual_paste_summary">Manually paste travel texts to extract info</string>
+    <string name="settings_jump_target">Click Action Target</string>
+    <string name="settings_jump_target_summary">Select app to launch when clicking on travel card</string>
+    <string name="settings_jump_none">Show Only (No Jump)</string>
+    <string name="settings_jump_12306">Railway 12306</string>
+    <string name="settings_jump_umetrip">Umetrip (航旅纵横)</string>
+    <string name="settings_jump_maps">System Maps</string>
+    <string name="settings_manual_title">Manual Parsing</string>
+    <string name="settings_manual_hint">Paste 12306 ticket SMS, flight messages, or format \"G123 Beijing South → Shanghai Hongqiao 2026-08-01 14:30 05A\"</string>
+    <string name="settings_manual_parse">Parse</string>
+    <string name="settings_manual_cancel">Cancel</string>
+    <string name="settings_manual_save">Save</string>
+    <string name="settings_manual_confirm_title">Confirm Travel Details</string>
+    <string name="settings_manual_confirm_train">Train/Flight: </string>
+    <string name="settings_manual_confirm_from">From: </string>
+    <string name="settings_manual_confirm_to">To: </string>
+    <string name="settings_manual_confirm_time">Time: </string>
+    <string name="settings_manual_confirm_seat">Seat: </string>
+    <string name="settings_manual_parse_success">Parse success!</string>
+    <string name="settings_manual_parse_failed">Parse failed: %1$s</string>
+    <string name="settings_manual_save_success">Travel saved successfully</string>
+    <string name="settings_delete">Delete</string>
+    <string name="settings_delete_confirm">Are you sure you want to delete this trip?</string>
+    <string name="notification_title">Upcoming Travel Reminder</string>
+    <string name="notification_content">Your trip %1$s from %2$s is departing soon at %3$s. Please get ready!</string>
+    <string name="target_format_with_to">%1$s %2$s → %3$s %4$s %5$s</string>
+    <string name="target_format_no_to">%1$s %2$s %3$s %4$s</string>
+    <string name="trip_list_header">Saved Trips</string>
+    <string name="no_trips">No upcoming trips. Enable SMS parsing or paste manually above.</string>
+</resources>
