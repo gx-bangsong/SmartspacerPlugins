@@ -71,9 +71,45 @@ The **Check-In Reminder** plugin acts as your personal attendance assistant, man
 
 ---
 
+The **Parcel Tracker** plugin scans your SMS messages to automatically identify and extract pickup codes, displaying them directly on your Smartspace for quick and easy access.
+
+### Features
+
+- **Automated Recognition**: Monitors incoming SMS messages in real-time or scans your inbox to extract pickup codes automatically.
+- **Intelligent Rule Engine**: Pre-configured with rules for major courier services (e.g., Cainiao, Hive Box) and supports extensions via custom JSON files.
+- **Essential Information**: Displays the pickup code (e.g., 3-4-1024) and the station name directly on Smartspace.
+- **Automatic Expiry**: Configurable cleanup duration (defaulting to 24 hours) ensures that old pickup codes don't clutter your view.
+- **Customizable Rules**: For unique SMS formats, you can define your own matching logic by following the [SMS Rules Documentation](DOCS_SMS_RULES.md).
+
+---
+
 ## 饮水提醒 | Water Reminder
 
-“饮水提醒”插件是一个帮助您养成良好饮水习惯的智能工具。它会在您设定的时间段内，根据您的每日目标 and 水杯容量，智能地提醒您按时饮水，并跟踪您的饮水进度。
+“饮水提醒”插件是一个帮助您养成良好饮水习惯的智能工具。它会在您设定的时间段内，根据您的每日目标和水杯容量，智能地提醒您按时饮水，并跟踪您的饮水进度。
+
+### 主要功能
+
+- **个性化饮水目标**：您可以设定从 500ml 到 5000ml 的每日饮水总量。
+- **自定义水杯容量**：根据您常用的水杯，设定 100ml 到 1000ml 的单次饮水量。
+- **智能提醒周期**：设定每日开始和结束提醒的时间，插件将只在活跃时段内打扰您。
+- **多种显示模式**：根据您的喜好，选择不同的 Smartspace 显示样式。
+- **进度自动重置**：可选择在每日提醒开始时自动清零饮水记录。
+- **智能调整**：启用后，插件会根据您的饮水进度动态调整下一次提醒的时间。
+- **暂停提醒**：需要暂时中断？可以轻松将下一次提醒推迟 5 到 60 分钟。
+
+---
+
+The **Water Reminder** plugin is a smart tool to help you build and maintain healthy hydration habits. It intelligently reminds you to drink water at regular intervals based on your daily goal and cup size, all within a time window you define, while also tracking your progress.
+
+### Features
+
+- **Personalized Daily Goal**: Set your daily water intake goal, from 500ml to 5000ml.
+- **Custom Cup Size**: Define the volume of your typical cup, from 100ml to 1000ml, for accurate tracking.
+- **Smart Reminder Schedule**: Specify start and end times for reminders, ensuring the plugin is only active when you are.
+- **Multiple Display Modes**: Choose from various display styles to customize how the reminder appears on Smartspace.
+- **Automatic Progress Reset**: Optionally configure your daily progress to reset automatically at the start of your reminder schedule.
+- **Smart Adjustments**: When enabled, the plugin dynamically adjusts the next reminder time based on your hydration progress.
+- **Snooze Functionality**: Need a break? Easily snooze the next reminder for 5 to 60 minutes.
 
 ---
 
@@ -81,11 +117,51 @@ The **Check-In Reminder** plugin acts as your personal attendance assistant, man
 
 “用药提醒”插件是一个简单而可靠的工具，旨在确保您不会忘记在正确的时间服用药物。您可以轻松添加多种药物，并为每种药物设置灵活的提醒时间表。
 
+### 主要功能
+
+- **药物管理**：轻松添加 and 管理您的所有药物。
+- **剂量说明**：为每种药物记录具体的剂量信息（例如，“饭后一粒”）。
+- **灵活的用药周期**：设定药物的开始日期和可选的结束日期，支持长期服药和短期疗程。
+- **精确的提醒时间**：您可以为每种药物添加多个每日的精确服药时间点（例如，08:00, 14:00, 20:00）。
+- **自动计算下一次剂量**：插件会自动计算并显示下一次需要服药的时间，让您一目了然。
+
+---
+
+The **Medication Reminder** plugin is a simple and reliable tool designed to ensure you never forget to take your medication at the right time. You can easily add multiple medications and set up flexible reminder schedules for each one.
+
+### Features
+
+- **Medication Management**: Easily add and manage all your medications.
+- **Dosage Information**: Record specific dosage instructions for each medication (e.g., "One pill after meals").
+- **Flexible Scheduling**: Set a start date and an optional end date for each medication, supporting both long-term and short-term treatments.
+- **Precise Reminder Times**: Add multiple specific times of day for each medication, ensuring accurate reminders (e.g., 08:00, 14:00, 20:00).
+- **Automatic Next Dose Calculation**: The plugin automatically calculates and displays the time for your next dose, keeping you informed at a glance.
+
 ---
 
 ## 食物保质期提醒 | Food Shelf Life Reminder
 
 “食物保质期提醒”插件帮助您跟踪家中食物的有效期，有效减少浪费。只需简单几步，即可为您储藏的食物设置到期提醒。
+
+### 主要功能
+
+- **物品追踪**：添加您购买的食物或其他有时效性物品的名称。
+- **储存方式记录**：记录每件物品的储存方法（例如，“冷藏”、“避光干燥”）。
+- **灵活的保质期设定**：以天为单位，轻松设置物品的保质期。
+- **快捷填充**：为常见保质期（如 3 个月、12 个月）提供一键填充功能，简化输入过程。
+- **自动到期日计算**：插件会根据您输入的保质期，自动计算并记录准确的到期日期。
+
+---
+
+The **Food Shelf Life Reminder** plugin helps you keep track of the expiration dates of your food items at home, effectively reducing waste. Set up expiry reminders for your stored goods in just a few simple steps.
+
+### Features
+
+- **Item Tracking**: Add the names of food items or other perishable goods you've purchased.
+- **Storage Method Logging**: Record the storage method for each item (e.g., "Refrigerated," "Store in a cool, dry place").
+- **Flexible Shelf Life**: Easily set the shelf life for your items in days.
+- **Quick-Fill Buttons**: Use one-tap buttons for common shelf lives (e.g., 3 months, 12 months) to speed up data entry.
+- **Automatic Expiry Calculation**: The plugin automatically calculates and records the exact expiration date based on the shelf life you provide.
 
 ---
 
@@ -101,5 +177,6 @@ The **Check-In Reminder** plugin acts as your personal attendance assistant, man
 - **智能摘要显示**：插件会将您选择的众多指数智能地分类、汇总成两条简洁明了的摘要信息：“活动建议”（如“宜：洗车 | 不宜：运动”）和“状态摘要”（如“穿衣：炎热”），有效避免了信息过长被截断的问题。
 - **自定义配置**：
     - **API 密钥**：填入您自己的和风天气 API 密钥。
-    - **API Host**：支持自定义数据 API 地址（如付费版、商业版密钥可填写 `api.qweather.com`）。注：城市查询服务 (GeoAPI) 会自动路由到官方专用的 `geoapi.qweather.com`，您无需担心因更改数据 API 主机而导致城市查询或天气检索失败。
+    - **API Host**：支持自定义数据 API 地址（如付费版、商业版密钥可填写 `api.qweather.com`）。
+      - *避坑与报错说明*：如果您填写了自定义主机（例如填入付费版的 `api.qweather.com`），请务必注意：由于该插件内部对城市查询服务（GeoAPI）也共用了此域名，而和风天气的 GeoAPI 域名固定只能是 `geoapi.qweather.com`，这会导致城市查询（lookupCity）因请求到非 Geo 域名（如 api.qweather.com）而返回 404，导致初始化城市定位失败。建议仅在通过自定义反向代理（该代理必须同时转发天气和 Geo 接口）时才使用此字段，否则建议留空以使用默认主机。
     - **城市名称**：输入您希望查询的城市。
