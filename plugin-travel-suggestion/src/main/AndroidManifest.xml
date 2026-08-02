@@ -28,7 +28,7 @@
         <activity
             android:name=".ui.activities.TravelActionActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
-            android:exported="false" />
+            android:exported="true" />
 
         <provider
             android:name=".providers.TravelTargetProvider"
