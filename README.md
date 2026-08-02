@@ -119,7 +119,7 @@ The **Water Reminder** plugin is a smart tool to help you build and maintain hea
 
 ### 主要功能
 
-- **药物管理**：轻松添加 and 管理您的所有药物。
+- **药物管理**：轻松添加和管理您的所有药物。
 - **剂量说明**：为每种药物记录具体的剂量信息（例如，“饭后一粒”）。
 - **灵活的用药周期**：设定药物的开始日期和可选的结束日期，支持长期服药和短期疗程。
 - **精确的提醒时间**：您可以为每种药物添加多个每日的精确服药时间点（例如，08:00, 14:00, 20:00）。
@@ -177,6 +177,22 @@ The **Food Shelf Life Reminder** plugin helps you keep track of the expiration d
 - **智能摘要显示**：插件会将您选择的众多指数智能地分类、汇总成两条简洁明了的摘要信息：“活动建议”（如“宜：洗车 | 不宜：运动”）和“状态摘要”（如“穿衣：炎热”），有效避免了信息过长被截断的问题。
 - **自定义配置**：
     - **API 密钥**：填入您自己的和风天气 API 密钥。
-    - **API Host**：支持自定义数据 API 地址（如付费版、商业版密钥可填写 `api.qweather.com`）。
+    - **API Host**：支持自定义 API 地址，方便使用代理或私有化部署的用户。
       - *避坑与报错说明*：如果您填写了自定义主机（例如填入付费版的 `api.qweather.com`），请务必注意：由于该插件内部对城市查询服务（GeoAPI）也共用了此域名，而和风天气的 GeoAPI 域名固定只能是 `geoapi.qweather.com`，这会导致城市查询（lookupCity）因请求到非 Geo 域名（如 api.qweather.com）而返回 404，导致初始化城市定位失败。建议仅在通过自定义反向代理（该代理必须同时转发天气和 Geo 接口）时才使用此字段，否则建议留空以使用默认主机。
     - **城市名称**：输入您希望查询的城市。
+
+---
+
+The **QWeather Indices** plugin brings a variety of lifestyle indices to your Smartspace, keeping you well-informed. Powered by the QWeather API, it provides accurate and rich daily-life advice to help you better plan your day.
+
+**Please Note:** You need a QWeather API Key to use this plugin.
+
+### Features
+
+- **Rich Index Selection**: Choose from a wide range of QWeather's lifestyle indices that matter to you, such as sports, car washing, dressing, fishing, UV index, and more.
+- **Smart Summary Display**: The plugin intelligently categorizes and consolidates the selected indices into two concise summary lines: "Activity Suggestions" (e.g., "Suitable for: Car Wash | Unsuitable for: Sports") and "Status Summary" (e.g., "Dressing: Hot"). This effectively prevents text from being truncated.
+- **Custom Configuration**:
+    - **API Key**: Enter your personal QWeather API key.
+    - **API Host**: Allows for a custom API host address, which is useful for users with proxies or private deployments.
+      - *Warning*: If you set a custom host (e.g. `api.qweather.com` for subscription keys), the plugin will also route GeoAPI city lookup to this domain. Since QWeather's GeoAPI is only hosted on `geoapi.qweather.com`, the lookup city request will fail with a 404 error. Only configure this if your custom proxy also handles and routes GeoAPI endpoints correctly, otherwise leave it empty.
+    - **City Name**: Specify the city for which you want to retrieve weather data.
