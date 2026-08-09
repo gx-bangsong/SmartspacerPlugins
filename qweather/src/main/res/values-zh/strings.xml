@@ -12,7 +12,7 @@
     <string name="settings_api_host_title">API 主机</string>
     <string name="settings_api_host_summary">和风天气的自定义 API 主机地址</string>
     <string name="settings_location_name_title">城市名称</string>
-    <string name="settings_location_name_summary">输入要查询天气指数的城市名称</string>
+    <string name="settings_location_name_summary">输入要查询天气指数 of 城市名称</string>
     <string name="settings_select_indices_title">选择生活指数</string>
     <string name="settings_select_indices_summary">选择你希望在 Smartspace 上展示的天气生活指数</string>
     <string name="settings_use_emoji_title">使用 Emoji 表情</string>

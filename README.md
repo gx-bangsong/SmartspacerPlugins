@@ -12,11 +12,48 @@ This repository contains an unofficial collection of plugins developed for [Smar
 
 ## 目录 | Table of Contents
 
+- [出行建议提取 (Travel Suggestions)](#出行建议提取--travel-suggestions)
+- [考勤打卡提醒 (Check-In Reminder)](#考勤打卡提醒--check-in-reminder)
 - [快递取件提醒 (Parcel Tracker)](#快递取件提醒--parcel-tracker)
 - [饮水提醒 (Water Reminder)](#饮水提醒--water-reminder)
 - [用药提醒 (Medication Reminder)](#用药提醒--medication-reminder)
 - [食物保质期提醒 (Food Shelf Life Reminder)](#食物保质期提醒--food-shelf-life-reminder)
 - [和风天气生活指数 (QWeather Indices)](#和风天气生活指数--qweather-indices)
+
+---
+
+## 出行建议提取 | Travel Suggestions
+
+“出行建议提取”插件可以自动解析您的短信，或通过手动粘贴，自动识别火车、高铁和飞机票的出行信息，并优雅地展示在 Smartspace 卡片上，避免您因找不到票务信息而手忙脚乱。
+
+### 主要功能
+
+- **智能短信解析**：内置高度精准的正则提取模块（基于 `shared-sms-parser` 独立解析库），完美适配 12306 订票、各航空公司出票短信。
+- **手动粘贴解析**：提供可视化“方案 B”核对弹窗，粘贴短信后一键解析，在表单中核对并编辑车次、出发地、目的地、时间和座位号等字段后安全入库。
+- **点击一键跳转**：点击行程卡片可直接复制行程详情到剪贴板，并可自定义联动拉起 12306、航旅纵横或系统地图等软件。
+- **精确出发通知**：使用 `AlarmManager` 机制，在出发前 30 分钟弹出高优先级系统通知，提醒您做好出行准备。
+- **优雅 Dismiss**：在 Smartspace 上侧滑清除行程卡，将自动把该行程标记为已出行。
+
+---
+
+The **Travel Suggestions** plugin automatically parses ticket notifications from your SMS or via manual paste, extracting trains, high-speed rail, and flight details to display directly on your Smartspace.
+
+---
+
+## 考勤打卡提醒 | Check-In Reminder
+
+“考勤打卡”插件是一个用于每日打卡状态跟踪、智能提醒并快速拉起办公软件的多合一考勤小助手。
+
+### 主要功能
+
+- **智能打卡逻辑 (方案 A)**：Smartspace 桌面卡片动态流转状态：“今日未打卡” $\rightarrow$ 点击记录上班时间，显示“上班已打卡 09:15” $\rightarrow$ 再次点击记录下班时间，并支持多次点击实时更新下班打卡。
+- **打卡联动 App**：配置您日常打卡使用的应用（企业微信、钉钉、飞书、飞连），点击 Smartspace 卡片后，在本地 Room 记录时间的同时，自动帮您拉起该考勤应用。
+- **双重闹铃提醒**：支持自定义上班与下班时间提醒。如果在指定打卡时间前半小时仍未打卡，将触发系统通知（内容支持自定义配置，默认为“上班时间请记得打卡”）。
+- **打卡记录轨迹**：在设置页以列表形式直观展示您的所有打卡历史。支持手动补卡与随时删除记录，管理更轻松。
+
+---
+
+The **Check-In Reminder** plugin acts as your personal attendance assistant, managing clock-in/out states, scheduling dual-track reminder alarms, and automatically launching corporate tools like DingTalk, WeCom, Feishu, or Feilian.
 
 ---
 
@@ -141,6 +178,7 @@ The **Food Shelf Life Reminder** plugin helps you keep track of the expiration d
 - **自定义配置**：
     - **API 密钥**：填入您自己的和风天气 API 密钥。
     - **API Host**：支持自定义 API 地址，方便使用代理或私有化部署的用户。
+      - *避坑与报错说明*：如果您填写了自定义主机（例如填入付费版的 `api.qweather.com`），请务必注意：由于该插件内部对城市查询服务（GeoAPI）也共用了此域名，而和风天气的 GeoAPI 域名固定只能是 `geoapi.qweather.com`，这会导致城市查询（lookupCity）因请求到非 Geo 域名（如 api.qweather.com）而返回 404，导致初始化城市定位失败。建议仅在通过自定义反向代理（该代理必须同时转发天气和 Geo 接口）时才使用此字段，否则建议留空以使用默认主机。
     - **城市名称**：输入您希望查询的城市。
 
 ---
@@ -156,4 +194,5 @@ The **QWeather Indices** plugin brings a variety of lifestyle indices to your Sm
 - **Custom Configuration**:
     - **API Key**: Enter your personal QWeather API key.
     - **API Host**: Allows for a custom API host address, which is useful for users with proxies or private deployments.
+      - *Warning*: If you set a custom host (e.g. `api.qweather.com` for subscription keys), the plugin will also route GeoAPI city lookup to this domain. Since QWeather's GeoAPI is only hosted on `geoapi.qweather.com`, the lookup city request will fail with a 404 error. Only configure this if your custom proxy also handles and routes GeoAPI endpoints correctly, otherwise leave it empty.
     - **City Name**: Specify the city for which you want to retrieve weather data.

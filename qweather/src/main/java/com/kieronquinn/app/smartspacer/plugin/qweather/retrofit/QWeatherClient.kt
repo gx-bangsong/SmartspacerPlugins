@@ -24,7 +24,7 @@ class QWeatherClient(private val settings: SettingsRepository) {
     private suspend fun getApi(): QWeatherApi {
         // 1. 获取用户输入的 Host
         var rawHost = settings.apiHost.first().ifEmpty { DEFAULT_BASE_URL }
-        
+
         // 2. 去除首尾空格（防止复制粘贴带空格导致崩溃）
         rawHost = rawHost.trim()
 

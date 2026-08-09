@@ -37,6 +37,7 @@ jobs:
 
     - name: Run tests with Gradle
       run: |
+        ./gradlew :shared-sms-parser:test
         ./gradlew :qweather:test
         ./gradlew :plugin-water:test
         ./gradlew :plugin-food:test
@@ -50,6 +51,8 @@ jobs:
         ./gradlew :plugin-food:assembleDebug
         ./gradlew :plugin-medication:assembleDebug
         ./gradlew :plugin-parcel:assembleDebug
+        ./gradlew :plugin-travel-suggestion:assembleDebug
+        ./gradlew :plugin-check-in:assembleDebug
 
     - name: Upload APKs
       uses: actions/upload-artifact@v4
