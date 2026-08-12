@@ -6,6 +6,7 @@
     <string name="settings_enable_reminder_summary">在设定时间仍未打卡时，接收系统通知提醒</string>
     <string name="settings_work_start_time">上班打卡时间</string>
     <string name="settings_work_end_time">下班打卡时间</string>
+    <string name="settings_custom_time">自定义时间…</string>
     <string name="settings_custom_reminder_text">自定义提醒内容</string>
     <string name="settings_custom_reminder_text_summary">收到上班打卡通知时的提醒文本</string>
     <string name="settings_checkin_app">打卡联动 App</string>

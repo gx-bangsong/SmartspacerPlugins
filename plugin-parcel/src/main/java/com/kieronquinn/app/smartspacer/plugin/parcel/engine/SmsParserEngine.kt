@@ -9,7 +9,11 @@ class SmsParserEngine(private val context: Context) {
     suspend fun parse(text: String): ParseResult? {
         val rules = ruleManager.getEffectiveRules()
         for (rule in rules) {
-            if (rule.matchKeywords.all { text.contains(it) }) {
+            // 每个关键词项默认是必须同时满足的条件；用 | 可在同一项中声明多个等价关键词。
+            // 例如通用规则可同时匹配“取件码”“取货码”和“取件密码”。
+            if (rule.matchKeywords.all { keyword ->
+                    keyword.split("|").any { alternative -> text.contains(alternative) }
+                }) {
                 val pickupCode = extract(text, rule.extractionRules.pickupCodeRegex)
                 if (pickupCode != null) {
                     val location = rule.extractionRules.locationRegex?.let { extract(text, it) }

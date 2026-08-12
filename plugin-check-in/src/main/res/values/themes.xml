@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- BaseConfigurationActivity is an AppCompat activity, so the check-in
+         settings screen must use an AppCompat-compatible theme. -->
+    <style name="Theme.CheckIn" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="android:windowActionModeOverlay">true</item>
+    </style>
+</resources>

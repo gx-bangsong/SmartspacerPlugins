@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentActivity
 import com.kieronquinn.app.smartspacer.plugin.checkin.data.CheckInDao
 import com.kieronquinn.app.smartspacer.plugin.checkin.data.CheckInItem
 import com.kieronquinn.app.smartspacer.plugin.checkin.repositories.CheckInSettingsRepository
@@ -19,7 +19,9 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-class CheckInActionActivity : AppCompatActivity() {
+// This activity uses a platform translucent theme and has no AppCompat UI.
+// FragmentActivity avoids AppCompat's Theme.AppCompat requirement.
+class CheckInActionActivity : FragmentActivity() {
 
     private val checkInDao by inject<CheckInDao>()
     private val settingsRepository by inject<CheckInSettingsRepository>()

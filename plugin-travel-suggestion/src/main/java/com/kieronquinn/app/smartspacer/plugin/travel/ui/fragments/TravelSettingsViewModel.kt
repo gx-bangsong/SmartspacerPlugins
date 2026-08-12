@@ -23,7 +23,7 @@ class TravelSettingsViewModel(
         .stateIn(viewModelScope, SharingStarted.Eagerly, false)
 
     val jumpTarget = settingsRepository.jumpTarget
-        .stateIn(viewModelScope, SharingStarted.Eagerly, "none")
+        .stateIn(viewModelScope, SharingStarted.Eagerly, "auto")
 
     val allTrips = travelInfoDao.getAllFlow()
         .stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
@@ -43,6 +43,12 @@ class TravelSettingsViewModel(
     fun setJumpTarget(target: String) {
         viewModelScope.launch {
             settingsRepository.setJumpTarget(target)
+        }
+    }
+
+    fun importRules(json: String, onResult: (Boolean) -> Unit) {
+        viewModelScope.launch {
+            onResult(settingsRepository.setCustomRulesJson(json))
         }
     }
 

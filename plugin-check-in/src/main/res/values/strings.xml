@@ -6,6 +6,7 @@
     <string name="settings_enable_reminder_summary">Send a notification if you have not punched by the set times</string>
     <string name="settings_work_start_time">Work Start Time</string>
     <string name="settings_work_end_time">Work End Time</string>
+    <string name="settings_custom_time">Custom time…</string>
     <string name="settings_custom_reminder_text">Custom Reminder Text</string>
     <string name="settings_custom_reminder_text_summary">Notification body to display for punch reminders</string>
     <string name="settings_checkin_app">Attendance App Link</string>

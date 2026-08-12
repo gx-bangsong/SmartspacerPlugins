@@ -3,7 +3,10 @@ package com.kieronquinn.app.smartspacer.plugin.checkin.ui.fragments
 import android.os.Bundle
 import android.view.View
 import android.widget.EditText
+import android.widget.TimePicker
 import android.widget.Toast
+import android.app.TimePickerDialog
+import java.util.Calendar
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.kieronquinn.app.smartspacer.plugin.checkin.R
@@ -64,9 +67,11 @@ class CheckInSettingsFragment : BaseFragment<FragmentCheckInSettingsBinding>(Fra
                     "feilian" to getString(R.string.settings_app_feilian)
                 )
 
+                // 保留常用快捷时间，同时提供“自定义时间”入口，支持任意分钟。
                 val timeOptions = listOf(
                     "07:00", "07:30", "08:00", "08:30", "09:00", "09:30", "10:00",
-                    "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", "19:00", "19:30"
+                    "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", "19:00", "19:30",
+                    getString(R.string.settings_custom_time)
                 )
 
                 val settingsItems = mutableListOf<BaseSettingsItem>(
@@ -81,19 +86,31 @@ class CheckInSettingsFragment : BaseFragment<FragmentCheckInSettingsBinding>(Fra
                     ),
                     Dropdown(
                         getString(R.string.settings_work_start_time),
-                        getString(R.string.settings_work_start_time),
+                        startT,
                         ContextCompat.getDrawable(requireContext(), SharedR.drawable.ic_smartspacer),
                         setting = startT,
-                        onSet = { viewModel.setWorkStartTime(it) },
+                        onSet = { selected ->
+                            if (selected == getString(R.string.settings_custom_time)) {
+                                showTimePicker(startT) { viewModel.setWorkStartTime(it) }
+                            } else {
+                                viewModel.setWorkStartTime(selected)
+                            }
+                        },
                         options = timeOptions,
                         adapter = { it }
                     ),
                     Dropdown(
                         getString(R.string.settings_work_end_time),
-                        getString(R.string.settings_work_end_time),
+                        endT,
                         ContextCompat.getDrawable(requireContext(), SharedR.drawable.ic_smartspacer),
                         setting = endT,
-                        onSet = { viewModel.setWorkEndTime(it) },
+                        onSet = { selected ->
+                            if (selected == getString(R.string.settings_custom_time)) {
+                                showTimePicker(endT) { viewModel.setWorkEndTime(it) }
+                            } else {
+                                viewModel.setWorkEndTime(selected)
+                            }
+                        },
                         options = timeOptions,
                         adapter = { it }
                     ),
@@ -169,6 +186,24 @@ class CheckInSettingsFragment : BaseFragment<FragmentCheckInSettingsBinding>(Fra
                 adapter.update(settingsItems)
             }
         }
+    }
+
+    private fun showTimePicker(current: String, onSelected: (String) -> Unit) {
+        val parts = current.split(":")
+        val initialHour = parts.getOrNull(0)?.toIntOrNull()?.coerceIn(0, 23)
+            ?: Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
+        val initialMinute = parts.getOrNull(1)?.toIntOrNull()?.coerceIn(0, 59)
+            ?: Calendar.getInstance().get(Calendar.MINUTE)
+
+        TimePickerDialog(
+            requireContext(),
+            { _: TimePicker, hour: Int, minute: Int ->
+                onSelected("%02d:%02d".format(hour, minute))
+            },
+            initialHour,
+            initialMinute,
+            true
+        ).show()
     }
 
     private fun setupFab() {
