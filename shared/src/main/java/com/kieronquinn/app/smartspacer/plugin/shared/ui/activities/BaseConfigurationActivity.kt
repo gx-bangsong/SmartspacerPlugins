@@ -5,14 +5,17 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.core.view.WindowCompat
+import androidx.fragment.app.FragmentActivity
 import com.google.android.material.color.DynamicColors
 import com.kieronquinn.app.shared.R
 import com.kieronquinn.app.smartspacer.plugin.shared.repositories.NavGraphRepository.NavGraphMapping
 import com.kieronquinn.app.smartspacer.plugin.shared.utils.extensions.whenCreated
 import com.kieronquinn.app.smartspacer.sdk.utils.applySecurity
-import com.kieronquinn.monetcompat.app.MonetCompatActivity
+import com.kieronquinn.monetcompat.core.MonetCompat
 
-abstract class BaseConfigurationActivity: MonetCompatActivity() {
+abstract class BaseConfigurationActivity: FragmentActivity() {
+
+    private val monet by lazy { MonetCompat.getInstance() }
 
     companion object {
         fun createIntent(context: Context, mapping: NavGraphMapping): Intent {
