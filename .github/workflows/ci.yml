@@ -71,7 +71,7 @@ jobs:
           import os
           from pathlib import PurePosixPath
 
-          # 可生成 APK 的应用模块
+          # 能够生成 APK 的应用模块
           apps = [
               "aftership",
               "amazon",
@@ -113,6 +113,7 @@ jobs:
           affected = set()
           test_libraries = set()
 
+          # 修改这些文件时，需要全量检查
           global_files = {
               "build.gradle",
               "settings.gradle",
@@ -122,12 +123,12 @@ jobs:
               "gradlew.bat",
           }
 
+          # 注意：这里故意不包含 .github/
+          # 修改 CI 文件不会触发所有插件重新构建
           global_prefixes = (
               "gradle/",
-              ".github/",
           )
 
-          # 这些文件变化时，全量检查
           if force_all or any(
               path in global_files or path.startswith(global_prefixes)
               for path in changed
@@ -157,7 +158,7 @@ jobs:
                   elif module in apps:
                       affected.add(module)
 
-              # 出行插件变化时，同时运行解析库测试
+              # 出行插件修改时，同时运行短信解析库测试
               if "plugin-travel-suggestion" in affected:
                   test_libraries.add("shared-sms-parser")
 
