@@ -30,6 +30,10 @@ abstract class BaseConfigurationActivity: FragmentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // BaseConfigurationActivity no longer extends MonetCompatActivity because
+        // that class requires an AppCompat theme. Initialise MonetCompat manually
+        // so the Material3 theme can be retained without the AppCompat crash.
+        MonetCompat.setup(this)
         WindowCompat.setDecorFitsSystemWindows(window, false)
         DynamicColors.applyToActivityIfAvailable(this)
         whenCreated {
