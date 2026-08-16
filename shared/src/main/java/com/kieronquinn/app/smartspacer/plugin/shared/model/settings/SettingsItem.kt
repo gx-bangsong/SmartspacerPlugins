@@ -58,7 +58,12 @@ sealed class GenericSettingsItem(val type: GenericSettingsItemType): BaseSetting
         val onSet: (T) -> Unit,
         val options: List<T>,
         val adapter: (T) -> Any
-    ): GenericSettingsItem(GenericSettingsItemType.DROPDOWN)
+    ): GenericSettingsItem(GenericSettingsItemType.DROPDOWN) {
+        // Multiple dropdowns on one screen previously shared the same stable
+        // ID (the view-type index), which confused RecyclerView's stable-ID
+        // handling and could bind the wrong row / invoke the wrong onSet.
+        override fun getItemId() = title.hashCode().toLong()
+    }
 
     data class SwitchSetting(
         val checked: Boolean,

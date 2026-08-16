@@ -9,8 +9,10 @@ import android.os.Build
 import androidx.core.app.NotificationCompat
 import com.kieronquinn.app.smartspacer.plugin.checkin.R
 import com.kieronquinn.app.smartspacer.plugin.checkin.data.CheckInDao
+import com.kieronquinn.app.smartspacer.plugin.checkin.providers.CheckInProvider
 import com.kieronquinn.app.smartspacer.plugin.checkin.repositories.CheckInSettingsRepository
 import com.kieronquinn.app.smartspacer.plugin.checkin.repositories.CheckInScheduler
+import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider
 import com.kieronquinn.app.smartspacer.plugin.shared.utils.extensions.verifySecurity
 import com.kieronquinn.app.smartspacer.sdk.utils.applySecurity
 import kotlinx.coroutines.CoroutineScope
@@ -52,16 +54,21 @@ class CheckInAlarmReceiver : BroadcastReceiver(), KoinComponent {
             try {
                 val todayDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
                 val record = checkInDao.getByDate(todayDate)
+                val checkInOnly = settingsRepository.checkInOnly.first()
 
                 val shouldNotify = when (type) {
                     TYPE_START -> record?.checkInTime == null
-                    TYPE_END -> record?.checkOutTime == null
+                    // 仅上班打卡模式下即使有残留的下班闹钟也不提醒
+                    TYPE_END -> !checkInOnly && record?.checkOutTime == null
                     else -> false
                 }
 
                 if (shouldNotify) {
                     showNotification(context, type)
                 }
+
+                // 到点后立即刷新 Smartspace 卡片，让“到点未打卡”的状态显示出来
+                SmartspacerTargetProvider.notifyChange(context, CheckInProvider::class.java)
 
                 // Reschedule for next occurrence
                 scheduler.scheduleDailyAlarms()

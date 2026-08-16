@@ -4,6 +4,8 @@
     <string name="settings_title">Check-In Settings</string>
     <string name="settings_enable_reminder">Enable Reminders</string>
     <string name="settings_enable_reminder_summary">Send a notification if you have not punched by the set times</string>
+    <string name="settings_check_in_only">Check-in only mode</string>
+    <string name="settings_check_in_only_summary">Only remind and record clock-in; clock-out reminder and clock-out are disabled</string>
     <string name="settings_work_start_time">Work Start Time</string>
     <string name="settings_work_end_time">Work End Time</string>
     <string name="settings_custom_time">Custom time…</string>
@@ -24,6 +26,8 @@
     <string name="target_unpunched">今日未打卡，点击打卡</string>
     <string name="target_punched_in">上班已打卡 %1$s</string>
     <string name="target_punched_out">下班已打卡 %1$s</string>
+    <string name="target_remind_check_in">上班打卡时间已到，请打卡</string>
+    <string name="target_remind_check_out">下班打卡时间已到，请打卡</string>
     <string name="settings_delete">Delete</string>
     <string name="settings_delete_confirm">Are you sure you want to delete this check-in record?</string>
 </resources>
