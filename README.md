@@ -32,7 +32,7 @@ This repository contains an unofficial collection of plugins developed for [Smar
 - **手动粘贴解析**：提供可视化“方案 B”核对弹窗，粘贴短信后一键解析，在表单中核对并编辑车次、出发地、目的地、时间和座位号等字段后安全入库。
 - **点击一键跳转**：点击行程卡片可直接复制行程详情到剪贴板，并可自定义联动拉起 12306、航旅纵横或系统地图等软件。
 - **精确出发通知**：使用 `AlarmManager` 机制，在出发前 30 分钟弹出高优先级系统通知，提醒您做好出行准备。
-- **优雅 Dismiss**：在 Smartspace 上侧滑清除行程卡，将自动把该行程标记为已出行。
+- **优雅 Dismiss**：在 Smartspace 上点击该target，将自动把该行程标记为已出行。
 
 ---
 
@@ -177,7 +177,7 @@ The **Food Shelf Life Reminder** plugin helps you keep track of the expiration d
 - **智能摘要显示**：插件会将您选择的众多指数智能地分类、汇总成两条简洁明了的摘要信息：“活动建议”（如“宜：洗车 | 不宜：运动”）和“状态摘要”（如“穿衣：炎热”），有效避免了信息过长被截断的问题。
 - **自定义配置**：
     - **API 密钥**：填入您自己的和风天气 API 密钥。
-    - **API Host**：支持自定义 API 地址，方便使用代理或私有化部署的用户。
+    - **API Host**：和风天气API要求。
       - *避坑与报错说明*：如果您填写了自定义主机（例如填入付费版的 `api.qweather.com`），请务必注意：由于该插件内部对城市查询服务（GeoAPI）也共用了此域名，而和风天气的 GeoAPI 域名固定只能是 `geoapi.qweather.com`，这会导致城市查询（lookupCity）因请求到非 Geo 域名（如 api.qweather.com）而返回 404，导致初始化城市定位失败。建议仅在通过自定义反向代理（该代理必须同时转发天气和 Geo 接口）时才使用此字段，否则建议留空以使用默认主机。
     - **城市名称**：输入您希望查询的城市。
 
@@ -193,6 +193,6 @@ The **QWeather Indices** plugin brings a variety of lifestyle indices to your Sm
 - **Smart Summary Display**: The plugin intelligently categorizes and consolidates the selected indices into two concise summary lines: "Activity Suggestions" (e.g., "Suitable for: Car Wash | Unsuitable for: Sports") and "Status Summary" (e.g., "Dressing: Hot"). This effectively prevents text from being truncated.
 - **Custom Configuration**:
     - **API Key**: Enter your personal QWeather API key.
-    - **API Host**: Allows for a custom API host address, which is useful for users with proxies or private deployments.
+    - **API Host**: API provider's commend.
       - *Warning*: If you set a custom host (e.g. `api.qweather.com` for subscription keys), the plugin will also route GeoAPI city lookup to this domain. Since QWeather's GeoAPI is only hosted on `geoapi.qweather.com`, the lookup city request will fail with a 404 error. Only configure this if your custom proxy also handles and routes GeoAPI endpoints correctly, otherwise leave it empty.
     - **City Name**: Specify the city for which you want to retrieve weather data.
