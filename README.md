@@ -178,7 +178,6 @@ The **Food Shelf Life Reminder** plugin helps you keep track of the expiration d
 - **自定义配置**：
     - **API 密钥**：填入您自己的和风天气 API 密钥。
     - **API Host**：和风天气API要求。
-      - *避坑与报错说明*：如果您填写了自定义主机（例如填入付费版的 `api.qweather.com`），请务必注意：由于该插件内部对城市查询服务（GeoAPI）也共用了此域名，而和风天气的 GeoAPI 域名固定只能是 `geoapi.qweather.com`，这会导致城市查询（lookupCity）因请求到非 Geo 域名（如 api.qweather.com）而返回 404，导致初始化城市定位失败。建议仅在通过自定义反向代理（该代理必须同时转发天气和 Geo 接口）时才使用此字段，否则建议留空以使用默认主机。
     - **城市名称**：输入您希望查询的城市。
 
 ---
