@@ -6,7 +6,7 @@ import android.app.NotificationManager
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
-import androidx.core.os.BuildCompat
+import androidx.annotation.RequiresApi
 
 /**
  * Runtime eligibility checks for Android "promoted ongoing" (Live Update) notifications.
@@ -102,13 +102,38 @@ object LiveUpdateEligibility {
         sdkInt >= PLATFORM_MIN_SDK && sdkIntFull > baklavaFull
 
     /**
-     * Runtime detection of Android 16 QPR1 (minor SDK 36.1) or newer, delegating to the official
-     * androidx `BuildCompat.isAtLeastB_1()` (safe on every API level). The promoted-ongoing
-     * request and the progress style are only applied when this returns true, because
+     * Runtime detection of Android 16 QPR1 (minor SDK 36.1) or newer.
+     *
+     * This replicates the official androidx check (`BuildCompat.isAtLeastB_1()` /
+     * `SdkFullVersionCompat`): `Build.VERSION.SDK_INT_FULL` is a runtime value (encoding
+     * `major * 100000 + minor`), so a 36.0 device reports 3600000 (or 0 when the
+     * major/minor-versioning flag is off) and a 36.1 device reports 3600001. The literal
+     * `BAKLAVA_1_FULL` is used instead of `Build.VERSION_CODES_FULL.BAKLAVA_1`, which is not
+     * available in the compileSdk 36 stubs (same approach as androidx, see
+     * `SdkFullVersionCompat.isAtLeastCinnamonBunMinor1`). The promoted-ongoing request and the
+     * progress style are only applied when this returns true, because
      * `setRequestPromotedOngoing` and `ProgressStyle#setProgressIndeterminate` do not exist on
      * the initial Android 16.0 release.
      */
-    fun isAtLeastBaklavaQpr1(): Boolean = BuildCompat.isAtLeastB_1()
+    fun isAtLeastBaklavaQpr1(): Boolean {
+        if (!isPlatformSupported(Build.VERSION.SDK_INT)) return false
+        return try {
+            sdkIntFull() >= BAKLAVA_1_FULL
+        } catch (e: Throwable) {
+            false
+        }
+    }
+
+    /** Build.VERSION_CODES_FULL.BAKLAVA_1 = 36 * 100000 + 1 (not in the compileSdk 36 stubs). */
+    private const val BAKLAVA_1_FULL = 3_600_001
+
+    /**
+     * `Build.VERSION.SDK_INT_FULL` (added with the major/minor versioning scheme in Android 16).
+     * Only invoked after the `SDK_INT >= 36` short-circuit in [isAtLeastBaklavaQpr1].
+     */
+    @RequiresApi(Build.VERSION_CODES.BAKLAVA)
+    @Suppress("FlaggedApi") // Flagged in the SDK; runtime-gated by the version check above (same approach as androidx).
+    private fun sdkIntFull(): Int = Build.VERSION.SDK_INT_FULL
 
     fun hasPostPromotedManifestPermission(context: Context): Boolean {
         return context.checkSelfPermission(Manifest.permission.POST_PROMOTED_NOTIFICATIONS) ==
