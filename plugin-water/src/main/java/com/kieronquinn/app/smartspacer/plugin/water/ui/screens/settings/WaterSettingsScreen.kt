@@ -1,5 +1,9 @@
 package com.kieronquinn.app.smartspacer.plugin.water.ui.screens.settings
 
+import android.Manifest
+import android.os.Build
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -25,9 +29,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
+import com.kieronquinn.app.smartspacer.plugin.shared.notifications.NotificationPermissionHelper
+import com.kieronquinn.app.smartspacer.plugin.water.R
 import com.kieronquinn.app.smartspacer.plugin.water.repositories.DisplayMode
 
 @Composable
@@ -35,11 +42,62 @@ fun WaterSettingsScreen(viewModel: WaterSettingsViewModel) {
     val uiState by viewModel.uiState.collectAsState(viewModel.initialState)
     val context = LocalContext.current as androidx.fragment.app.FragmentActivity
 
+    @Composable
+    fun NotificationPermissionRow() {
+        val lifecycleOwner = androidx.compose.ui.platform.LocalLifecycleOwner.current
+        var granted by remember {
+            mutableStateOf(NotificationPermissionHelper.hasNotificationPermission(context))
+        }
+        // Refresh the status when returning from the permission dialog / system settings.
+        androidx.compose.runtime.DisposableEffect(lifecycleOwner) {
+            val observer = androidx.lifecycle.LifecycleEventObserver { _, event ->
+                if (event == androidx.lifecycle.Lifecycle.Event.ON_RESUME) {
+                    granted = NotificationPermissionHelper.hasNotificationPermission(context)
+                }
+            }
+            lifecycleOwner.lifecycle.addObserver(observer)
+            onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
+        }
+        val launcher = rememberLauncherForActivityResult(
+            ActivityResultContracts.RequestPermission()
+        ) {}
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable {
+                    if (granted) {
+                        NotificationPermissionHelper.openNotificationSettings(context)
+                    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        launcher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                    } else {
+                        NotificationPermissionHelper.openNotificationSettings(context)
+                    }
+                }
+                .padding(vertical = 4.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = if (granted) {
+                    stringResource(R.string.notification_permission_granted)
+                } else {
+                    stringResource(R.string.notification_permission_denied)
+                },
+                color = MaterialTheme.colorScheme.onBackground
+            )
+            Spacer(Modifier.weight(1f))
+            Text(
+                stringResource(R.string.notification_permission_open_settings),
+                color = MaterialTheme.colorScheme.primary
+            )
+        }
+    }
+
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
+            NotificationPermissionRow()
             Text(
                 "Daily Goal: ${uiState.dailyGoalMl}ml",
                 color = MaterialTheme.colorScheme.onBackground

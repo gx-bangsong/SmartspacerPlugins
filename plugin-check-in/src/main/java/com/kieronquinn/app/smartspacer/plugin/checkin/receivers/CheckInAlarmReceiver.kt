@@ -1,7 +1,9 @@
 package com.kieronquinn.app.smartspacer.plugin.checkin.receivers
 
+import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -12,6 +14,7 @@ import com.kieronquinn.app.smartspacer.plugin.checkin.data.CheckInDao
 import com.kieronquinn.app.smartspacer.plugin.checkin.providers.CheckInProvider
 import com.kieronquinn.app.smartspacer.plugin.checkin.repositories.CheckInSettingsRepository
 import com.kieronquinn.app.smartspacer.plugin.checkin.repositories.CheckInScheduler
+import com.kieronquinn.app.smartspacer.plugin.checkin.ui.activities.CheckInActionActivity
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider
 import com.kieronquinn.app.smartspacer.plugin.shared.utils.extensions.verifySecurity
 import com.kieronquinn.app.smartspacer.sdk.utils.applySecurity
@@ -25,6 +28,12 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
+/**
+ * Fires at the configured punch reminder time: shows a high-priority notification with a
+ * "已打卡" end action (records the punch, cancels the notification) and refreshes the Smartspacer
+ * target. This is a static daily reminder, which the official Live Update guidance classifies as
+ * inappropriate for promotion — it therefore stays a regular (non-ongoing) notification.
+ */
 class CheckInAlarmReceiver : BroadcastReceiver(), KoinComponent {
 
     companion object {
@@ -32,6 +41,8 @@ class CheckInAlarmReceiver : BroadcastReceiver(), KoinComponent {
         const val TYPE_END = "end"
         private const val EXTRA_TYPE = "reminder_type"
         private const val CHANNEL_ID = "check_in_reminders"
+        const val NOTIFICATION_ID_START = 1001
+        const val NOTIFICATION_ID_END = 1002
 
         fun createIntent(context: Context, type: String): Intent {
             return Intent(context, CheckInAlarmReceiver::class.java).apply {
@@ -99,14 +110,48 @@ class CheckInAlarmReceiver : BroadcastReceiver(), KoinComponent {
             context.getString(R.string.default_reminder_text_end)
         }
 
+        val notificationId = if (type == TYPE_START) NOTIFICATION_ID_START else NOTIFICATION_ID_END
+
         val notification = NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(R.mipmap.ic_launcher)
             .setContentTitle(context.getString(R.string.notification_title))
             .setContentText(finalContent)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setCategory(Notification.CATEGORY_REMINDER)
+            .setOnlyAlertOnce(true)
             .setAutoCancel(true)
+            .setContentIntent(punchContentIntent(context, type))
+            .addAction(
+                R.drawable.ic_launcher_foreground,
+                context.getString(if (type == TYPE_START) R.string.notification_action_punch_in else R.string.notification_action_punch_out),
+                punchActionIntent(context, type, notificationId)
+            )
             .build()
 
-        notificationManager.notify(if (type == TYPE_START) 1001 else 1002, notification)
+        notificationManager.notify(notificationId, notification)
+    }
+
+    private fun punchActionIntent(context: Context, type: String, notificationId: Int): PendingIntent {
+        val intent = Intent(context, CheckInActionReceiver::class.java).apply {
+            action = CheckInActionReceiver.ACTION_PUNCH
+            putExtra(CheckInActionReceiver.EXTRA_TYPE, type)
+            putExtra(CheckInActionReceiver.EXTRA_NOTIFICATION_ID, notificationId)
+        }
+        return PendingIntent.getBroadcast(
+            context,
+            if (type == TYPE_START) 3001 else 3002,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+    }
+
+    private fun punchContentIntent(context: Context, type: String): PendingIntent {
+        val intent = Intent(context, CheckInActionActivity::class.java)
+        return PendingIntent.getActivity(
+            context,
+            if (type == TYPE_START) 4001 else 4002,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
     }
 }

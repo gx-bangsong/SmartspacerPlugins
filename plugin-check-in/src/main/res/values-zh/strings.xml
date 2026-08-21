@@ -30,4 +30,9 @@
     <string name="target_remind_check_out">下班打卡时间已到，请打卡</string>
     <string name="settings_delete">删除</string>
     <string name="settings_delete_confirm">确定要删除此打卡记录吗？</string>
+    <string name="notification_action_punch_in">已打卡</string>
+    <string name="notification_action_punch_out">已下班打卡</string>
+    <string name="settings_notification_permission">通知权限</string>
+    <string name="settings_notification_permission_granted">已授权。点击打开通知设置</string>
+    <string name="settings_notification_permission_denied">未授权。点击授权</string>
 </resources>

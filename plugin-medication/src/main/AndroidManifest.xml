@@ -48,6 +48,10 @@
             android:name=".receivers.MedicationAlarmReceiver"
             android:exported="false" />
 
+        <receiver
+            android:name=".receivers.MedicationActionReceiver"
+            android:exported="false" />
+
     </application>
 
 </manifest>
