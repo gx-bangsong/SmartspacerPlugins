@@ -42,10 +42,6 @@
             android:name=".receivers.CheckInAlarmReceiver"
             android:exported="false" />
 
-        <receiver
-            android:name=".receivers.CheckInActionReceiver"
-            android:exported="false" />
-
     </application>
 
 </manifest>

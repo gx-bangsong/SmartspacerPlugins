@@ -20,7 +20,7 @@
     <string name="settings_jump_umetrip">Umetrip (航旅纵横)</string>
     <string name="settings_jump_maps">System Maps</string>
     <string name="settings_manual_title">Manual Parsing</string>
-    <string name="settings_manual_hint">Paste 12306 ticket SMS, flight messages, or format \&quot;G123 Beijing South → Shanghai Hongqiao 2026-08-01 14:30 05A\&quot;</string>
+    <string name="settings_manual_hint">Paste 12306 ticket SMS, flight messages, or format \"G123 Beijing South → Shanghai Hongqiao 2026-08-01 14:30 05A\"</string>
     <string name="settings_manual_parse">Parse</string>
     <string name="settings_manual_cancel">Cancel</string>
     <string name="settings_manual_save">Save</string>
@@ -41,68 +41,4 @@
     <string name="target_format_no_to">%1$s %2$s %3$s %4$s</string>
     <string name="trip_list_header">Saved Trips</string>
     <string name="no_trips">No upcoming trips. Enable SMS parsing or paste manually above.</string>
-
-    <!-- Notification channels -->
-    <string name="notification_channel_reminders">Travel reminders</string>
-    <string name="notification_channel_results">Travel results</string>
-    <string name="notification_channel_share_op">Travel info parsing</string>
-
-    <!-- Share-parse operation notifications (Live Updates) -->
-    <string name="share_op_parsing_title">Parsing travel info…</string>
-    <string name="share_op_parsing_content">Extracting train / flight details from the shared text</string>
-    <string name="share_op_cancel">Cancel parsing</string>
-    <string name="share_op_review_title">Review: %1$s</string>
-    <string name="share_op_review_confirm">Review &amp; save</string>
-    <string name="share_op_failed_title">Could not parse travel info</string>
-    <string name="share_op_failed_content">No train/flight info found. You can paste the text manually.</string>
-    <string name="share_op_retry_manual">Paste manually</string>
-    <string name="share_op_saved_title">Trip saved</string>
-    <string name="share_op_already_saved">This trip has already been saved</string>
-    <string name="share_op_duplicate">This trip already exists</string>
-    <string name="share_op_parsing_activity_text">Parsing travel info…</string>
-    <string name="share_op_failed_activity_text">Could not parse the shared text</string>
-    <string name="share_op_manual_paste">Paste manually</string>
-    <string name="share_op_public_title">Travel info</string>
-    <string name="share_op_public_content">Processing travel info</string>
-
-    <!-- Trip notifications -->
-    <string name="notification_result_title">Trip saved: %1$s</string>
-    <string name="notification_live_title">%1$s departing soon</string>
-    <string name="notification_short_critical">Departing</string>
-    <string name="notification_action_view">View trip</string>
-    <string name="notification_action_mark_used">Mark as traveled</string>
-    <string name="notification_public_title">Upcoming trip</string>
-    <string name="notification_public_content">You have a trip departing soon</string>
-
-    <!-- Manual paste / review dialog -->
-    <string name="manual_paste_title">Manual Paste Parse</string>
-    <string name="manual_paste_hint">Paste your ticket or boarding SMS below:</string>
-    <string name="manual_paste_label">SMS or text content</string>
-    <string name="manual_paste_placeholder">【12306】…</string>
-    <string name="manual_paste_parse">Parse</string>
-    <string name="manual_paste_save">Save</string>
-    <string name="manual_paste_cancel">Cancel</string>
-    <string name="manual_paste_required">Train number, departure station and departure time are required</string>
-    <string name="manual_paste_time_format_error">Invalid time format. Use: yyyy-MM-dd HH:mm</string>
-    <string name="manual_paste_saved">Trip saved successfully</string>
-    <string name="manual_paste_parse_success">Parsed successfully — please review before saving!</string>
-    <string name="manual_paste_parse_failed">Parse failed: %1$s</string>
-    <string name="manual_paste_unknown_error">Unknown error</string>
-    <string name="manual_paste_review_title">Review the parsed trip (editable):</string>
-    <string name="manual_paste_field_train">Train / Flight</string>
-    <string name="manual_paste_field_from">Departure station / airport</string>
-    <string name="manual_paste_field_to">Arrival station / airport (optional)</string>
-    <string name="manual_paste_field_time">Departure time (yyyy-MM-dd HH:mm)</string>
-    <string name="manual_paste_field_seat">Seat (optional)</string>
-    <string name="manual_paste_field_passenger">Passenger name (optional)</string>
-    <string name="manual_paste_repaste">Paste again</string>
-
-    <!-- Settings: notification permission -->
-    <string name="settings_notification_permission">Notification permission</string>
-    <string name="settings_notification_permission_granted">Granted. Tap to open notification settings</string>
-    <string name="settings_notification_permission_denied">Denied. Tap to grant access</string>
-    <string name="settings_promoted_notifications">Promoted Live Updates</string>
-    <string name="settings_promoted_enabled">Enabled — live updates can be promoted</string>
-    <string name="settings_promoted_disabled">Disabled. Tap to open system settings</string>
-    <string name="settings_promoted_not_supported">Requires Android 16 QPR1 (36.1) or later</string>
 </resources>
