@@ -135,8 +135,16 @@ object LiveUpdateEligibility {
     @Suppress("FlaggedApi") // Flagged in the SDK; runtime-gated by the version check above (same approach as androidx).
     private fun sdkIntFull(): Int = Build.VERSION.SDK_INT_FULL
 
+    /**
+     * `android.permission.POST_PROMOTED_NOTIFICATIONS` (non-runtime permission introduced with
+     * Android 16 QPR1 / minor SDK 36.1). The `Manifest.permission` constant is not present in the
+     * compileSdk 36 stubs, so the literal string is used (same approach as the `BAKLAVA_1_FULL`
+     * constant); the manifest still declares the permission.
+     */
+    const val POST_PROMOTED_NOTIFICATIONS = "android.permission.POST_PROMOTED_NOTIFICATIONS"
+
     fun hasPostPromotedManifestPermission(context: Context): Boolean {
-        return context.checkSelfPermission(Manifest.permission.POST_PROMOTED_NOTIFICATIONS) ==
+        return context.checkSelfPermission(POST_PROMOTED_NOTIFICATIONS) ==
             PackageManager.PERMISSION_GRANTED
     }
 

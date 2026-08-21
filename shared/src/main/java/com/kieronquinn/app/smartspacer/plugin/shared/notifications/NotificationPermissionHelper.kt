@@ -28,8 +28,15 @@ object NotificationPermissionHelper {
             PackageManager.PERMISSION_GRANTED
     }
 
+    /**
+     * `android.permission.POST_PROMOTED_NOTIFICATIONS` — the non-runtime permission introduced
+     * with Android 16 QPR1 (minor SDK 36.1). The Manifest.permission constant is absent from the
+     * compileSdk 36 stubs, so the literal string is used.
+     */
+    const val POST_PROMOTED_NOTIFICATIONS = "android.permission.POST_PROMOTED_NOTIFICATIONS"
+
     fun hasPostPromotedPermission(context: Context): Boolean {
-        return context.checkSelfPermission(Manifest.permission.POST_PROMOTED_NOTIFICATIONS) ==
+        return context.checkSelfPermission(POST_PROMOTED_NOTIFICATIONS) ==
             PackageManager.PERMISSION_GRANTED
     }
 
