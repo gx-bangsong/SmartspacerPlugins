@@ -1,0 +1,34 @@
+<resources>
+    <string name="app_name">快递取件提醒</string>
+    <string name="plugin_description">从短信中提取取件码并显示在 Smartspace 上。</string>
+    <string name="mark_as_picked_up">标记已取件</string>
+    <string name="pickup_code">取件码：%s</string>
+    <string name="station_location">位置：%s</string>
+    <string name="no_pending_parcels">暂无待取件包裹</string>
+
+    <!-- Notification -->
+    <string name="notification_channel">快递取件</string>
+    <string name="notification_title">取件码：%1$s</string>
+    <string name="action_mark_as_picked_up">标记已取件</string>
+    <string name="action_stop_live_update">停止实时显示</string>
+    <string name="notification_public_title">快递取件通知</string>
+    <string name="notification_public_content">您有一条快递取件通知</string>
+
+    <!-- Settings -->
+    <string name="privacy_note">隐私说明：所有短信处理均在本地完成。</string>
+    <string name="cleanup_duration">自动清理时长</string>
+    <string name="cleanup_duration_summary">取件码保留时长</string>
+    <string name="hours_format">%1$d 小时</string>
+    <string name="scan_inbox">扫描收件箱</string>
+    <string name="scan_inbox_summary">扫描历史短信中的快递取件信息</string>
+    <string name="import_rules">导入规则</string>
+    <string name="import_rules_summary">加载自定义 JSON 解析规则</string>
+    <string name="rules_imported">规则导入成功</string>
+    <string name="rules_import_failed">规则导入失败</string>
+    <string name="experimental_promoted_title">取件码实时更新（实验性）</string>
+    <string name="experimental_promoted_summary">在 Android 16 QPR1（36.1）及以上将取件码显示为置顶的 Live Update。默认关闭：官方不建议对普通包裹跟踪使用 promoted 通知。</string>
+    <string name="experimental_promoted_warning">实验性功能：在 Android 16 QPR1（36.1）及以上，取件码将作为 Live Update 保持置顶，直到您标记已取件或停止实时显示。</string>
+    <string name="notification_permission">通知权限</string>
+    <string name="notification_permission_granted">已授权。点击打开通知设置</string>
+    <string name="notification_permission_denied">未授权。点击授权</string>
+</resources>

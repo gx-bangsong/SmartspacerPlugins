@@ -82,4 +82,24 @@ class WaterScheduler {
             alarmManager.cancel(pendingIntent)
         }
     }
+
+    /**
+     * Schedules a single snoozed reminder. Uses a request code derived from the snooze time so
+     * repeated snoozes never overwrite each other's alarms.
+     */
+    fun scheduleSnooze(context: Context, snoozeTime: Long) {
+        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val intent = Intent(context, WaterReminderReceiver::class.java).apply {
+            putExtra(WaterReminderReceiver.EXTRA_REMINDER_TIME, snoozeTime)
+        }
+        val pendingIntent = PendingIntent.getBroadcast(
+            context,
+            com.kieronquinn.app.smartspacer.plugin.shared.notifications.NotificationIds.forEntity(
+                "water_snooze_alarm", snoozeTime
+            ),
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, snoozeTime, pendingIntent)
+    }
 }

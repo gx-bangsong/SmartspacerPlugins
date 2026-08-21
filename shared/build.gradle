@@ -8,7 +8,9 @@ plugins {
 
 android {
     namespace 'com.kieronquinn.app.shared'
-    compileSdk compile_sdk
+    compileSdk {
+        version = release(compile_sdk) { minorApiLevel = compile_sdk_minor }
+    }
 
     defaultConfig {
         minSdk min_sdk
@@ -74,4 +76,7 @@ dependencies {
     ksp "androidx.room:room-compiler:$room_version"
 
     compileOnly project(path: ':systemstubs')
+
+    //Testing
+    testImplementation "junit:junit:4.13.2"
 }

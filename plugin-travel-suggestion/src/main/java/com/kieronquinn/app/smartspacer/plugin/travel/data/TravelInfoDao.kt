@@ -31,4 +31,7 @@ interface TravelInfoDao {
 
     @Query("SELECT * FROM travel_info_items WHERE isUsed = 0 AND departureTime > :now ORDER BY departureTime ASC")
     fun getUnusedTripsFlow(now: Long): Flow<List<TravelInfoItem>>
+
+    @Query("SELECT * FROM travel_info_items WHERE isUsed = 0")
+    suspend fun getUnusedAll(): List<TravelInfoItem>
 }

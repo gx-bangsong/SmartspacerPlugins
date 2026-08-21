@@ -8,14 +8,16 @@ plugins {
 
 android {
     namespace 'com.kieronquinn.app.smartspacer.plugin.parcel'
-    compileSdk compile_sdk
+    compileSdk {
+        version = release(compile_sdk) { minorApiLevel = compile_sdk_minor }
+    }
 
     defaultConfig {
         applicationId "com.kieronquinn.app.smartspacer.plugin.parcel"
         minSdk min_sdk
         targetSdk target_sdk
-        versionCode 100
-        versionName "1.0.0"
+        versionCode 101
+        versionName "1.1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

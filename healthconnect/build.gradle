@@ -7,7 +7,9 @@ plugins {
 
 android {
     namespace 'com.kieronquinn.app.smartspacer.plugin.healthconnect'
-    compileSdk compile_sdk
+    compileSdk {
+        version = release(compile_sdk) { minorApiLevel = compile_sdk_minor }
+    }
 
     defaultConfig {
         applicationId "com.kieronquinn.app.smartspacer.plugin.healthconnect"

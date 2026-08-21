@@ -19,6 +19,7 @@ This repository contains an unofficial collection of plugins developed for [Smar
 - [用药提醒 (Medication Reminder)](#用药提醒--medication-reminder)
 - [食物保质期提醒 (Food Shelf Life Reminder)](#食物保质期提醒--food-shelf-life-reminder)
 - [和风天气生活指数 (QWeather Indices)](#和风天气生活指数--qweather-indices)
+- [Live Updates 支持与兼容性 (Live Updates Support)](#live-updates-支持与兼容性-live-updates-support)
 
 ---
 
@@ -31,12 +32,23 @@ This repository contains an unofficial collection of plugins developed for [Smar
 - **智能短信解析**：内置高度精准的正则提取模块（基于 `shared-sms-parser` 独立解析库），完美适配 12306 订票、各航空公司出票短信。
 - **手动粘贴解析**：提供可视化“方案 B”核对弹窗，粘贴短信后一键解析，在表单中核对并编辑车次、出发地、目的地、时间和座位号等字段后安全入库。
 - **点击一键跳转**：点击行程卡片可直接复制行程详情到剪贴板，并可自定义联动拉起 12306、航旅纵横或系统地图等软件。
-- **精确出发通知**：使用 `AlarmManager` 机制，在出发前 30 分钟弹出高优先级系统通知，提醒您做好出行准备。
+- **精确出发通知**：使用 `AlarmManager` 机制，在出发前 30 分钟弹出高优先级系统通知，提醒您做好出行准备；进入出发窗口后，通知会自动升级为置顶的 **Live Update**（含系统倒计时、出发站/到达站与座位信息），并提供“查看行程”与“标记已出行”操作。
+- **系统分享解析**：从微信、浏览器、备忘录等任何应用分享车票/航班文本 → 在 Sharesheet 中选择 **“解析出行信息”** → 应用内完成解析 → 弹出可编辑核对表单 → 确认后保存并安排出发提醒。
 - **优雅 Dismiss**：在 Smartspace 上点击该target，将自动把该行程标记为已出行。
 
 ---
 
 The **Travel Suggestions** plugin automatically parses ticket notifications from your SMS or via manual paste, extracting trains, high-speed rail, and flight details to display directly on your Smartspace.
+
+### 使用步骤：从其他应用分享文本 → 解析出行信息 → 核对并保存
+
+1. 在任意应用中（微信、浏览器、备忘录、短信等）选中包含车票/航班信息的文本，点击“分享”；
+2. 在系统 Sharesheet 中选择 **“解析出行信息”**（本插件）；
+3. 应用立即显示“正在解析出行信息”的 Live Update 通知与解析进度；
+4. 解析成功后，同一张通知原地更新为行程摘要，并弹出可编辑的核对表单（车次/航班、出发站、到达站、时间、座位均可修改）；
+5. 点击 **“核对并保存”** 后，行程才写入数据库、刷新 Smartspace 卡片并安排出发前提醒；或点击 **“取消”** 放弃（不写入任何数据）。
+
+> 隐私说明：分享的文本只用于本地解析，不会写入日志或上传；解析过程中的临时草稿只保存核对所需的最少字段（不含乘客姓名与原始短信全文），30 分钟后自动清理。
 
 ---
 
@@ -72,6 +84,8 @@ The **Check-In Reminder** plugin acts as your personal attendance assistant, man
 ---
 
 The **Parcel Tracker** plugin scans your SMS messages to automatically identify and extract pickup codes, displaying them directly on your Smartspace for quick and easy access.
+
+> **实验性选项（默认关闭）**：设置页提供“取件码实时更新（Promoted Live Update）”。官方明确说明普通包裹跟踪不适合 promoted 通知，因此该选项默认关闭；开启后取件码通知会以 Live Update 置顶显示（需要 Android 16 QPR1/36.1+，且系统允许该应用的 promoted 通知），提供“已取件”与“停止实时显示”操作。用户移除/取消置顶后不会被自动重新发布。
 
 ### Features
 
@@ -195,3 +209,34 @@ The **QWeather Indices** plugin brings a variety of lifestyle indices to your Sm
     - **API Host**: API provider's commend.
       - *Warning*: If you set a custom host (e.g. `api.qweather.com` for subscription keys), the plugin will also route GeoAPI city lookup to this domain. Since QWeather's GeoAPI is only hosted on `geoapi.qweather.com`, the lookup city request will fail with a 404 error. Only configure this if your custom proxy also handles and routes GeoAPI endpoints correctly, otherwise leave it empty.
     - **City Name**: Specify the city for which you want to retrieve weather data.
+
+---
+
+## Live Updates 支持与兼容性 | Live Updates Support
+
+本合集对部分插件启用了 Android 官方的 **promoted ongoing notification（Live Updates）** 支持。Live Update 是系统层面的置顶持续通知（官方文档：[Create live update notifications](https://developer.android.com/develop/ui/views/notifications/live-update)、[Progress-centric notifications](https://developer.android.com/about/versions/16/features/progress-centric-notifications)），不是 LiveData / 热更新，也不替代 Smartspacer Target 刷新。
+
+### 支持版本
+
+| Android 版本 | 行为 |
+|---|---|
+| Android 10–15（API 29–35） | 全部降级为普通通知；功能不受影响 |
+| Android 16 基础版（API 36.0） | 36.0 不包含 `setRequestPromotedOngoing` 等 opt-in API，插件自动降级为普通 ongoing 通知（符合官方行为；官方 Live Updates 需要 36.1/QPR） |
+| Android 16 36.1/QPR 及更新 | 满足条件时按 Live Update 置顶显示；以 `NotificationManager.canPostPromotedNotifications()` 与 `Notification.hasPromotableCharacteristics()` 运行时检测为准 |
+
+### 场景 × 是否符合官方 Live Update 条件
+
+| 场景 | 用户主动发起 | ongoing | 时间敏感 | 有明确结束 | 是否 Live Update |
+|---|---|---|---|---|---|
+| 出行：分享文本“解析出行信息”（PARSING/REVIEW） | ✅ | ✅ | ✅ | ✅（确认/取消/失败） | ✅ promoted Live Update（进度样式 + 原地更新） |
+| 出行：已保存行程进入出发窗口（T-30） | ✅（购票时已确认） | ✅ | ✅ | ✅（出发/标记已出行/删除） | ✅ promoted Live Update（系统倒计时） |
+| 出行：短信自动解析结果通知 | ❌（后台短信非用户主动） | — | — | — | ❌ 普通高优先级通知（进入窗口后升级为 Live Update） |
+| 快递取件码 | ❌ | ❌ | ❌ | — | ❌ 默认普通通知；设置页实验性开关（默认关闭）可开启 |
+| 考勤 / 饮水 / 用药 / 食物提醒 | 定时静态提醒 | ❌ | ❌ | — | ❌ 普通通知（带结束操作） |
+
+### 平台使用限制
+
+- Live Update 需要 `android.permission.POST_PROMOTED_NOTIFICATIONS`（非运行时权限，随安装授予）、Android 16 QPR1（36.1）及以上系统，并由用户开启该应用的 promoted 通知；被用户关闭、OEM 未实现或系统不支持时自动降级为普通通知。
+- 同一业务实体始终使用同一 notification ID 原地更新，并设置 `setOnlyAlertOnce(true)`，不会重复响铃或堆叠卡片。
+- 用户移除（dismiss/unpin）后，通知不会被后续的轮询/重启/重新调度自动重新发布。
+- 锁屏显示使用 `VISIBILITY_PRIVATE` + 脱敏 public version，不展示乘客姓名、证件号或完整短信原文。
