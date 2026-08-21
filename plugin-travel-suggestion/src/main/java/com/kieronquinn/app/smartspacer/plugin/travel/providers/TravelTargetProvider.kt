@@ -25,9 +25,6 @@ import java.util.Locale
 class TravelTargetProvider : SmartspacerTargetProvider(), KoinComponent {
 
     private val travelInfoDao by inject<TravelInfoDao>()
-    private val travelScheduler by inject<com.kieronquinn.app.smartspacer.plugin.travel.repositories.TravelScheduler>()
-    private val notificationController by inject<com.kieronquinn.app.smartspacer.plugin.travel.notifications.TravelNotificationController>()
-    private val suppressionRepository by inject<com.kieronquinn.app.smartspacer.plugin.travel.repositories.TravelSuppressionRepository>()
 
     override fun getConfig(smartspacerId: String?): Config {
         val safeContext = context!!
@@ -101,9 +98,6 @@ class TravelTargetProvider : SmartspacerTargetProvider(), KoinComponent {
                 val item = travelInfoDao.getById(itemId)
                 if (item != null) {
                     travelInfoDao.update(item.copy(isUsed = true))
-                    travelScheduler.cancelReminder(item.id)
-                    notificationController.cancelTrip(item.id)
-                    suppressionRepository.clearForTrip(item.id)
                 }
             }
             return true

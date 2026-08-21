@@ -4,10 +4,7 @@
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.READ_SMS" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-    <!-- Non-runtime permission required to request promoted ongoing ("Live Update") notifications on Android 16+. -->
-    <uses-permission android:name="android.permission.POST_PROMOTED_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
         android:name=".TravelPlugin"
@@ -33,28 +30,6 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:exported="true" />
 
-        <!--
-            Sharesheet entry point: "解析出行信息". Exported on purpose, but the intent filter only
-            accepts ACTION_SEND text shares; the activity itself validates action/MIME/length and
-            fails safely. No share content is ever logged.
-        -->
-        <activity
-            android:name=".ui.activities.TravelShareParseActivity"
-            android:exported="true"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"
-            android:launchMode="standard">
-            <intent-filter>
-                <action android:name="android.intent.action.SEND" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <data android:mimeType="text/plain" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.SEND" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <data android:mimeType="text/*" />
-            </intent-filter>
-        </activity>
-
         <provider
             android:name=".providers.TravelTargetProvider"
             android:authorities="${applicationId}.provider.travel"
@@ -77,20 +52,6 @@
         <receiver
             android:name=".receivers.TravelAlarmReceiver"
             android:exported="false" />
-
-        <receiver
-            android:name=".receivers.TravelActionReceiver"
-            android:exported="false" />
-
-        <receiver
-            android:name=".receivers.TravelBootReceiver"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-                <action android:name="android.intent.action.TIMEZONE_CHANGED" />
-                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
-            </intent-filter>
-        </receiver>
 
     </application>
 

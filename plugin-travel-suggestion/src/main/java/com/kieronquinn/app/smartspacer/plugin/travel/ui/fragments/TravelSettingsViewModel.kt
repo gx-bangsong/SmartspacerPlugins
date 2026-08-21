@@ -4,10 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kieronquinn.app.smartspacer.plugin.travel.data.TravelInfoDao
 import com.kieronquinn.app.smartspacer.plugin.travel.data.TravelInfoItem
-import com.kieronquinn.app.smartspacer.plugin.travel.notifications.TravelNotificationController
 import com.kieronquinn.app.smartspacer.plugin.travel.repositories.TravelSettingsRepository
 import com.kieronquinn.app.smartspacer.plugin.travel.repositories.TravelScheduler
-import com.kieronquinn.app.smartspacer.plugin.travel.repositories.TravelSuppressionRepository
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -15,9 +13,7 @@ import kotlinx.coroutines.launch
 class TravelSettingsViewModel(
     private val settingsRepository: TravelSettingsRepository,
     private val travelInfoDao: TravelInfoDao,
-    private val travelScheduler: TravelScheduler,
-    private val notificationController: TravelNotificationController,
-    private val suppressionRepository: TravelSuppressionRepository
+    private val travelScheduler: TravelScheduler
 ) : ViewModel() {
 
     val isSmsParsingEnabled = settingsRepository.isSmsParsingEnabled
@@ -60,8 +56,6 @@ class TravelSettingsViewModel(
         viewModelScope.launch {
             travelInfoDao.delete(item)
             travelScheduler.cancelReminder(item.id)
-            notificationController.cancelTrip(item.id)
-            suppressionRepository.clearForTrip(item.id)
         }
     }
 
