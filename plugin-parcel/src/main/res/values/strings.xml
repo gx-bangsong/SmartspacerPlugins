@@ -5,30 +5,4 @@
     <string name="pickup_code">Pickup Code: %s</string>
     <string name="station_location">Location: %s</string>
     <string name="no_pending_parcels">No pending parcels</string>
-
-    <!-- Notification -->
-    <string name="notification_channel">Parcel pickup</string>
-    <string name="notification_title">Pickup code: %1$s</string>
-    <string name="action_mark_as_picked_up">Mark as picked up</string>
-    <string name="action_stop_live_update">Stop live display</string>
-    <string name="notification_public_title">Parcel notification</string>
-    <string name="notification_public_content">You have a parcel notification</string>
-
-    <!-- Settings -->
-    <string name="privacy_note">Privacy: All SMS processing is local.</string>
-    <string name="cleanup_duration">Cleanup Duration</string>
-    <string name="cleanup_duration_summary">How long to keep pickup codes</string>
-    <string name="hours_format">%1$d hours</string>
-    <string name="scan_inbox">Scan Inbox</string>
-    <string name="scan_inbox_summary">Scan historical SMS for parcels</string>
-    <string name="import_rules">Import Rules</string>
-    <string name="import_rules_summary">Load custom JSON parsing rules</string>
-    <string name="rules_imported">Rules imported successfully</string>
-    <string name="rules_import_failed">Failed to import rules</string>
-    <string name="experimental_promoted_title">Promoted Live Update for pickup codes (experimental)</string>
-    <string name="experimental_promoted_summary">Show pickup codes as an ongoing Live Update on Android 16 QPR1 (36.1)+. Off by default: ordinary package tracking is not recommended for promoted notifications.</string>
-    <string name="experimental_promoted_warning">Experimental: on Android 16 QPR1 (36.1)+ the pickup code will stay pinned as a Live Update until you mark it picked up or stop the live display.</string>
-    <string name="notification_permission">Notification permission</string>
-    <string name="notification_permission_granted">Granted. Tap to open notification settings</string>
-    <string name="notification_permission_denied">Denied. Tap to grant access</string>
 </resources>

@@ -11,48 +11,32 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import com.kieronquinn.app.smartspacer.plugin.travel.R
 import com.kieronquinn.app.smartspacer.plugin.travel.data.TravelInfoItem
-import com.kieronquinn.app.smartspacer.shared.smsparser.ParseResultStatus
 import com.kieronquinn.app.smartspacer.shared.smsparser.SmsParser
-import com.kieronquinn.app.smartspacer.shared.smsparser.TravelInfo
+import com.kieronquinn.app.smartspacer.shared.smsparser.ParseResultStatus
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-/**
- * The "paste → parse → editable review → save" dialog, shared by the settings screen and the
- * sharesheet flow (via [ManualPasteFragment]). When [initialInfo] is provided the raw-paste step
- * is skipped and the form opens directly in the editable review state.
- */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ManualPasteDialog(
-    initialInfo: TravelInfo? = null,
-    source: String = "manual",
     onDismiss: () -> Unit,
     onSave: (TravelInfoItem) -> Unit
 ) {
     val context = LocalContext.current
-    val timeFormat = remember { SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()) }
-
     var rawText by rememberSaveable { mutableStateOf("") }
 
-    var isParsed by rememberSaveable { mutableStateOf(initialInfo != null) }
-    var trainNumber by rememberSaveable { mutableStateOf(initialInfo?.trainNumber ?: "") }
-    var departureStation by rememberSaveable { mutableStateOf(initialInfo?.departureStation ?: "") }
-    var arrivalStation by rememberSaveable { mutableStateOf(initialInfo?.arrivalStation ?: "") }
-    var departureTimeStr by rememberSaveable {
-        mutableStateOf(
-            initialInfo?.let { timeFormat.format(Date(it.departureTime)) } ?: ""
-        )
-    }
-    var seat by rememberSaveable { mutableStateOf(initialInfo?.seat ?: "") }
-    var passengerName by rememberSaveable { mutableStateOf(initialInfo?.passengerName ?: "") }
+    var isParsed by rememberSaveable { mutableStateOf(false) }
+    var trainNumber by rememberSaveable { mutableStateOf("") }
+    var departureStation by rememberSaveable { mutableStateOf("") }
+    var arrivalStation by rememberSaveable { mutableStateOf("") }
+    var departureTimeStr by rememberSaveable { mutableStateOf("") }
+    var seat by rememberSaveable { mutableStateOf("") }
+    var passengerName by rememberSaveable { mutableStateOf("") }
 
     Dialog(
         onDismissRequest = onDismiss,
@@ -61,23 +45,24 @@ fun ManualPasteDialog(
         Scaffold(
             topBar = {
                 CenterAlignedTopAppBar(
-                    title = { Text(stringResource(R.string.manual_paste_title)) },
+                    title = { Text("手动粘贴解析行程") },
                     navigationIcon = {
                         IconButton(onClick = onDismiss) {
-                            Icon(Icons.Default.Close, contentDescription = stringResource(R.string.manual_paste_cancel))
+                            Icon(Icons.Default.Close, contentDescription = "Close")
                         }
                     },
                     actions = {
                         if (isParsed) {
                             TextButton(onClick = {
                                 if (trainNumber.isBlank() || departureStation.isBlank() || departureTimeStr.isBlank()) {
-                                    Toast.makeText(context, context.getString(R.string.manual_paste_required), Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(context, "车次、出发地及出发时间不能为空", Toast.LENGTH_SHORT).show()
                                     return@TextButton
                                 }
+                                val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
                                 val parsedTimeMs = try {
-                                    timeFormat.parse(departureTimeStr.trim())?.time ?: System.currentTimeMillis()
+                                    sdf.parse(departureTimeStr.trim())?.time ?: System.currentTimeMillis()
                                 } catch (e: Exception) {
-                                    Toast.makeText(context, context.getString(R.string.manual_paste_time_format_error), Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(context, "时间格式错误，请输入: yyyy-MM-dd HH:mm", Toast.LENGTH_SHORT).show()
                                     return@TextButton
                                 }
                                 val item = TravelInfoItem(
@@ -87,12 +72,12 @@ fun ManualPasteDialog(
                                     departureTime = parsedTimeMs,
                                     seat = seat.trim().ifBlank { null },
                                     passengerName = passengerName.trim().ifBlank { null },
-                                    source = source
+                                    source = "manual"
                                 )
                                 onSave(item)
-                                Toast.makeText(context, context.getString(R.string.manual_paste_saved), Toast.LENGTH_SHORT).show()
+                                Toast.makeText(context, "行程已成功保存", Toast.LENGTH_SHORT).show()
                             }) {
-                                Text(stringResource(R.string.manual_paste_save))
+                                Text("保存")
                             }
                         }
                     }
@@ -108,12 +93,12 @@ fun ManualPasteDialog(
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 if (!isParsed) {
-                    Text(stringResource(R.string.manual_paste_hint), style = MaterialTheme.typography.titleMedium)
+                    Text("请粘贴购票或出票短信：", style = MaterialTheme.typography.titleMedium)
                     OutlinedTextField(
                         value = rawText,
                         onValueChange = { rawText = it },
-                        label = { Text(stringResource(R.string.manual_paste_label)) },
-                        placeholder = { Text(stringResource(R.string.manual_paste_placeholder)) },
+                        label = { Text("短信或文本内容") },
+                        placeholder = { Text("【12306】...") },
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(160.dp)
@@ -127,62 +112,63 @@ fun ManualPasteDialog(
                                 trainNumber = info.trainNumber
                                 departureStation = info.departureStation
                                 arrivalStation = info.arrivalStation ?: ""
-                                departureTimeStr = timeFormat.format(Date(info.departureTime))
+                                val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
+                                departureTimeStr = sdf.format(Date(info.departureTime))
                                 seat = info.seat ?: ""
                                 passengerName = info.passengerName ?: ""
                                 isParsed = true
-                                Toast.makeText(context, context.getString(R.string.manual_paste_parse_success), Toast.LENGTH_SHORT).show()
+                                Toast.makeText(context, "解析成功，请核对信息后保存！", Toast.LENGTH_SHORT).show()
                             } else {
-                                val errorMsg = result.errorMessage ?: context.getString(R.string.manual_paste_unknown_error)
-                                Toast.makeText(context, context.getString(R.string.manual_paste_parse_failed, errorMsg), Toast.LENGTH_LONG).show()
+                                val errorMsg = result.errorMessage ?: "未知错误"
+                                Toast.makeText(context, "解析失败: $errorMsg", Toast.LENGTH_LONG).show()
                             }
                         },
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        Text(stringResource(R.string.manual_paste_parse))
+                        Text("解析文本")
                     }
                 } else {
-                    Text(stringResource(R.string.manual_paste_review_title), style = MaterialTheme.typography.titleMedium)
+                    Text("核对解析到的行程信息（可编辑）：", style = MaterialTheme.typography.titleMedium)
 
                     OutlinedTextField(
                         value = trainNumber,
                         onValueChange = { trainNumber = it },
-                        label = { Text(stringResource(R.string.manual_paste_field_train)) },
+                        label = { Text("车次 / 航班号") },
                         modifier = Modifier.fillMaxWidth()
                     )
 
                     OutlinedTextField(
                         value = departureStation,
                         onValueChange = { departureStation = it },
-                        label = { Text(stringResource(R.string.manual_paste_field_from)) },
+                        label = { Text("出发站 / 机场") },
                         modifier = Modifier.fillMaxWidth()
                     )
 
                     OutlinedTextField(
                         value = arrivalStation,
                         onValueChange = { arrivalStation = it },
-                        label = { Text(stringResource(R.string.manual_paste_field_to)) },
+                        label = { Text("到达站 / 机场（选填）") },
                         modifier = Modifier.fillMaxWidth()
                     )
 
                     OutlinedTextField(
                         value = departureTimeStr,
                         onValueChange = { departureTimeStr = it },
-                        label = { Text(stringResource(R.string.manual_paste_field_time)) },
+                        label = { Text("出发时间 (格式: yyyy-MM-dd HH:mm)") },
                         modifier = Modifier.fillMaxWidth()
                     )
 
                     OutlinedTextField(
                         value = seat,
                         onValueChange = { seat = it },
-                        label = { Text(stringResource(R.string.manual_paste_field_seat)) },
+                        label = { Text("座位号（选填）") },
                         modifier = Modifier.fillMaxWidth()
                     )
 
                     OutlinedTextField(
                         value = passengerName,
                         onValueChange = { passengerName = it },
-                        label = { Text(stringResource(R.string.manual_paste_field_passenger)) },
+                        label = { Text("乘车人姓名（选填）") },
                         modifier = Modifier.fillMaxWidth()
                     )
 
@@ -194,7 +180,7 @@ fun ManualPasteDialog(
                             onClick = { isParsed = false },
                             modifier = Modifier.weight(1f)
                         ) {
-                            Text(stringResource(R.string.manual_paste_repaste))
+                            Text("重新粘贴")
                         }
                     }
                 }
