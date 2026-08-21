@@ -43,7 +43,9 @@ jobs:
         ./gradlew :plugin-food:test
         ./gradlew :plugin-medication:test
         ./gradlew :plugin-parcel:test
-
+        ./gradlew :shared:test
+        ./gradlew :plugin-travel-suggestion:test
+        ./gradlew :plugin-check-in:test
     - name: Build Debug APKs
       run: |
         ./gradlew :qweather:assembleDebug
