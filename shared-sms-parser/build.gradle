@@ -5,9 +5,7 @@ plugins {
 
 android {
     namespace 'com.kieronquinn.app.smartspacer.shared.smsparser'
-    compileSdk {
-        version = release(compile_sdk) { minorApiLevel = compile_sdk_minor }
-    }
+    compileSdk compile_sdk
 
     defaultConfig {
         minSdk min_sdk

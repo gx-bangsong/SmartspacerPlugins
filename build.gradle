@@ -5,12 +5,12 @@ buildscript {
     ext.protobuf_version = '0.9.0'
     ext.refine_version = '4.4.0'
     ext.room_version = "2.6.1"
-    // compileSdk 36 + minor API 1 (Android 16.0 + 16 QPR1 / 36.1) is required for the
-    // promoted-ongoing ("Live Update") APIs (Notification.Builder#setRequestPromotedOngoing,
-    // Notification.ProgressStyle#setProgressIndeterminate), which were added in the
-    // Android 16 QPR1 (36.1) minor SDK release.
+    // compileSdk 36 (Android 16). The promoted-ongoing ("Live Update") request and the
+    // progress-centric style are provided by androidx.core 1.17.0 compat APIs
+    // (NotificationCompat.Builder#setRequestPromotedOngoing, NotificationCompat.ProgressStyle),
+    // which need only compileSdk 35/36 — not the 36.1 minor SDK — and are runtime-gated by
+    // BuildCompat.isAtLeastB_1() (see LiveUpdateEligibility).
     ext.compile_sdk = 36
-    ext.compile_sdk_minor = 1
     ext.min_sdk = 29
     ext.target_sdk = 34
     dependencies {
@@ -22,12 +22,13 @@ buildscript {
 
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 plugins {
-    // AGP 8.13 is the first stable line whose maximum supported API level is 36.1 (Android 16
-    // QPR1), which exposes the promoted-ongoing APIs via the compileSdk minorApiLevel DSL.
-    id 'com.android.application' version '8.13.0' apply false
-    id 'com.android.library' version '8.13.0' apply false
-    id 'org.jetbrains.kotlin.android' version '1.9.10' apply false
-    id 'com.google.devtools.ksp' version '1.9.10-1.0.13' apply false
+    // AGP 8.10 supports compileSdk 36 (Android 16); Kotlin 2.2.21 is the newest KGP whose
+    // official compatibility matrix covers AGP 8.10.x and Gradle 8.11.1.
+    id 'com.android.application' version '8.10.1' apply false
+    id 'com.android.library' version '8.10.1' apply false
+    id 'org.jetbrains.kotlin.android' version '2.2.21' apply false
+    id 'org.jetbrains.kotlin.plugin.compose' version '2.2.21' apply false
+    id 'com.google.devtools.ksp' version '2.2.21-2.0.5' apply false
     id 'dev.rikka.tools.refine' version "$refine_version" apply false
     id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin' version '2.0.1' apply false
 }

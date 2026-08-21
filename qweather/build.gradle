@@ -8,9 +8,7 @@ plugins {
 
 android {
     namespace 'com.kieronquinn.app.smartspacer.plugin.qweather'
-    compileSdk {
-        version = release(rootProject.ext.compile_sdk) { minorApiLevel = rootProject.ext.compile_sdk_minor }
-    }
+    compileSdk rootProject.ext.compile_sdk
 
     defaultConfig {
         applicationId "com.kieronquinn.app.smartspacer.plugin.qweather"

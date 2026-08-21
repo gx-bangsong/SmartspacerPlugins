@@ -6,9 +6,7 @@ plugins {
 
 android {
     namespace 'com.kieronquinn.app.smartspacer.plugin.googlekeep'
-    compileSdk {
-        version = release(compile_sdk) { minorApiLevel = compile_sdk_minor }
-    }
+    compileSdk compile_sdk
 
     defaultConfig {
         applicationId "com.kieronquinn.app.smartspacer.plugin.googlekeep"

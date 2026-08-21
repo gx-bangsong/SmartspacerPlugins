@@ -216,12 +216,14 @@ The **QWeather Indices** plugin brings a variety of lifestyle indices to your Sm
 
 本合集对部分插件启用了 Android 官方的 **promoted ongoing notification（Live Updates）** 支持。Live Update 是系统层面的置顶持续通知（官方文档：[Create live update notifications](https://developer.android.com/develop/ui/views/notifications/live-update)、[Progress-centric notifications](https://developer.android.com/about/versions/16/features/progress-centric-notifications)），不是 LiveData / 热更新，也不替代 Smartspacer Target 刷新。
 
+实现方式：通过 **androidx.core 1.17.0** 的兼容 API（`NotificationCompat.Builder#setRequestPromotedOngoing`、`NotificationCompat.ProgressStyle`、`BuildCompat.isAtLeastB_1()`）在 compileSdk 36 下编译；运行时仅在 `BuildCompat.isAtLeastB_1()`（Android 16 QPR1 / 36.1+）为真时才真正请求提升，其余设备自动降级。
+
 ### 支持版本
 
 | Android 版本 | 行为 |
 |---|---|
 | Android 10–15（API 29–35） | 全部降级为普通通知；功能不受影响 |
-| Android 16 基础版（API 36.0） | 36.0 不包含 `setRequestPromotedOngoing` 等 opt-in API，插件自动降级为普通 ongoing 通知（符合官方行为；官方 Live Updates 需要 36.1/QPR） |
+| Android 16 基础版（API 36.0） | 36.0 不包含 opt-in 的 promoted API，插件经 `BuildCompat.isAtLeastB_1()` 检测后自动降级为普通 ongoing 通知（符合官方行为；官方 Live Updates 需要 36.1/QPR） |
 | Android 16 36.1/QPR 及更新 | 满足条件时按 Live Update 置顶显示；以 `NotificationManager.canPostPromotedNotifications()` 与 `Notification.hasPromotableCharacteristics()` 运行时检测为准 |
 
 ### 场景 × 是否符合官方 Live Update 条件

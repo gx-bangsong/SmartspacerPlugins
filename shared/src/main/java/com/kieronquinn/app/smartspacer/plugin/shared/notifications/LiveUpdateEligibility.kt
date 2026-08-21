@@ -6,6 +6,7 @@ import android.app.NotificationManager
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
+import androidx.core.os.BuildCompat
 
 /**
  * Runtime eligibility checks for Android "promoted ongoing" (Live Update) notifications.
@@ -17,11 +18,8 @@ import android.os.Build
  * feature-flagged and OEM dependent, `SDK_INT >= 36` alone must NEVER be treated as "promoted
  * Live Updates work here". The authoritative runtime checks are:
  *
- *  - [isAtLeastBaklavaQpr1]: the device runs Android 16 QPR1 (36.1) or newer. Mirrors the
- *    official androidx `BuildCompat.isAtLeastB_1()` check, which compares
- *    `Build.VERSION.SDK_INT_FULL > Build.VERSION_CODES_FULL.BAKLAVA` (both introduced with the
- *    major/minor versioning scheme in Android 16). Reading `SDK_INT_FULL` is only safe on
- *    API 36+ devices, hence the short-circuit on [isPlatformSupported].
+ *  - [isAtLeastBaklavaQpr1]: the device runs Android 16 QPR1 (36.1) or newer (official
+ *    `BuildCompat.isAtLeastB_1()` from androidx.core).
  *  - [NotificationManager.canPostPromotedNotifications] (API 36): returns whether this app is
  *    currently allowed to post promoted notifications (considers the manifest permission, the
  *    user's per-app switch and the framework feature flag / OEM implementation).
@@ -29,6 +27,11 @@ import android.os.Build
  *    On the initial 36.0 release this method used the colourised/legacy promotion spec, while
  *    36.1/QPR requires the explicit request extra. Calling it after building is the only
  *    reliable way to know whether the notification will actually be promoted.
+ *
+ * The promotion request itself goes through the androidx compat APIs
+ * (`NotificationCompat.Builder#setRequestPromotedOngoing` / `NotificationCompat.ProgressStyle`,
+ * androidx.core 1.17.0) which compile against compileSdk 36 and are only invoked when
+ * [isAtLeastBaklavaQpr1] is true.
  *
  * All checks in this class are safe to call on any API level; they simply report "not eligible"
  * below the required platform, so callers fall back to a normal notification.
@@ -85,35 +88,27 @@ object LiveUpdateEligibility {
     fun isPlatformSupported(sdkInt: Int): Boolean = sdkInt >= PLATFORM_MIN_SDK
 
     /**
-     * Runtime detection of Android 16 QPR1 (minor SDK 36.1) or newer.
-     *
-     * This mirrors the official androidx `BuildCompat.isAtLeastB_1()` implementation. The full
-     * SDK version (`ro.build.version.sdk_full`) is a runtime value, so on a 36.0 device
-     * `SDK_INT_FULL` is either absent/0 (flag off) or equals the Baklava base, both of which
-     * yield `false` here; only a 36.1+ device reports a value greater than the Baklava base.
-     * The comparison is only evaluated after the `SDK_INT >= 36` short-circuit, because the
-     * `SDK_INT_FULL` field does not exist below API 36.
-     */
-    /**
-     * Pure decision function for the 36.1+ check (unit-testable on the JVM).
+     * Pure decision function for the 36.1+ check (unit-testable on the JVM). Mirrors the
+     * official androidx `BuildCompat.isAtLeastB_1()` semantics: the full SDK version
+     * (`ro.build.version.sdk_full`, encoding `major * 100000 + minor`) is a runtime value, so on
+     * a 36.0 device it is either 0 (flag off) or equals the Baklava base (3600000), both of
+     * which yield `false` here; only a 36.1+ device reports a value greater than the base.
      *
      * @param sdkInt        `Build.VERSION.SDK_INT` (major API level, 36 on all Android 16 devices)
-     * @param sdkIntFull    `Build.VERSION.SDK_INT_FULL` (runtime full version, encoding
-     *                      `major * 100000 + minor`, e.g. 3600000 on 36.0 and 3600001 on 36.1)
+     * @param sdkIntFull    `Build.VERSION.SDK_INT_FULL` (e.g. 3600000 on 36.0, 3600001 on 36.1)
      * @param baklavaFull   `Build.VERSION_CODES_FULL.BAKLAVA` (compile-time constant, 3600000)
      */
     fun isAtLeastMinorSdk(sdkInt: Int, sdkIntFull: Int, baklavaFull: Int): Boolean =
         sdkInt >= PLATFORM_MIN_SDK && sdkIntFull > baklavaFull
 
-    fun isAtLeastBaklavaQpr1(): Boolean {
-        if (!isPlatformSupported(Build.VERSION.SDK_INT)) return false
-        return try {
-            @Suppress("FlaggedApi") // Flagged in the SDK; runtime-gated by the version check above (same approach as androidx BuildCompat).
-            isAtLeastMinorSdk(Build.VERSION.SDK_INT, Build.VERSION.SDK_INT_FULL, Build.VERSION_CODES_FULL.BAKLAVA)
-        } catch (e: Throwable) {
-            false
-        }
-    }
+    /**
+     * Runtime detection of Android 16 QPR1 (minor SDK 36.1) or newer, delegating to the official
+     * androidx `BuildCompat.isAtLeastB_1()` (safe on every API level). The promoted-ongoing
+     * request and the progress style are only applied when this returns true, because
+     * `setRequestPromotedOngoing` and `ProgressStyle#setProgressIndeterminate` do not exist on
+     * the initial Android 16.0 release.
+     */
+    fun isAtLeastBaklavaQpr1(): Boolean = BuildCompat.isAtLeastB_1()
 
     fun hasPostPromotedManifestPermission(context: Context): Boolean {
         return context.checkSelfPermission(Manifest.permission.POST_PROMOTED_NOTIFICATIONS) ==
