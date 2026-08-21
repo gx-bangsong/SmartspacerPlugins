@@ -10,7 +10,7 @@ buildscript {
     // (NotificationCompat.Builder#setRequestPromotedOngoing, NotificationCompat.ProgressStyle),
     // which need only compileSdk 35/36 — not the 36.1 minor SDK — and are runtime-gated by
     // BuildCompat.isAtLeastB_1() (see LiveUpdateEligibility).
-    ext.compile_sdk = 36
+    ext.compile_sdk = 34
     ext.min_sdk = 29
     ext.target_sdk = 34
     dependencies {
@@ -24,10 +24,11 @@ buildscript {
 plugins {
     // AGP 8.10 supports compileSdk 36 (Android 16); Kotlin 2.2.21 is the newest KGP whose
     // official compatibility matrix covers AGP 8.10.x and Gradle 8.11.1.
-    id 'com.android.application' version '8.10.2' apply false
-    id 'com.android.library' version '8.10.2' apply false
-    id 'org.jetbrains.kotlin.android' version '1.9.10' apply false
-    id 'com.google.devtools.ksp' version '1.9.10-1.0.13' apply false
+    id 'com.android.application' version '8.10.1' apply false
+    id 'com.android.library' version '8.10.1' apply false
+    id 'org.jetbrains.kotlin.android' version '2.2.21' apply false
+    id 'org.jetbrains.kotlin.plugin.compose' version '2.2.21' apply false
+    id 'com.google.devtools.ksp' version '2.2.21-2.0.5' apply false
     id 'dev.rikka.tools.refine' version "$refine_version" apply false
     id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin' version '2.0.1' apply false
 }
