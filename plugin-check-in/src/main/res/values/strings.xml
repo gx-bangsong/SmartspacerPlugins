@@ -30,4 +30,9 @@
     <string name="target_remind_check_out">下班打卡时间已到，请打卡</string>
     <string name="settings_delete">Delete</string>
     <string name="settings_delete_confirm">Are you sure you want to delete this check-in record?</string>
+    <string name="notification_action_punch_in">Punch in</string>
+    <string name="notification_action_punch_out">Punch out</string>
+    <string name="settings_notification_permission">Notification permission</string>
+    <string name="settings_notification_permission_granted">Granted. Tap to open notification settings</string>
+    <string name="settings_notification_permission_denied">Denied. Tap to grant access</string>
 </resources>

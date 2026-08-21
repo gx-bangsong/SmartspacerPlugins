@@ -1,14 +1,18 @@
 package com.kieronquinn.app.smartspacer.plugin.checkin.ui.fragments
 
+import android.Manifest
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.EditText
 import android.widget.TimePicker
 import android.widget.Toast
 import android.app.TimePickerDialog
+import androidx.activity.result.contract.ActivityResultContracts
 import java.util.Calendar
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
+import com.kieronquinn.app.smartspacer.plugin.shared.notifications.NotificationPermissionHelper
 import com.kieronquinn.app.smartspacer.plugin.checkin.R
 import com.kieronquinn.app.smartspacer.plugin.checkin.databinding.FragmentCheckInSettingsBinding
 import com.kieronquinn.app.smartspacer.plugin.checkin.providers.CheckInProvider
@@ -30,6 +34,12 @@ import com.kieronquinn.app.shared.R as SharedR
 class CheckInSettingsFragment : BaseFragment<FragmentCheckInSettingsBinding>(FragmentCheckInSettingsBinding::inflate) {
 
     private val viewModel by viewModel<CheckInSettingsViewModel>()
+
+    private val requestNotificationPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) {
+        setupSettingsAndHistory()
+    }
 
     override val adapter by lazy {
         object : BaseSettingsAdapter(recyclerView, emptyList()) {}
@@ -175,6 +185,22 @@ class CheckInSettingsFragment : BaseFragment<FragmentCheckInSettingsBinding>(Fra
                         adapter = { appLabels[it] ?: it }
                     )
                 )
+                settingsItems.add(
+                    Setting(
+                        getString(R.string.settings_notification_permission),
+                        notificationPermissionSubtitle(),
+                        ContextCompat.getDrawable(requireContext(), SharedR.drawable.ic_info),
+                        onClick = {
+                            if (NotificationPermissionHelper.hasNotificationPermission(requireContext())) {
+                                NotificationPermissionHelper.openNotificationSettings(requireContext())
+                            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                requestNotificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                            } else {
+                                NotificationPermissionHelper.openNotificationSettings(requireContext())
+                            }
+                        }
+                    )
+                )
 
                 settingsItems.add(Header(getString(R.string.settings_history_header)))
 
@@ -221,6 +247,14 @@ class CheckInSettingsFragment : BaseFragment<FragmentCheckInSettingsBinding>(Fra
 
                 adapter.update(settingsItems)
             }
+        }
+    }
+
+    private fun notificationPermissionSubtitle(): String {
+        return if (NotificationPermissionHelper.hasNotificationPermission(requireContext())) {
+            getString(R.string.settings_notification_permission_granted)
+        } else {
+            getString(R.string.settings_notification_permission_denied)
         }
     }
 
