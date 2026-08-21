@@ -2,12 +2,15 @@ package com.kieronquinn.app.smartspacer.plugin.travel.ui.fragments
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
+import com.kieronquinn.app.smartspacer.plugin.shared.notifications.LiveUpdateEligibility
+import com.kieronquinn.app.smartspacer.plugin.shared.notifications.NotificationPermissionHelper
 import com.kieronquinn.app.smartspacer.plugin.travel.R
 import com.kieronquinn.app.smartspacer.plugin.travel.data.TravelInfoItem
 import com.kieronquinn.app.smartspacer.plugin.travel.databinding.FragmentTravelSettingsBinding
@@ -51,6 +54,15 @@ class TravelSettingsFragment : BaseFragment<FragmentTravelSettingsBinding>(Fragm
             viewModel.setSmsParsingEnabled(false)
             Toast.makeText(requireContext(), "无短信权限，无法启用短信解析", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    private val requestNotificationPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { granted ->
+        val message = if (granted) R.string.settings_notification_permission_granted
+        else R.string.settings_notification_permission_denied
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+        setupSettingsAndTrips()
     }
 
     private val importRulesLauncher = registerForActivityResult(
@@ -138,6 +150,28 @@ class TravelSettingsFragment : BaseFragment<FragmentTravelSettingsBinding>(Fragm
                         onClick = {
                             importRulesLauncher.launch(arrayOf("application/json", "text/plain", "*/*"))
                         }
+                    ),
+                    Setting(
+                        getString(R.string.settings_notification_permission),
+                        notificationPermissionSubtitle(),
+                        ContextCompat.getDrawable(requireContext(), SharedR.drawable.ic_info),
+                        onClick = {
+                            if (NotificationPermissionHelper.hasNotificationPermission(requireContext())) {
+                                NotificationPermissionHelper.openNotificationSettings(requireContext())
+                            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                requestNotificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                            } else {
+                                NotificationPermissionHelper.openNotificationSettings(requireContext())
+                            }
+                        }
+                    ),
+                    Setting(
+                        getString(R.string.settings_promoted_notifications),
+                        promotedSubtitle(),
+                        ContextCompat.getDrawable(requireContext(), SharedR.drawable.ic_info),
+                        onClick = {
+                            NotificationPermissionHelper.openPromotedSettings(requireContext())
+                        }
                     )
                 )
 
@@ -177,6 +211,29 @@ class TravelSettingsFragment : BaseFragment<FragmentTravelSettingsBinding>(Fragm
 
                 adapter.update(settingsItems)
             }
+        }
+    }
+
+    private fun notificationPermissionSubtitle(): String {
+        return if (NotificationPermissionHelper.hasNotificationPermission(requireContext())) {
+            getString(R.string.settings_notification_permission_granted)
+        } else {
+            getString(R.string.settings_notification_permission_denied)
+        }
+    }
+
+    private fun promotedSubtitle(): String {
+        return when (LiveUpdateEligibility.evaluate(
+            platformSupported = LiveUpdateEligibility.isPlatformSupported(Build.VERSION.SDK_INT),
+            manifestPermissionGranted = LiveUpdateEligibility.hasPostPromotedManifestPermission(requireContext()),
+            notificationsAllowed = NotificationPermissionHelper.areNotificationsEnabled(requireContext()),
+            canPostPromoted = LiveUpdateEligibility.canPostPromotedNotifications(requireContext())
+        )) {
+            LiveUpdateEligibility.Result.ELIGIBLE -> getString(R.string.settings_promoted_enabled)
+            LiveUpdateEligibility.Result.NOT_SUPPORTED -> getString(R.string.settings_promoted_not_supported)
+            LiveUpdateEligibility.Result.PERMISSION_MISSING,
+            LiveUpdateEligibility.Result.DISABLED -> getString(R.string.settings_promoted_disabled)
+            LiveUpdateEligibility.Result.POST_NOTIFICATIONS_DENIED -> getString(R.string.settings_notification_permission_denied)
         }
     }
 
