@@ -47,11 +47,8 @@ dependencies {
     api 'com.google.android.material:material:1.12.0'
     api "androidx.navigation:navigation-fragment-ktx:$nav_version"
     api "androidx.navigation:navigation-ui-ktx:$nav_version"
-    api "androidx.security:security-crypto:1.1.0-alpha06"
-    api "androidx.preference:preference-ktx:1.2.1"
 
     //Hidden APIs
-    api "dev.rikka.tools.refine:runtime:$refine_version"
 
     //Smartspacer SDK
     api 'com.kieronquinn.smartspacer:sdk-plugin:1.0.3'
@@ -60,17 +57,12 @@ dependencies {
     api "io.insert-koin:koin-android:3.5.6"
 
     //Theming
-    api 'com.github.KieronQuinn:MonetCompat:0.4.1'
 
     //Image Loading
-    api 'com.github.bumptech.glide:glide:4.16.0'
 
     //Data Loading
-    api "com.squareup.retrofit2:retrofit:2.11.0"
-    api "com.squareup.retrofit2:converter-gson:2.11.0"
 
     //Used in Backup + Restore
-    api 'com.google.code.gson:gson:2.11.0'
 
     //Room for data storage
     api "androidx.room:room-runtime:$room_version"
