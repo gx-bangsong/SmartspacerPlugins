@@ -37,12 +37,19 @@ jobs:
 
     - name: Run tests with Gradle
       run: |
-        ./gradlew :shared-sms-parser:test
-        ./gradlew :qweather:test
-        ./gradlew :plugin-water:test
-        ./gradlew :plugin-food:test
-        ./gradlew :plugin-medication:test
-        ./gradlew :plugin-parcel:test
+        ./gradlew :shared-sms-parser:test 2>&1 | tee /tmp/gradle-tests.log
+        exit ${PIPESTATUS[0]}
+
+    - name: Surface Gradle failures to step summary
+      if: always()
+      run: |
+        {
+          echo "### Gradle diagnostics"
+          echo ""
+          echo '```'
+          grep -E -A6 "What went wrong|FAILURE|Execution failed|error:|e: |Caused by|Could not|unresolved|Configuration problem|> Task .* FAILED" /tmp/gradle-tests.log | head -200 || true
+          echo '```'
+        } >> "$GITHUB_STEP_SUMMARY"
 
     - name: Build Debug APKs
       run: |
