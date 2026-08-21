@@ -21,16 +21,4 @@
     <string name="display_mode_progress">Progress</string>
     <string name="display_mode_reminder">Reminder</string>
     <string name="display_mode_dynamic">Dynamic</string>
-
-    <!-- Notifications -->
-    <string name="notification_channel_name">Water reminders</string>
-    <string name="notification_drink_title">Time for a glass of water!</string>
-    <string name="notification_drink_content">Stay hydrated! Record a cup or snooze.</string>
-    <string name="notification_action_drink">Record drink</string>
-    <string name="notification_action_snooze">Snooze</string>
-
-    <!-- Notification permission row -->
-    <string name="notification_permission_granted">Notifications: granted</string>
-    <string name="notification_permission_denied">Notifications: denied — tap to grant</string>
-    <string name="notification_permission_open_settings">Settings</string>
 </resources>
