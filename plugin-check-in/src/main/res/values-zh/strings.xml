@@ -4,8 +4,11 @@
     <string name="settings_title">打卡设置</string>
     <string name="settings_enable_reminder">启用打卡提醒</string>
     <string name="settings_enable_reminder_summary">在设定时间仍未打卡时，接收系统通知提醒</string>
+    <string name="settings_check_in_only">仅上班打卡模式</string>
+    <string name="settings_check_in_only_summary">只提醒并记录上班打卡，停用下班提醒与下班打卡</string>
     <string name="settings_work_start_time">上班打卡时间</string>
     <string name="settings_work_end_time">下班打卡时间</string>
+    <string name="settings_custom_time">自定义时间…</string>
     <string name="settings_custom_reminder_text">自定义提醒内容</string>
     <string name="settings_custom_reminder_text_summary">收到上班打卡通知时的提醒文本</string>
     <string name="settings_checkin_app">打卡联动 App</string>
@@ -23,6 +26,8 @@
     <string name="target_unpunched">今日未打卡，点击打卡</string>
     <string name="target_punched_in">上班已打卡 %1$s</string>
     <string name="target_punched_out">下班已打卡 %1$s</string>
+    <string name="target_remind_check_in">上班打卡时间已到，请打卡</string>
+    <string name="target_remind_check_out">下班打卡时间已到，请打卡</string>
     <string name="settings_delete">删除</string>
     <string name="settings_delete_confirm">确定要删除此打卡记录吗？</string>
 </resources>

@@ -35,11 +35,14 @@ class CheckInSchedulerImpl(
             return
         }
 
+        val checkInOnly = settingsRepository.checkInOnly.first()
         val startTime = settingsRepository.workStartTime.first()
         val endTime = settingsRepository.workEndTime.first()
 
         scheduleSpecificAlarm(startTime, 1, CheckInAlarmReceiver.TYPE_START)
-        scheduleSpecificAlarm(endTime, 2, CheckInAlarmReceiver.TYPE_END)
+        if (!checkInOnly) {
+            scheduleSpecificAlarm(endTime, 2, CheckInAlarmReceiver.TYPE_END)
+        }
     }
 
     private fun scheduleSpecificAlarm(timeStr: String, reqCode: Int, type: String) {

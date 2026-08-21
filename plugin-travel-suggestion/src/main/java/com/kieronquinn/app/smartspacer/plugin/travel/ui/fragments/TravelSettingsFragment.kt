@@ -53,6 +53,26 @@ class TravelSettingsFragment : BaseFragment<FragmentTravelSettingsBinding>(Fragm
         }
     }
 
+    private val importRulesLauncher = registerForActivityResult(
+        ActivityResultContracts.OpenDocument()
+    ) { uri ->
+        if (uri == null) return@registerForActivityResult
+        lifecycleScope.launch {
+            val json = runCatching {
+                requireContext().contentResolver.openInputStream(uri)?.bufferedReader()?.use { it.readText() }
+            }.getOrNull()
+            if (json.isNullOrBlank()) {
+                Toast.makeText(requireContext(), R.string.settings_import_rules_failed, Toast.LENGTH_SHORT).show()
+            } else {
+                viewModel.importRules(json) { success ->
+                    val message = if (success) R.string.settings_import_rules_success
+                    else R.string.settings_import_rules_failed
+                    Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.settingsBaseLoading.visibility = View.GONE
@@ -68,8 +88,9 @@ class TravelSettingsFragment : BaseFragment<FragmentTravelSettingsBinding>(Fragm
                 val isReadNotifEnabled = viewModel.isReadNotificationEnabled.value
                 val currentTarget = viewModel.jumpTarget.value
 
-                val appOptions = listOf("none", "12306", "umetrip", "maps")
+                val appOptions = listOf("auto", "none", "12306", "umetrip", "maps")
                 val appLabels = mapOf(
+                    "auto" to getString(R.string.settings_jump_auto),
                     "none" to getString(R.string.settings_jump_none),
                     "12306" to getString(R.string.settings_jump_12306),
                     "umetrip" to getString(R.string.settings_jump_umetrip),
@@ -109,6 +130,14 @@ class TravelSettingsFragment : BaseFragment<FragmentTravelSettingsBinding>(Fragm
                         },
                         options = appOptions,
                         adapter = { appLabels[it] ?: it }
+                    ),
+                    Setting(
+                        getString(R.string.settings_import_rules),
+                        getString(R.string.settings_import_rules_summary),
+                        ContextCompat.getDrawable(requireContext(), SharedR.drawable.ic_info),
+                        onClick = {
+                            importRulesLauncher.launch(arrayOf("application/json", "text/plain", "*/*"))
+                        }
                     )
                 )
 

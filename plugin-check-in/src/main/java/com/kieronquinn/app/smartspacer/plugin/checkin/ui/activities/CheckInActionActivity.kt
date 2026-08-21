@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentActivity
 import com.kieronquinn.app.smartspacer.plugin.checkin.data.CheckInDao
 import com.kieronquinn.app.smartspacer.plugin.checkin.data.CheckInItem
 import com.kieronquinn.app.smartspacer.plugin.checkin.repositories.CheckInSettingsRepository
@@ -19,7 +19,9 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-class CheckInActionActivity : AppCompatActivity() {
+// This activity uses a platform translucent theme and has no AppCompat UI.
+// FragmentActivity avoids AppCompat's Theme.AppCompat requirement.
+class CheckInActionActivity : FragmentActivity() {
 
     private val checkInDao by inject<CheckInDao>()
     private val settingsRepository by inject<CheckInSettingsRepository>()
@@ -34,6 +36,8 @@ class CheckInActionActivity : AppCompatActivity() {
                 val timeStr = SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date(now))
 
                 val record = checkInDao.getByDate(todayDate)
+                val checkInOnly = settingsRepository.checkInOnly.first()
+
                 if (record == null) {
                     val newRecord = CheckInItem(
                         date = todayDate,
@@ -42,14 +46,23 @@ class CheckInActionActivity : AppCompatActivity() {
                     )
                     checkInDao.insert(newRecord)
                     Toast.makeText(this@CheckInActionActivity, "上班打卡成功: $timeStr", Toast.LENGTH_SHORT).show()
-                } else if (record.checkOutTime == null) {
+                } else if (!checkInOnly && record.checkOutTime == null) {
                     val updated = record.copy(checkOutTime = now)
                     checkInDao.update(updated)
                     Toast.makeText(this@CheckInActionActivity, "下班打卡成功: $timeStr", Toast.LENGTH_SHORT).show()
                 } else {
-                    val updated = record.copy(checkOutTime = now)
+                    // 仅上班打卡模式：每次点击都更新上班时间；否则更新下班时间
+                    val updated = if (checkInOnly) {
+                        record.copy(checkInTime = now)
+                    } else {
+                        record.copy(checkOutTime = now)
+                    }
                     checkInDao.update(updated)
-                    Toast.makeText(this@CheckInActionActivity, "已更新下班打卡: $timeStr", Toast.LENGTH_SHORT).show()
+                    if (checkInOnly) {
+                        Toast.makeText(this@CheckInActionActivity, "上班打卡成功: $timeStr", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(this@CheckInActionActivity, "已更新下班打卡: $timeStr", Toast.LENGTH_SHORT).show()
+                    }
                 }
 
                 // Sync UI refresh

@@ -23,9 +23,14 @@ fun CheckInTheme(content: @Composable () -> Unit) {
 class ManualCheckInFragment : DialogFragment() {
 
     private var listener: ((CheckInItem) -> Unit)? = null
+    private var checkInOnly: Boolean = false
 
     fun setOnCheckInAddedListener(listener: (CheckInItem) -> Unit) {
         this.listener = listener
+    }
+
+    fun setCheckInOnly(enabled: Boolean) {
+        this.checkInOnly = enabled
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,6 +47,7 @@ class ManualCheckInFragment : DialogFragment() {
             setContent {
                 CheckInTheme {
                     ManualCheckInDialog(
+                        checkInOnly = checkInOnly,
                         onDismiss = { dismiss() },
                         onSave = { item ->
                             listener?.invoke(item)

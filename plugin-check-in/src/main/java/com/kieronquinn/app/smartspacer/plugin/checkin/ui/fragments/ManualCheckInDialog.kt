@@ -23,7 +23,8 @@ import java.util.Locale
 @Composable
 fun ManualCheckInDialog(
     onDismiss: () -> Unit,
-    onSave: (CheckInItem) -> Unit
+    onSave: (CheckInItem) -> Unit,
+    checkInOnly: Boolean = false
 ) {
     val context = LocalContext.current
     val todayStr = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
@@ -71,7 +72,10 @@ fun ManualCheckInDialog(
                                 }
                             } else null
 
-                            val checkOutTimeMs = if (checkOutTimeStr.isNotBlank()) {
+                            val checkOutTimeMs = if (checkInOnly) {
+                                // 仅上班打卡模式下不记录下班时间
+                                null
+                            } else if (checkOutTimeStr.isNotBlank()) {
                                 try {
                                     sdfFull.parse("${dateStr.trim()} ${checkOutTimeStr.trim()}")?.time
                                 } catch (e: Exception) {
@@ -118,12 +122,14 @@ fun ManualCheckInDialog(
                     modifier = Modifier.fillMaxWidth()
                 )
 
-                OutlinedTextField(
-                    value = checkOutTimeStr,
-                    onValueChange = { checkOutTimeStr = it },
-                    label = { Text("下班时间 (格式: HH:mm，留空代表未打卡)") },
-                    modifier = Modifier.fillMaxWidth()
-                )
+                if (!checkInOnly) {
+                    OutlinedTextField(
+                        value = checkOutTimeStr,
+                        onValueChange = { checkOutTimeStr = it },
+                        label = { Text("下班时间 (格式: HH:mm，留空代表未打卡)") },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
             }
         }
     }

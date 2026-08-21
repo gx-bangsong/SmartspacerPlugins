@@ -75,6 +75,14 @@ class ParcelDetailFragment : DialogFragment() {
         Toast.makeText(requireContext(), "Pickup code copied to clipboard", Toast.LENGTH_SHORT).show()
     }
 
+    override fun onDismiss(dialog: android.content.DialogInterface) {
+        super.onDismiss(dialog)
+        // This fragment is launched inside DialogLauncherActivity.  Dismissing the
+        // dialog alone leaves the launcher activity (and its dimmed window) on
+        // screen, which blocks interaction with the activity underneath.
+        activity?.finish()
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

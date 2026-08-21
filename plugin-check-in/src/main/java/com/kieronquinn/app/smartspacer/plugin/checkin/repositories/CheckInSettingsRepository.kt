@@ -13,6 +13,9 @@ interface CheckInSettingsRepository {
     val isReminderEnabled: Flow<Boolean>
     suspend fun setReminderEnabled(enabled: Boolean)
 
+    val checkInOnly: Flow<Boolean>
+    suspend fun setCheckInOnly(enabled: Boolean)
+
     val workStartTime: Flow<String>
     suspend fun setWorkStartTime(time: String)
 
@@ -30,6 +33,7 @@ class CheckInSettingsRepositoryImpl(context: Context) : BaseSettingsRepositoryIm
     companion object {
         private const val PREFERENCES_NAME = "check_in_prefs"
         private const val KEY_REMINDER_ENABLED = "reminder_enabled"
+        private const val KEY_CHECK_IN_ONLY = "check_in_only"
         private const val KEY_WORK_START = "work_start_time"
         private const val KEY_WORK_END = "work_end_time"
         private const val KEY_REMINDER_TEXT = "custom_reminder_text"
@@ -41,6 +45,9 @@ class CheckInSettingsRepositoryImpl(context: Context) : BaseSettingsRepositoryIm
 
     private val _isReminderEnabled = MutableStateFlow(sharedPreferences.getBoolean(KEY_REMINDER_ENABLED, true))
     override val isReminderEnabled = _isReminderEnabled.asStateFlow()
+
+    private val _checkInOnly = MutableStateFlow(sharedPreferences.getBoolean(KEY_CHECK_IN_ONLY, false))
+    override val checkInOnly = _checkInOnly.asStateFlow()
 
     private val _workStartTime = MutableStateFlow(sharedPreferences.getString(KEY_WORK_START, "08:30") ?: "08:30")
     override val workStartTime = _workStartTime.asStateFlow()
@@ -58,6 +65,7 @@ class CheckInSettingsRepositoryImpl(context: Context) : BaseSettingsRepositoryIm
         sharedPreferences.registerOnSharedPreferenceChangeListener { prefs, key ->
             when (key) {
                 KEY_REMINDER_ENABLED -> _isReminderEnabled.value = prefs.getBoolean(KEY_REMINDER_ENABLED, true)
+                KEY_CHECK_IN_ONLY -> _checkInOnly.value = prefs.getBoolean(KEY_CHECK_IN_ONLY, false)
                 KEY_WORK_START -> _workStartTime.value = prefs.getString(KEY_WORK_START, "08:30") ?: "08:30"
                 KEY_WORK_END -> _workEndTime.value = prefs.getString(KEY_WORK_END, "17:30") ?: "17:30"
                 KEY_REMINDER_TEXT -> _customReminderText.value = prefs.getString(KEY_REMINDER_TEXT, "上班时间请记得打卡") ?: "上班时间请记得打卡"
@@ -66,24 +74,51 @@ class CheckInSettingsRepositoryImpl(context: Context) : BaseSettingsRepositoryIm
         }
     }
 
-    override suspend fun setReminderEnabled(enabled: Boolean) = withContext(Dispatchers.IO) {
-        sharedPreferences.edit { putBoolean(KEY_REMINDER_ENABLED, enabled) }
+    // The in-memory StateFlow is updated synchronously in the setter (in
+    // addition to the SharedPreferences listener), so callers that read
+    // .first() right after a set - e.g. CheckInScheduler - always see the
+    // new value instead of racing with the async listener callback.
+
+    override suspend fun setReminderEnabled(enabled: Boolean) {
+        _isReminderEnabled.value = enabled
+        withContext(Dispatchers.IO) {
+            sharedPreferences.edit { putBoolean(KEY_REMINDER_ENABLED, enabled) }
+        }
     }
 
-    override suspend fun setWorkStartTime(time: String) = withContext(Dispatchers.IO) {
-        sharedPreferences.edit { putString(KEY_WORK_START, time) }
+    override suspend fun setCheckInOnly(enabled: Boolean) {
+        _checkInOnly.value = enabled
+        withContext(Dispatchers.IO) {
+            sharedPreferences.edit { putBoolean(KEY_CHECK_IN_ONLY, enabled) }
+        }
     }
 
-    override suspend fun setWorkEndTime(time: String) = withContext(Dispatchers.IO) {
-        sharedPreferences.edit { putString(KEY_WORK_END, time) }
+    override suspend fun setWorkStartTime(time: String) {
+        _workStartTime.value = time
+        withContext(Dispatchers.IO) {
+            sharedPreferences.edit { putString(KEY_WORK_START, time) }
+        }
     }
 
-    override suspend fun setCustomReminderText(text: String) = withContext(Dispatchers.IO) {
-        sharedPreferences.edit { putString(KEY_REMINDER_TEXT, text) }
+    override suspend fun setWorkEndTime(time: String) {
+        _workEndTime.value = time
+        withContext(Dispatchers.IO) {
+            sharedPreferences.edit { putString(KEY_WORK_END, time) }
+        }
     }
 
-    override suspend fun setLinkApp(app: String) = withContext(Dispatchers.IO) {
-        sharedPreferences.edit { putString(KEY_LINK_APP, app) }
+    override suspend fun setCustomReminderText(text: String) {
+        _customReminderText.value = text
+        withContext(Dispatchers.IO) {
+            sharedPreferences.edit { putString(KEY_REMINDER_TEXT, text) }
+        }
+    }
+
+    override suspend fun setLinkApp(app: String) {
+        _linkApp.value = app
+        withContext(Dispatchers.IO) {
+            sharedPreferences.edit { putString(KEY_LINK_APP, app) }
+        }
     }
 
     override suspend fun getBackup(): Map<String, String> = emptyMap()

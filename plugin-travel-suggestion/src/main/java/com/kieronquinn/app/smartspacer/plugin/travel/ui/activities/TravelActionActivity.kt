@@ -7,7 +7,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentActivity
 import com.kieronquinn.app.smartspacer.plugin.travel.repositories.TravelSettingsRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 
-class TravelActionActivity : AppCompatActivity() {
+class TravelActionActivity : FragmentActivity() {
 
     private val settingsRepository by inject<TravelSettingsRepository>()
 
@@ -39,7 +39,13 @@ class TravelActionActivity : AppCompatActivity() {
         }
 
         CoroutineScope(Dispatchers.Main).launch {
-            val target = settingsRepository.jumpTarget.first()
+            val configuredTarget = settingsRepository.jumpTarget.first()
+            // 自动按行程类型选择目标：航班打开航旅纵横，铁路行程打开 12306。
+            // 仍支持设置中手动指定目标或选择“仅展示”。
+            val isFlight = trainNumber.matches(Regex("[A-Z]{2}\\d{2,6}"))
+            val target = if (configuredTarget == "auto") {
+                if (isFlight) "umetrip" else "12306"
+            } else configuredTarget
             try {
                 when (target) {
                     "12306" -> {

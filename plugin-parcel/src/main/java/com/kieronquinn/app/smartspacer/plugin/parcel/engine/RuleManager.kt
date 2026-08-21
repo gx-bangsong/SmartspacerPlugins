@@ -23,17 +23,22 @@ class RuleManager(private val context: Context) : KoinComponent {
         }
 
         if (dbRules.isEmpty()) {
-            loadDefaultRulesIntoDb()
-            return getEffectiveRules()
+            // 只有默认规则确实加载成功后才重新读取；加载失败（如内置 JSON 解析异常）时
+            // 直接返回空列表，避免无限递归导致 StackOverflowError
+            if (loadDefaultRulesIntoDb()) {
+                return getEffectiveRules()
+            }
+            return emptyList()
         }
 
         return dbRules
     }
 
-    private suspend fun loadDefaultRulesIntoDb() {
-        try {
+    private suspend fun loadDefaultRulesIntoDb(): Boolean {
+        return try {
             val json = context.assets.open("rules/default_rules.json").bufferedReader().use { it.readText() }
-            val config = gson.fromJson(json, ParsingEngineConfig::class.java)
+            val config = gson.fromJson(json, ParsingEngineConfig::class.java) ?: return false
+            if (config.rules.isEmpty()) return false
             val ruleItems = config.rules.map {
                 RuleItem(
                     provider = it.provider,
@@ -45,8 +50,10 @@ class RuleManager(private val context: Context) : KoinComponent {
                 )
             }
             ruleDao.insertRules(ruleItems)
+            true
         } catch (e: Exception) {
             e.printStackTrace()
+            false
         }
     }
 

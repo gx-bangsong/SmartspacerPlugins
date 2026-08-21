@@ -9,7 +9,12 @@
     <string name="settings_manual_paste">Manual Paste Entry</string>
     <string name="settings_manual_paste_summary">Manually paste travel texts to extract info</string>
     <string name="settings_jump_target">Click Action Target</string>
-    <string name="settings_jump_target_summary">Select app to launch when clicking on travel card</string>
+    <string name="settings_jump_target_summary">Automatically choose based on flight or train, or select manually</string>
+    <string name="settings_import_rules">Import SMS Parsing Rules</string>
+    <string name="settings_import_rules_summary">Import a JSON file to replace the built-in travel SMS rules</string>
+    <string name="settings_import_rules_success">Rules imported successfully</string>
+    <string name="settings_import_rules_failed">The rule file is empty or could not be read</string>
+    <string name="settings_jump_auto">Automatic: flights to Umetrip, trains to 12306</string>
     <string name="settings_jump_none">Show Only (No Jump)</string>
     <string name="settings_jump_12306">Railway 12306</string>
     <string name="settings_jump_umetrip">Umetrip (航旅纵横)</string>

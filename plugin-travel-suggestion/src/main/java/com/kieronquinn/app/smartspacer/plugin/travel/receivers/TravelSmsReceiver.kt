@@ -36,7 +36,8 @@ class TravelSmsReceiver : BroadcastReceiver(), KoinComponent {
                     val messages = Telephony.Sms.Intents.getMessagesFromIntent(intent)
                     val fullText = messages.joinToString("") { it.displayMessageBody }
 
-                    val parser = SmsParser(context)
+                    val customRulesJson = settingsRepository.customRulesJson.first()
+                    val parser = customRulesJson?.let { SmsParser(it) } ?: SmsParser(context)
                     val result = parser.parseTravelInfo(fullText)
 
                     if (result.status == ParseResultStatus.SUCCESS && result.travelInfo != null) {

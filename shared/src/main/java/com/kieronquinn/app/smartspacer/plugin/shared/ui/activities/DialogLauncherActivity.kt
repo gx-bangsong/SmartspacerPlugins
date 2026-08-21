@@ -1,10 +1,13 @@
 package com.kieronquinn.app.smartspacer.plugin.shared.ui.activities
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.FragmentActivity
 
-class DialogLauncherActivity : AppCompatActivity() {
+// This activity is used with the shared Material3 dialog theme.  It must not
+// extend AppCompatActivity because that requires a Theme.AppCompat parent,
+// while Theme.Smartspacer.Dialog is a Material3 theme.
+class DialogLauncherActivity : FragmentActivity() {
 
     companion object {
         const val EXTRA_FRAGMENT_CLASS = "extra_fragment_class"

@@ -9,7 +9,12 @@
     <string name="settings_manual_paste">手动粘贴解析</string>
     <string name="settings_manual_paste_summary">手动粘贴包含行程的车票或航班文本并解析</string>
     <string name="settings_jump_target">点击跳转目标</string>
-    <string name="settings_jump_target_summary">点击 Smartspace 行程卡片时拉起的应用</string>
+    <string name="settings_jump_target_summary">默认按航班或铁路类型自动选择，也可以手动指定</string>
+    <string name="settings_import_rules">导入短信解析规则</string>
+    <string name="settings_import_rules_summary">导入 JSON 规则，替换内置出行短信解析规则</string>
+    <string name="settings_import_rules_success">规则导入成功，后续短信将使用新规则</string>
+    <string name="settings_import_rules_failed">规则文件为空或读取失败</string>
+    <string name="settings_jump_auto">自动：航班打开航旅纵横，火车打开 12306</string>
     <string name="settings_jump_none">仅展示（不跳转）</string>
     <string name="settings_jump_12306">铁路 12306</string>
     <string name="settings_jump_umetrip">航旅纵横</string>
