@@ -21,7 +21,7 @@ sealed class ShareTextResult {
  * Behaviour:
  *  - Only `ACTION_SEND` shares are accepted; anything else is rejected (not reachable via the
  *    intent filter, but defensive).
- *  - `text/plain` is the primary MIME type; `text/*` subtypes are tolerated.
+ *  - `text/plain` is the primary MIME type; other `text/` subtypes are tolerated.
  *  - `EXTRA_TEXT` is preferred, `ClipData` text is the fallback.
  *  - Blank text, non-text MIME types and oversized payloads fail safely without exceptions.
  */
