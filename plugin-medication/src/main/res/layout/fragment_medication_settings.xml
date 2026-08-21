@@ -6,19 +6,6 @@
     android:layout_height="match_parent"
     android:transitionGroup="true">
 
-    <TextView
-        android:id="@+id/notification_permission_row"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:background="?attr/selectableItemBackground"
-        android:clickable="true"
-        android:focusable="true"
-        android:padding="16dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium.Smartspacer"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <com.kieronquinn.app.smartspacer.plugin.shared.ui.views.LifecycleAwareRecyclerView
         android:id="@+id/settings_base_recycler_view"
         android:layout_width="match_parent"
@@ -28,7 +15,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/notification_permission_row"
+        app:layout_constraintTop_toTopOf="parent"
         tools:listitem="@layout/item_settings_text_item" />
 
     <com.google.android.material.progressindicator.LinearProgressIndicator
