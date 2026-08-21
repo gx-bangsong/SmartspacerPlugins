@@ -9,4 +9,14 @@
     <string name="medication_record_success">用药记录成功</string>
     <string name="action_snooze">稍后提醒</string>
     <string name="snooze_duration_minutes">15</string>
+
+    <!-- Notifications -->
+    <string name="notification_channel_name">Medication reminders</string>
+    <string name="notification_dose_title">Time for %1$s</string>
+    <string name="notification_dose_content">It is time to take your medication</string>
+    <string name="notification_dose_content_with_dosage">Dosage: %1$s</string>
+    <string name="notification_action_taken">Taken</string>
+    <string name="notification_action_snooze">Snooze</string>
+    <string name="notification_permission_granted">Notifications: granted — tap to open settings</string>
+    <string name="notification_permission_denied">Notifications: denied — tap to grant</string>
 </resources>

@@ -30,16 +30,19 @@ android {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
     }
+}
 
-    kotlinOptions {
-        jvmTarget = '17'
+kotlin {
+    compilerOptions {
+        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17
     }
 }
 
-
 dependencies {
     //AndroidX + Material
-    api 'androidx.core:core-ktx:1.13.1'
+    // 1.17.0 adds NotificationCompat.Builder#setRequestPromotedOngoing and
+    // NotificationCompat.ProgressStyle (promoted ongoing "Live Update" support).
+    api 'androidx.core:core-ktx:1.17.0'
     api 'androidx.appcompat:appcompat:1.7.0'
     api 'com.google.android.material:material:1.12.0'
     api "androidx.navigation:navigation-fragment-ktx:$nav_version"

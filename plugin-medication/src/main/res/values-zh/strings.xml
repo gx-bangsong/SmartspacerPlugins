@@ -10,4 +10,14 @@
     <string name="medication_record_success">用药记录成功</string>
     <string name="action_snooze">稍后提醒</string>
     <string name="snooze_duration_minutes">15</string>
+
+    <!-- Notifications -->
+    <string name="notification_channel_name">用药提醒</string>
+    <string name="notification_dose_title">该服用 %1$s 了</string>
+    <string name="notification_dose_content">到服药时间了</string>
+    <string name="notification_dose_content_with_dosage">剂量：%1$s</string>
+    <string name="notification_action_taken">已服用</string>
+    <string name="notification_action_snooze">稍后提醒</string>
+    <string name="notification_permission_granted">通知：已授权——点击打开设置</string>
+    <string name="notification_permission_denied">通知：未授权——点击授权</string>
 </resources>
