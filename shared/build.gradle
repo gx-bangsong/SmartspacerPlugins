@@ -42,7 +42,7 @@ dependencies {
     //AndroidX + Material
     // 1.17.0 adds NotificationCompat.Builder#setRequestPromotedOngoing and
     // NotificationCompat.ProgressStyle (promoted ongoing "Live Update" support).
-    api 'androidx.core:core-ktx:1.17.0'
+    api 'androidx.core:core-ktx:1.13.1'
     api 'androidx.appcompat:appcompat:1.7.0'
     api 'com.google.android.material:material:1.12.0'
     api "androidx.navigation:navigation-fragment-ktx:$nav_version"
