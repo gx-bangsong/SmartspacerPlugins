@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace 'com.kieronquinn.app.systemstubs'
-    compileSdk compile_sdk
+    compileSdk 36
 
     defaultConfig {
         minSdk min_sdk
