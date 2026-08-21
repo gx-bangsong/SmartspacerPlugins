@@ -2,6 +2,7 @@ package com.kieronquinn.app.smartspacer.plugin.parcel.ui.fragments
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -14,6 +15,8 @@ import com.kieronquinn.app.smartspacer.plugin.parcel.engine.RuleManager
 import com.kieronquinn.app.smartspacer.plugin.shared.model.settings.BaseSettingsItem
 import com.kieronquinn.app.smartspacer.plugin.shared.model.settings.GenericSettingsItem.Setting
 import com.kieronquinn.app.smartspacer.plugin.shared.model.settings.GenericSettingsItem.Dropdown
+import com.kieronquinn.app.smartspacer.plugin.shared.model.settings.GenericSettingsItem.SwitchSetting
+import com.kieronquinn.app.smartspacer.plugin.shared.notifications.NotificationPermissionHelper
 import com.kieronquinn.app.smartspacer.plugin.shared.ui.base.settings.BaseSettingsFragment
 import com.kieronquinn.app.smartspacer.plugin.shared.ui.base.settings.BaseSettingsAdapter
 import kotlinx.coroutines.launch
@@ -36,6 +39,12 @@ class SettingsFragment : BaseSettingsFragment() {
         }
     }
 
+    private val requestNotificationPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) {
+        setupSettings(viewModel.cleanupDurationHours.value, viewModel.promotedLiveUpdates.value)
+    }
+
     private val importRulesLauncher = registerForActivityResult(
         ActivityResultContracts.GetContent()
     ) { uri ->
@@ -44,7 +53,7 @@ class SettingsFragment : BaseSettingsFragment() {
                 val json = requireContext().contentResolver.openInputStream(it)?.bufferedReader()?.use { reader -> reader.readText() }
                 if (json != null) {
                     val success = RuleManager(requireContext()).importRulesFromJson(json)
-                    val message = if (success) "Rules imported successfully" else "Failed to import rules"
+                    val message = if (success) getString(R.string.rules_imported) else getString(R.string.rules_import_failed)
                     Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
                 }
             }
@@ -58,45 +67,88 @@ class SettingsFragment : BaseSettingsFragment() {
 
         lifecycleScope.launchWhenStarted {
             viewModel.cleanupDurationHours.collect {
-                setupSettings(it)
+                setupSettings(it, viewModel.promotedLiveUpdates.value)
+            }
+        }
+        lifecycleScope.launchWhenStarted {
+            viewModel.promotedLiveUpdates.collect {
+                setupSettings(viewModel.cleanupDurationHours.value, it)
             }
         }
     }
 
-    private fun setupSettings(currentDuration: Int) {
+    private fun setupSettings(currentDuration: Int, promotedEnabled: Boolean) {
         val durationOptions = listOf(12, 24, 48, 72)
-        val items = listOf<BaseSettingsItem>(
+        val items = mutableListOf<BaseSettingsItem>(
             Setting(
                 getString(R.string.plugin_description),
-                "Privacy: All SMS processing is local.",
+                getString(R.string.privacy_note),
                 ContextCompat.getDrawable(requireContext(), SharedR.drawable.ic_info),
                 onClick = {}
             ),
             Dropdown(
-                "Cleanup Duration",
-                "How long to keep pickup codes",
+                getString(R.string.cleanup_duration),
+                getString(R.string.cleanup_duration_summary),
                 ContextCompat.getDrawable(requireContext(), SharedR.drawable.ic_smartspacer),
                 setting = currentDuration,
                 onSet = { hours ->
                     viewModel.setCleanupDurationHours(hours)
                 },
                 options = durationOptions,
-                adapter = { "$it hours" }
+                adapter = { getString(R.string.hours_format, it) }
             ),
             Setting(
-                "Scan Inbox",
-                "Scan historical SMS for parcels",
+                getString(R.string.scan_inbox),
+                getString(R.string.scan_inbox_summary),
                 ContextCompat.getDrawable(requireContext(), SharedR.drawable.ic_search),
                 onClick = { checkPermissionsAndScan() }
             ),
             Setting(
-                "Import Rules",
-                "Load custom JSON parsing rules",
+                getString(R.string.import_rules),
+                getString(R.string.import_rules_summary),
                 ContextCompat.getDrawable(requireContext(), SharedR.drawable.ic_libraries),
                 onClick = { importRulesLauncher.launch("application/json") }
+            ),
+            SwitchSetting(
+                checked = promotedEnabled,
+                title = getString(R.string.experimental_promoted_title),
+                subtitle = getString(R.string.experimental_promoted_summary),
+                icon = ContextCompat.getDrawable(requireContext(), SharedR.drawable.ic_smartspacer),
+                onChanged = { enabled ->
+                    viewModel.setPromotedLiveUpdates(enabled)
+                    if (enabled) {
+                        Toast.makeText(
+                            requireContext(),
+                            R.string.experimental_promoted_warning,
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                }
+            ),
+            Setting(
+                getString(R.string.notification_permission),
+                notificationPermissionSubtitle(),
+                ContextCompat.getDrawable(requireContext(), SharedR.drawable.ic_info),
+                onClick = {
+                    if (NotificationPermissionHelper.hasNotificationPermission(requireContext())) {
+                        NotificationPermissionHelper.openNotificationSettings(requireContext())
+                    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        requestNotificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                    } else {
+                        NotificationPermissionHelper.openNotificationSettings(requireContext())
+                    }
+                }
             )
         )
         adapter.update(items)
+    }
+
+    private fun notificationPermissionSubtitle(): String {
+        return if (NotificationPermissionHelper.hasNotificationPermission(requireContext())) {
+            getString(R.string.notification_permission_granted)
+        } else {
+            getString(R.string.notification_permission_denied)
+        }
     }
 
     private fun checkPermissionsAndScan() {

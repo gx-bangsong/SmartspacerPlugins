@@ -3,6 +3,7 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-parcelize'
     id 'androidx.navigation.safeargs.kotlin'
+    id 'com.google.devtools.ksp'
 }
 
 android {
@@ -40,11 +41,8 @@ android {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
     }
-}
-
-kotlin {
-    compilerOptions {
-        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17
+    kotlinOptions {
+        jvmTarget = '17'
     }
 }
 
@@ -61,4 +59,5 @@ dependencies {
     implementation 'me.saket:better-link-movement-method:2.2.0'
 
     //Data storage
+    ksp "androidx.room:room-compiler:$room_version"
 }

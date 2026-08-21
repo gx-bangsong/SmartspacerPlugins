@@ -1,15 +1,23 @@
 package com.kieronquinn.app.smartspacer.plugin.medication.ui.fragments
 
+import android.Manifest
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.app.NotificationManagerCompat
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.progressindicator.LinearProgressIndicator
+import com.kieronquinn.app.smartspacer.plugin.medication.R
 import com.kieronquinn.app.smartspacer.plugin.medication.data.MedicationDao
 import com.kieronquinn.app.smartspacer.plugin.medication.databinding.FragmentMedicationSettingsBinding
 import com.kieronquinn.app.smartspacer.plugin.medication.repositories.MedicationScheduler
 import com.kieronquinn.app.smartspacer.plugin.medication.ui.adapters.MedicationAdapter
 import com.kieronquinn.app.smartspacer.plugin.medication.work.MedicationWorker
+import com.kieronquinn.app.smartspacer.plugin.shared.notifications.NotificationIds
+import com.kieronquinn.app.smartspacer.plugin.shared.notifications.NotificationPermissionHelper
 import com.kieronquinn.app.smartspacer.plugin.shared.ui.base.settings.BaseFragment
 import com.kieronquinn.app.smartspacer.plugin.shared.ui.base.settings.BaseSettingsAdapter
 import com.kieronquinn.app.smartspacer.plugin.shared.ui.views.LifecycleAwareRecyclerView
@@ -32,14 +40,38 @@ class MedicationSettingsFragment : BaseFragment<FragmentMedicationSettingsBindin
     override val loadingView: LinearProgressIndicator
         get() = binding.settingsBaseLoadingProgress
 
+    private val requestNotificationPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) {
+        updateNotificationPermissionRow()
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // 显式隐藏加载 UI
         binding.settingsBaseLoading.visibility = View.GONE
+        binding.notificationPermissionRow.setOnClickListener {
+            if (NotificationPermissionHelper.hasNotificationPermission(requireContext())) {
+                NotificationPermissionHelper.openNotificationSettings(requireContext())
+            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                requestNotificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+            } else {
+                NotificationPermissionHelper.openNotificationSettings(requireContext())
+            }
+        }
+        updateNotificationPermissionRow()
         setupMedicationList()
         setupFab()
         // 确保定期任务已启动
         MedicationWorker.enqueuePeriodic(requireContext())
+    }
+
+    private fun updateNotificationPermissionRow() {
+        binding.notificationPermissionRow.text = if (NotificationPermissionHelper.hasNotificationPermission(requireContext())) {
+            getString(R.string.notification_permission_granted)
+        } else {
+            getString(R.string.notification_permission_denied)
+        }
     }
 
     private fun setupMedicationList() {
@@ -50,6 +82,10 @@ class MedicationSettingsFragment : BaseFragment<FragmentMedicationSettingsBindin
                     lifecycleScope.launch {
                         medicationDao.delete(medication)
                         medicationScheduler.cancelAlarm(medication.id)
+                        // 删除药物时同步取消对应提醒通知
+                        NotificationManagerCompat.from(requireContext()).cancel(
+                            NotificationIds.forEntity(NotificationIds.NAMESPACE_MEDICATION, medication.id.toLong())
+                        )
                         // 数据变更时触发立即刷新
                         MedicationWorker.enqueueImmediate(requireContext())
                     }

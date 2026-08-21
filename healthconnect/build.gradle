@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'com.google.devtools.ksp'
     id 'kotlin-parcelize'
 }
 
@@ -37,11 +38,8 @@ android {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
     }
-}
-
-kotlin {
-    compilerOptions {
-        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17
+    kotlinOptions {
+        jvmTarget = '17'
     }
 }
 
@@ -49,6 +47,7 @@ dependencies {
     implementation project(path: ':shared')
 
     //Data storage
+    ksp "androidx.room:room-compiler:$room_version"
 
     implementation 'androidx.health.connect:connect-client:1.1.0-alpha07'
     implementation 'androidx.lifecycle:lifecycle-service:2.8.4'

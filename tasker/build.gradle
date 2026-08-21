@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'com.google.devtools.ksp'
     id 'kotlin-parcelize'
     id 'androidx.navigation.safeargs.kotlin'
 }
@@ -40,11 +41,8 @@ android {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
     }
-}
-
-kotlin {
-    compilerOptions {
-        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17
+    kotlinOptions {
+        jvmTarget = '17'
     }
 }
 
@@ -61,6 +59,8 @@ dependencies {
     implementation 'com.joaomgcd:taskerpluginlibrary:0.4.9'
 
     //Data storage
+    ksp "androidx.room:room-compiler:$room_version"
+    ksp 'com.github.bumptech.glide:ksp:4.15.1'
 
     //Markdown parsing
     implementation "io.noties.markwon:core:4.6.2"

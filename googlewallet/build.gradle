@@ -3,6 +3,7 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'com.google.protobuf'
     id 'androidx.navigation.safeargs.kotlin'
+    id 'com.google.devtools.ksp'
     id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
 }
 
@@ -41,6 +42,9 @@ android {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
     }
+    kotlinOptions {
+        jvmTarget = '17'
+    }
 }
 
 protobuf {
@@ -63,17 +67,12 @@ protobuf {
     }
 }
 
-kotlin {
-    compilerOptions {
-        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17
-    }
-}
-
 dependencies {
     implementation "com.google.protobuf:protobuf-javalite:3.25.2"
     implementation project(path: ':shared')
 
     //Data storage
+    ksp "androidx.room:room-compiler:$room_version"
 
     //zxing for barcode/QR preview
     implementation 'com.google.zxing:core:3.4.1'

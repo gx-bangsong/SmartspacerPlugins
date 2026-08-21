@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'com.google.devtools.ksp'
     id 'androidx.navigation.safeargs.kotlin'
 }
 
@@ -36,14 +37,11 @@ android {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
     }
+    kotlinOptions {
+        jvmTarget = '17'
+    }
     buildFeatures {
         viewBinding true
-    }
-}
-
-kotlin {
-    compilerOptions {
-        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17
     }
 }
 
@@ -51,4 +49,5 @@ dependencies {
     implementation project(path: ':shared')
 
     //Data storage
+    ksp "androidx.room:room-compiler:$room_version"
 }

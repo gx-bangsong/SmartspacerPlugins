@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'com.google.devtools.ksp'
     id 'androidx.navigation.safeargs.kotlin'
 }
 
@@ -36,14 +37,11 @@ android {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
     }
+    kotlinOptions {
+        jvmTarget = '17'
+    }
     buildFeatures {
         viewBinding true
-    }
-}
-
-kotlin {
-    compilerOptions {
-        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17
     }
 }
 
@@ -53,6 +51,7 @@ dependencies {
     implementation 'me.saket:better-link-movement-method:2.2.0'
 
     //Data storage
+    ksp "androidx.room:room-compiler:$room_version"
 
     //Retrofit for API
     implementation 'com.squareup.retrofit2:retrofit:2.11.0'
