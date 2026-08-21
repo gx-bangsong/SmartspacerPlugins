@@ -1,7 +1,6 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
-    id 'com.google.devtools.ksp'
     id 'dev.rikka.tools.refine'
     id 'kotlin-parcelize'
     id 'androidx.navigation.safeargs.kotlin'
@@ -84,8 +83,6 @@ dependencies {
     implementation 'org.lsposed.hiddenapibypass:hiddenapibypass:4.3'
 
     //Data storage
-    ksp "androidx.room:room-compiler:$room_version"
-    ksp 'com.github.bumptech.glide:ksp:4.15.1'
 
     compileOnly project(path: ':systemstubs')
 }

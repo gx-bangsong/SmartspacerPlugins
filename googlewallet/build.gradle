@@ -3,7 +3,6 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'com.google.protobuf'
     id 'androidx.navigation.safeargs.kotlin'
-    id 'com.google.devtools.ksp'
     id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
 }
 
@@ -75,7 +74,6 @@ dependencies {
     implementation project(path: ':shared')
 
     //Data storage
-    ksp "androidx.room:room-compiler:$room_version"
 
     //zxing for barcode/QR preview
     implementation 'com.google.zxing:core:3.4.1'

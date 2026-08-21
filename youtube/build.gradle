@@ -1,7 +1,6 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
-    id 'com.google.devtools.ksp'
     id 'androidx.navigation.safeargs.kotlin'
 }
 
@@ -54,7 +53,6 @@ dependencies {
     implementation 'me.saket:better-link-movement-method:2.2.0'
 
     //Data storage
-    ksp "androidx.room:room-compiler:$room_version"
 
     //Retrofit for API
     implementation 'com.squareup.retrofit2:retrofit:2.11.0'

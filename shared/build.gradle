@@ -3,7 +3,6 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-parcelize'
     id 'androidx.navigation.safeargs.kotlin'
-    id 'com.google.devtools.ksp'
 }
 
 android {
@@ -64,7 +63,6 @@ dependencies {
 
     //Image Loading
     api 'com.github.bumptech.glide:glide:4.16.0'
-    ksp 'com.github.bumptech.glide:ksp:4.15.1'
 
     //Data Loading
     api "com.squareup.retrofit2:retrofit:2.11.0"
@@ -76,7 +74,6 @@ dependencies {
     //Room for data storage
     api "androidx.room:room-runtime:$room_version"
     api "androidx.room:room-ktx:$room_version"
-    ksp "androidx.room:room-compiler:$room_version"
 
     compileOnly project(path: ':systemstubs')
 

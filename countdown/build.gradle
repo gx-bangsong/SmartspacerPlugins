@@ -3,7 +3,6 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-parcelize'
     id 'androidx.navigation.safeargs.kotlin'
-    id 'com.google.devtools.ksp'
 }
 
 android {
@@ -70,5 +69,4 @@ dependencies {
     implementation 'com.mikepenz:phosphor-typeface:+@aar'
 
     //Data storage
-    ksp "androidx.room:room-compiler:$room_version"
 }
