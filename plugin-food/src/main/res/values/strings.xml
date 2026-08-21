@@ -2,4 +2,14 @@
 <resources>
     <string name="app_name">Food Shelf Life Plugin</string>
     <string name="settings_title">Food Shelf Life Settings</string>
+
+    <!-- Notifications -->
+    <string name="notification_channel_name">Food expiry reminders</string>
+    <string name="notification_food_title">Food about to expire</string>
+    <string name="notification_food_expiring_content">%1$s is about to expire (in about %2$d days)</string>
+    <string name="notification_food_expired_content">%1$s has expired</string>
+    <string name="notification_action_handled">Mark as handled</string>
+    <string name="notification_action_snooze">Remind tomorrow</string>
+    <string name="notification_permission_granted">Notifications: granted — tap to open settings</string>
+    <string name="notification_permission_denied">Notifications: denied — tap to grant</string>
 </resources>

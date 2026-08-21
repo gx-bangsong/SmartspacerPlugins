@@ -21,4 +21,16 @@
     <string name="display_mode_progress">进度模式</string>
     <string name="display_mode_reminder">提醒模式</string>
     <string name="display_mode_dynamic">动态模式</string>
+
+    <!-- Notifications -->
+    <string name="notification_channel_name">饮水提醒</string>
+    <string name="notification_drink_title">该喝水啦！</string>
+    <string name="notification_drink_content">保持水分！记录一杯或稍后提醒。</string>
+    <string name="notification_action_drink">记录喝水</string>
+    <string name="notification_action_snooze">稍后提醒</string>
+
+    <!-- Notification permission row -->
+    <string name="notification_permission_granted">通知：已授权</string>
+    <string name="notification_permission_denied">通知：未授权——点击授权</string>
+    <string name="notification_permission_open_settings">设置</string>
 </resources>

@@ -47,6 +47,10 @@
             android:name=".receivers.FoodAlarmReceiver"
             android:exported="false" />
 
+        <receiver
+            android:name=".receivers.FoodActionReceiver"
+            android:exported="false" />
+
     </application>
 
 </manifest>

@@ -9,7 +9,7 @@ plugins {
 
 android {
     namespace 'com.kieronquinn.app.smartspacer.plugin.water'
-    compileSdk 36
+    compileSdk compile_sdk
 
     defaultConfig {
         applicationId "com.kieronquinn.app.smartspacer.plugin.water"
