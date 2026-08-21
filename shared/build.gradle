@@ -8,7 +8,7 @@ plugins {
 
 android {
     namespace 'com.kieronquinn.app.shared'
-    compileSdk 36
+    compileSdk compile_sdk
 
     defaultConfig {
         minSdk min_sdk
