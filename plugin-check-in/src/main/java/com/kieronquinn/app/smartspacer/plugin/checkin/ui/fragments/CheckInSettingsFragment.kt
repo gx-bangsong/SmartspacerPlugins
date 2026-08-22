@@ -13,6 +13,9 @@ import java.util.Calendar
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.kieronquinn.app.smartspacer.plugin.shared.notifications.NotificationPermissionHelper
+import com.kieronquinn.app.smartspacer.plugin.shared.permissions.PermissionOnboardingLauncher
+import com.kieronquinn.app.smartspacer.plugin.shared.permissions.PermissionOnboardingSettings
+import com.kieronquinn.app.smartspacer.plugin.checkin.permissions.CheckInPermissions
 import com.kieronquinn.app.smartspacer.plugin.checkin.R
 import com.kieronquinn.app.smartspacer.plugin.checkin.databinding.FragmentCheckInSettingsBinding
 import com.kieronquinn.app.smartspacer.plugin.checkin.providers.CheckInProvider
@@ -24,6 +27,7 @@ import com.kieronquinn.app.smartspacer.plugin.shared.model.settings.GenericSetti
 import com.kieronquinn.app.smartspacer.plugin.shared.ui.base.settings.BaseFragment
 import com.kieronquinn.app.smartspacer.plugin.shared.ui.base.settings.BaseSettingsAdapter
 import com.kieronquinn.app.smartspacer.plugin.shared.ui.views.LifecycleAwareRecyclerView
+import com.kieronquinn.app.smartspacer.plugin.shared.utils.extensions.whenResumed
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider
 import com.google.android.material.progressindicator.LinearProgressIndicator
 import kotlinx.coroutines.flow.collect
@@ -60,7 +64,7 @@ class CheckInSettingsFragment : BaseFragment<FragmentCheckInSettingsBinding>(Fra
     }
 
     private fun setupSettingsAndHistory() {
-        lifecycleScope.launch {
+        whenResumed {
             viewModel.uiState.collect { state ->
                 val records = state.records
                 val isRemEnabled = state.reminderEnabled
@@ -87,6 +91,14 @@ class CheckInSettingsFragment : BaseFragment<FragmentCheckInSettingsBinding>(Fra
                 )
 
                 val settingsItems = mutableListOf<BaseSettingsItem>(
+                    Setting(
+                        getString(SharedR.string.permission_onboarding_settings_entry),
+                        PermissionOnboardingSettings.subtitle(requireContext(), CheckInPermissions.config),
+                        ContextCompat.getDrawable(requireContext(), SharedR.drawable.ic_info),
+                        onClick = {
+                            PermissionOnboardingLauncher.launch(requireContext(), CheckInPermissions.config)
+                        }
+                    ),
                     SwitchSetting(
                         checked = isRemEnabled,
                         title = getString(R.string.settings_enable_reminder),
@@ -251,7 +263,7 @@ class CheckInSettingsFragment : BaseFragment<FragmentCheckInSettingsBinding>(Fra
     }
 
     private fun notificationPermissionSubtitle(): String {
-        return if (NotificationPermissionHelper.hasNotificationPermission(requireContext())) {
+        return if (NotificationPermissionHelper.isNotificationAccessGranted(requireContext())) {
             getString(R.string.settings_notification_permission_granted)
         } else {
             getString(R.string.settings_notification_permission_denied)

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/permission_onboarding_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        app:navigationIcon="@drawable/ic_back"
+        app:title="@string/permission_onboarding_title" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/margin_32">
+
+            <TextView
+                android:id="@+id/permission_onboarding_step"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small.Smartspacer"
+                tools:text="1 / 4" />
+
+            <TextView
+                android:id="@+id/permission_onboarding_capability_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_16"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large.Smartspacer"
+                tools:text="Notifications" />
+
+            <TextView
+                android:id="@+id/permission_onboarding_purpose"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_16"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium.Smartspacer.Lighter"
+                tools:text="Used to remind you about upcoming trips." />
+
+            <TextView
+                android:id="@+id/permission_onboarding_status"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_16"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium.Smartspacer"
+                tools:text="Status: not granted" />
+
+            <TextView
+                android:id="@+id/permission_onboarding_degradation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_8"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small.Smartspacer"
+                tools:text="If you skip this, reminders will not appear as notifications." />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/permission_onboarding_action"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_32"
+                android:text="@string/permission_onboarding_grant" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/permission_onboarding_next"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_8"
+                android:text="@string/permission_onboarding_next" />
+
+        </LinearLayout>
+    </ScrollView>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/permission_onboarding_skip"
+        style="@style/Widget.Material3.Button.TextButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_16"
+        android:text="@string/permission_onboarding_skip_later" />
+
+</LinearLayout>

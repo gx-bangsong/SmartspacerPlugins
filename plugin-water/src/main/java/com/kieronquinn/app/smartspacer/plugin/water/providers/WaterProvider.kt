@@ -86,7 +86,10 @@ class WaterProvider : SmartspacerTargetProvider(), KoinComponent {
             featureType = SmartspaceTarget.FEATURE_UNDEFINED,
             title = Text(text),
             subtitle = Text(""),
-            icon = SmartspaceIcon(AndroidIcon.createWithResource(context, R.mipmap.ic_launcher), shouldTint = false),
+            icon = SmartspaceIcon(
+                AndroidIcon.createWithResource(context, R.drawable.ic_launcher_greyscale),
+                shouldTint = true
+            ),
             onClick = TapAction(intent = intent)
         ).create()
 
@@ -97,7 +100,7 @@ class WaterProvider : SmartspacerTargetProvider(), KoinComponent {
         return Config(
             label = "Water Reminder",
             description = "Track your water intake",
-            icon = AndroidIcon.createWithResource(context, R.mipmap.ic_launcher),
+            icon = AndroidIcon.createWithResource(context, R.drawable.ic_launcher_greyscale),
             configActivity = Intent(context, com.kieronquinn.app.smartspacer.plugin.water.ui.activities.SettingsActivity::class.java)
         )
     }

@@ -8,6 +8,7 @@ import android.graphics.drawable.Icon as AndroidIcon
 import com.kieronquinn.app.smartspacer.plugin.travel.R
 import com.kieronquinn.app.smartspacer.plugin.travel.data.TravelInfoDao
 import com.kieronquinn.app.smartspacer.plugin.travel.data.TravelInfoItem
+import com.kieronquinn.app.smartspacer.plugin.travel.notifications.TravelLiveUpdateGate
 import com.kieronquinn.app.smartspacer.plugin.travel.ui.activities.TravelActionActivity
 import com.kieronquinn.app.smartspacer.sdk.model.SmartspaceTarget
 import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.TapAction
@@ -34,7 +35,7 @@ class TravelTargetProvider : SmartspacerTargetProvider(), KoinComponent {
         return Config(
             label = safeContext.getString(R.string.app_name),
             description = safeContext.getString(R.string.settings_enable_sms_summary),
-            icon = AndroidIcon.createWithResource(safeContext, R.mipmap.ic_launcher),
+            icon = AndroidIcon.createWithResource(safeContext, R.drawable.ic_launcher_greyscale),
             configActivity = Intent(safeContext, com.kieronquinn.app.smartspacer.plugin.travel.ui.activities.SettingsActivity::class.java)
         )
     }
@@ -44,6 +45,21 @@ class TravelTargetProvider : SmartspacerTargetProvider(), KoinComponent {
 
         val now = System.currentTimeMillis()
         val trips = runBlocking { travelInfoDao.getUnusedTrips(now) }
+
+        // Catch-up: if Smartspacer refreshes while a trip is already inside T-30, post the
+        // Live Update even when the original alarm was missed (doze / reboot / inexact fallback).
+        for (trip in trips) {
+            if (TravelLiveUpdateGate.shouldPostNow(
+                    trip, now, suppressionRepository.isSuppressed(trip.id)
+                )
+            ) {
+                try {
+                    notificationController.postTripLiveUpdate(trip)
+                } catch (_: Throwable) {
+                    // Catch-up notify is best-effort; never drop the Smartspace target.
+                }
+            }
+        }
 
         return trips.map { trip ->
             createTarget(context, trip)
@@ -89,7 +105,10 @@ class TravelTargetProvider : SmartspacerTargetProvider(), KoinComponent {
             featureType = SmartspaceTarget.FEATURE_REMINDER,
             title = Text(titleText),
             subtitle = Text(subtitleText),
-            icon = SmartspaceIcon(AndroidIcon.createWithResource(context, R.mipmap.ic_launcher), shouldTint = false),
+            icon = SmartspaceIcon(
+                AndroidIcon.createWithResource(context, R.drawable.ic_launcher_greyscale),
+                shouldTint = true
+            ),
             onClick = TapAction(intent = actionIntent)
         ).create()
     }

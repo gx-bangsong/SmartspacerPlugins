@@ -48,6 +48,14 @@
             android:name=".receivers.WaterReminderReceiver"
             android:exported="false" />
 
+        <receiver
+            android:name=".receivers.WaterExactAlarmPermissionReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.app.action.SCHEDULE_EXACT_ALARM_PERMISSION_STATE_CHANGED" />
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>

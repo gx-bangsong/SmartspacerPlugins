@@ -9,14 +9,18 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.NotificationManagerCompat
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.progressindicator.LinearProgressIndicator
+import com.kieronquinn.app.shared.R as SharedR
 import com.kieronquinn.app.smartspacer.plugin.food.R
 import com.kieronquinn.app.smartspacer.plugin.food.data.FoodItemDao
 import com.kieronquinn.app.smartspacer.plugin.food.databinding.FragmentFoodSettingsBinding
+import com.kieronquinn.app.smartspacer.plugin.food.permissions.FoodPermissions
 import com.kieronquinn.app.smartspacer.plugin.food.repositories.FoodScheduler
 import com.kieronquinn.app.smartspacer.plugin.food.ui.adapters.FoodAdapter
 import com.kieronquinn.app.smartspacer.plugin.food.work.FoodWorker
 import com.kieronquinn.app.smartspacer.plugin.shared.notifications.NotificationIds
 import com.kieronquinn.app.smartspacer.plugin.shared.notifications.NotificationPermissionHelper
+import com.kieronquinn.app.smartspacer.plugin.shared.permissions.PermissionOnboardingLauncher
+import com.kieronquinn.app.smartspacer.plugin.shared.permissions.PermissionOnboardingSettings
 import com.kieronquinn.app.smartspacer.plugin.shared.ui.base.settings.BaseFragment
 import com.kieronquinn.app.smartspacer.plugin.shared.ui.base.settings.BaseSettingsAdapter
 import com.kieronquinn.app.smartspacer.plugin.shared.ui.views.LifecycleAwareRecyclerView
@@ -48,6 +52,9 @@ class FoodSettingsFragment : BaseFragment<FragmentFoodSettingsBinding>(FragmentF
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.settingsBaseLoading.visibility = View.GONE
+        binding.permissionOnboardingRow.setOnClickListener {
+            PermissionOnboardingLauncher.launch(requireContext(), FoodPermissions.config)
+        }
         binding.notificationPermissionRow.setOnClickListener {
             if (NotificationPermissionHelper.hasNotificationPermission(requireContext())) {
                 NotificationPermissionHelper.openNotificationSettings(requireContext())
@@ -58,14 +65,26 @@ class FoodSettingsFragment : BaseFragment<FragmentFoodSettingsBinding>(FragmentF
             }
         }
         updateNotificationPermissionRow()
+        updatePermissionOnboardingRow()
         setupFoodList()
         setupFab()
         // 确保定期刷新任务已启动
         FoodWorker.enqueuePeriodic(requireContext())
     }
 
+    override fun onResume() {
+        super.onResume()
+        updateNotificationPermissionRow()
+        updatePermissionOnboardingRow()
+    }
+
+    private fun updatePermissionOnboardingRow() {
+        binding.permissionOnboardingRow.text = getString(SharedR.string.permission_onboarding_settings_entry) +
+            "\n" + PermissionOnboardingSettings.subtitle(requireContext(), FoodPermissions.config)
+    }
+
     private fun updateNotificationPermissionRow() {
-        binding.notificationPermissionRow.text = if (NotificationPermissionHelper.hasNotificationPermission(requireContext())) {
+        binding.notificationPermissionRow.text = if (NotificationPermissionHelper.isNotificationAccessGranted(requireContext())) {
             getString(R.string.notification_permission_granted)
         } else {
             getString(R.string.notification_permission_denied)

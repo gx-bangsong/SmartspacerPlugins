@@ -34,7 +34,7 @@ class CheckInProvider : SmartspacerTargetProvider(), KoinComponent {
         return Config(
             label = safeContext.getString(R.string.app_name),
             description = safeContext.getString(R.string.settings_title),
-            icon = AndroidIcon.createWithResource(safeContext, R.mipmap.ic_launcher),
+            icon = AndroidIcon.createWithResource(safeContext, R.drawable.ic_launcher_greyscale),
             configActivity = Intent(safeContext, com.kieronquinn.app.smartspacer.plugin.checkin.ui.activities.SettingsActivity::class.java)
         )
     }
@@ -99,7 +99,10 @@ class CheckInProvider : SmartspacerTargetProvider(), KoinComponent {
             featureType = SmartspaceTarget.FEATURE_REMINDER,
             title = Text(titleText),
             subtitle = Text(context.getString(R.string.app_name)),
-            icon = SmartspaceIcon(AndroidIcon.createWithResource(context, R.mipmap.ic_launcher), shouldTint = false),
+            icon = SmartspaceIcon(
+                AndroidIcon.createWithResource(context, R.drawable.ic_launcher_greyscale),
+                shouldTint = true
+            ),
             onClick = TapAction(intent = actionIntent)
         ).create()
     }

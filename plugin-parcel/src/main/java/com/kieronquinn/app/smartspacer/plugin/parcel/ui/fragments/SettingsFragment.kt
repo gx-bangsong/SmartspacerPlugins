@@ -16,9 +16,14 @@ import com.kieronquinn.app.smartspacer.plugin.shared.model.settings.BaseSettings
 import com.kieronquinn.app.smartspacer.plugin.shared.model.settings.GenericSettingsItem.Setting
 import com.kieronquinn.app.smartspacer.plugin.shared.model.settings.GenericSettingsItem.Dropdown
 import com.kieronquinn.app.smartspacer.plugin.shared.model.settings.GenericSettingsItem.SwitchSetting
+import com.kieronquinn.app.smartspacer.plugin.shared.model.settings.GenericSettingsItem.Footer
 import com.kieronquinn.app.smartspacer.plugin.shared.notifications.NotificationPermissionHelper
+import com.kieronquinn.app.smartspacer.plugin.shared.permissions.PermissionOnboardingLauncher
+import com.kieronquinn.app.smartspacer.plugin.shared.permissions.PermissionOnboardingSettings
+import com.kieronquinn.app.smartspacer.plugin.parcel.permissions.ParcelPermissions
 import com.kieronquinn.app.smartspacer.plugin.shared.ui.base.settings.BaseSettingsFragment
 import com.kieronquinn.app.smartspacer.plugin.shared.ui.base.settings.BaseSettingsAdapter
+import com.kieronquinn.app.smartspacer.plugin.shared.utils.extensions.whenResumed
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import com.kieronquinn.app.shared.R as SharedR
@@ -65,12 +70,12 @@ class SettingsFragment : BaseSettingsFragment() {
         // 显式隐藏加载 UI
         binding.settingsBaseLoading.visibility = View.GONE
 
-        lifecycleScope.launchWhenStarted {
+        whenResumed {
             viewModel.cleanupDurationHours.collect {
                 setupSettings(it, viewModel.promotedLiveUpdates.value)
             }
         }
-        lifecycleScope.launchWhenStarted {
+        whenResumed {
             viewModel.promotedLiveUpdates.collect {
                 setupSettings(viewModel.cleanupDurationHours.value, it)
             }
@@ -81,10 +86,12 @@ class SettingsFragment : BaseSettingsFragment() {
         val durationOptions = listOf(12, 24, 48, 72)
         val items = mutableListOf<BaseSettingsItem>(
             Setting(
-                getString(R.string.plugin_description),
-                getString(R.string.privacy_note),
+                getString(SharedR.string.permission_onboarding_settings_entry),
+                PermissionOnboardingSettings.subtitle(requireContext(), ParcelPermissions.config),
                 ContextCompat.getDrawable(requireContext(), SharedR.drawable.ic_info),
-                onClick = {}
+                onClick = {
+                    PermissionOnboardingLauncher.launch(requireContext(), ParcelPermissions.config)
+                }
             ),
             Dropdown(
                 getString(R.string.cleanup_duration),
@@ -138,13 +145,17 @@ class SettingsFragment : BaseSettingsFragment() {
                         NotificationPermissionHelper.openNotificationSettings(requireContext())
                     }
                 }
+            ),
+            Footer(
+                ContextCompat.getDrawable(requireContext(), SharedR.drawable.ic_info),
+                getString(R.string.plugin_description) + "\n" + getString(R.string.privacy_note)
             )
         )
         adapter.update(items)
     }
 
     private fun notificationPermissionSubtitle(): String {
-        return if (NotificationPermissionHelper.hasNotificationPermission(requireContext())) {
+        return if (NotificationPermissionHelper.isNotificationAccessGranted(requireContext())) {
             getString(R.string.notification_permission_granted)
         } else {
             getString(R.string.notification_permission_denied)

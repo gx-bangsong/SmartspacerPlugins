@@ -37,22 +37,29 @@ class ParcelNotificationController(context: Context) {
 
     fun postParcel(parcel: ParcelItem, promoted: Boolean) {
         val notificationId = parcelNotificationId(parcel.id)
-        val title = context.getString(R.string.notification_title, parcel.pickupCode)
+        val capsule = ParcelLiveUpdateCapsule.text(parcel.pickupCode)
         val content = parcel.stationName ?: context.getString(R.string.app_name)
-
         val spec = LiveUpdateSpec(
             channelId = CHANNEL_ID,
             channelNameRes = R.string.notification_channel,
             channelImportance = NotificationManager.IMPORTANCE_HIGH,
             notificationId = notificationId,
-            smallIconRes = R.mipmap.ic_launcher,
-            contentTitle = title,
+            smallIconRes = R.drawable.ic_launcher_monochrome,
+            // Live Update title + chip are the raw pickup code. Never prefix "取件码：".
+            contentTitle = if (capsule.isNotEmpty()) capsule else parcel.pickupCode,
             contentText = content,
+            shortCriticalText = capsule.takeIf { it.isNotEmpty() },
+            progressIndeterminate = promoted,
             ongoing = promoted,
             requestPromoted = promoted,
             autoCancel = !promoted,
             priority = NotificationCompat.PRIORITY_HIGH,
-            category = Notification.CATEGORY_REMINDER,
+            category = Notification.CATEGORY_STATUS,
+            visibility = if (promoted) {
+                android.app.Notification.VISIBILITY_PUBLIC
+            } else {
+                android.app.Notification.VISIBILITY_PRIVATE
+            },
             contentIntent = parcelContentIntent(parcel.id),
             deleteIntent = parcelUnpinIntent(parcel.id),
             actions = listOf(
@@ -67,9 +74,8 @@ class ParcelNotificationController(context: Context) {
                     parcelUnpinIntent(parcel.id)
                 )
             ),
-            visibility = android.app.Notification.VISIBILITY_PRIVATE,
-            publicVersionTitle = context.getString(R.string.notification_public_title),
-            publicVersionText = context.getString(R.string.notification_public_content)
+            publicVersionTitle = if (promoted) null else context.getString(R.string.notification_public_title),
+            publicVersionText = if (promoted) null else context.getString(R.string.notification_public_content)
         )
         controller.post(spec, allowPromoted = promoted)
     }
