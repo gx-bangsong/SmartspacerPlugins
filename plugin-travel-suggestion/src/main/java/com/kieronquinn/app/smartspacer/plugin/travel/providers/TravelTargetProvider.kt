@@ -53,7 +53,11 @@ class TravelTargetProvider : SmartspacerTargetProvider(), KoinComponent {
                     trip, now, suppressionRepository.isSuppressed(trip.id)
                 )
             ) {
-                notificationController.postTripLiveUpdate(trip)
+                try {
+                    notificationController.postTripLiveUpdate(trip)
+                } catch (_: Throwable) {
+                    // Catch-up notify is best-effort; never drop the Smartspace target.
+                }
             }
         }
 
@@ -101,7 +105,10 @@ class TravelTargetProvider : SmartspacerTargetProvider(), KoinComponent {
             featureType = SmartspaceTarget.FEATURE_REMINDER,
             title = Text(titleText),
             subtitle = Text(subtitleText),
-            icon = SmartspaceIcon(AndroidIcon.createWithResource(context, R.mipmap.ic_launcher), shouldTint = false),
+            icon = SmartspaceIcon(
+                AndroidIcon.createWithResource(context, R.drawable.ic_launcher_greyscale),
+                shouldTint = true
+            ),
             onClick = TapAction(intent = actionIntent)
         ).create()
     }

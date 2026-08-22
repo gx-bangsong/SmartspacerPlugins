@@ -40,7 +40,12 @@ class ParcelTargetProvider : SmartspacerTargetProvider(), KoinComponent {
 
         // 过期逻辑已移至 ParcelWorker，这里只负责显示
         val pendingParcels = runBlocking {
-            liveUpdatePublisher.publishPending()
+            // Live Update republish is best-effort. A SecurityException / OEM drop
+            // must never blank the Smartspace card itself.
+            try {
+                liveUpdatePublisher.publishPending()
+            } catch (_: Throwable) {
+            }
             parcelDao.getPendingParcelsList()
         }
 
@@ -66,7 +71,10 @@ class ParcelTargetProvider : SmartspacerTargetProvider(), KoinComponent {
             featureType = SmartspaceTarget.FEATURE_REMINDER,
             title = Text(title),
             subtitle = Text(subtitle),
-            icon = SmartspaceIcon(AndroidIcon.createWithResource(context, R.mipmap.ic_launcher), shouldTint = false),
+            icon = SmartspaceIcon(
+                AndroidIcon.createWithResource(context, R.drawable.ic_launcher_greyscale),
+                shouldTint = true
+            ),
             onClick = TapAction(intent = detailIntent)
         ).create()
     }

@@ -99,7 +99,10 @@ class CheckInProvider : SmartspacerTargetProvider(), KoinComponent {
             featureType = SmartspaceTarget.FEATURE_REMINDER,
             title = Text(titleText),
             subtitle = Text(context.getString(R.string.app_name)),
-            icon = SmartspaceIcon(AndroidIcon.createWithResource(context, R.mipmap.ic_launcher), shouldTint = false),
+            icon = SmartspaceIcon(
+                AndroidIcon.createWithResource(context, R.drawable.ic_launcher_greyscale),
+                shouldTint = true
+            ),
             onClick = TapAction(intent = actionIntent)
         ).create()
     }

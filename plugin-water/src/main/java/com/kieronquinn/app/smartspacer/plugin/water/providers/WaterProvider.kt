@@ -86,7 +86,10 @@ class WaterProvider : SmartspacerTargetProvider(), KoinComponent {
             featureType = SmartspaceTarget.FEATURE_UNDEFINED,
             title = Text(text),
             subtitle = Text(""),
-            icon = SmartspaceIcon(AndroidIcon.createWithResource(context, R.mipmap.ic_launcher), shouldTint = false),
+            icon = SmartspaceIcon(
+                AndroidIcon.createWithResource(context, R.drawable.ic_launcher_greyscale),
+                shouldTint = true
+            ),
             onClick = TapAction(intent = intent)
         ).create()
 
