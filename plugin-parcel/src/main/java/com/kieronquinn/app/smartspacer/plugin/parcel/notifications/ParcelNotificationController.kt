@@ -48,6 +48,8 @@ class ParcelNotificationController(context: Context) {
             smallIconRes = R.mipmap.ic_launcher,
             contentTitle = title,
             contentText = content,
+            // Status-bar / lock-screen capsule: the pickup code, not just the app icon.
+            shortCriticalText = ParcelLiveUpdateCapsule.text(parcel.pickupCode),
             ongoing = promoted,
             requestPromoted = promoted,
             autoCancel = !promoted,
