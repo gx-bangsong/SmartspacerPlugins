@@ -3,6 +3,7 @@ package com.kieronquinn.app.smartspacer.plugin.parcel
 import android.content.Context
 import android.util.Log
 import com.kieronquinn.app.smartspacer.plugin.parcel.data.ParcelDatabase
+import com.kieronquinn.app.smartspacer.plugin.parcel.notifications.ParcelLiveUpdatePublisher
 import com.kieronquinn.app.smartspacer.plugin.parcel.notifications.ParcelNotificationController
 import com.kieronquinn.app.smartspacer.plugin.parcel.notifications.ParcelSuppressionRepository
 import com.kieronquinn.app.smartspacer.plugin.parcel.repositories.NavGraphRepositoryImpl
@@ -36,7 +37,8 @@ class ParcelPlugin : SmartspacerPlugin() {
         single<PluginPermissionConfig> { ParcelPermissions.config }
         single { ParcelNotificationController(get()) }
         single { ParcelSuppressionRepository(get()) }
+        single { ParcelLiveUpdatePublisher(get(), get(), get(), get()) }
         single<NavGraphRepository> { NavGraphRepositoryImpl() }
-        viewModel<SettingsViewModel> { SettingsViewModelImpl(get(), get(), get()) }
+        viewModel<SettingsViewModel> { SettingsViewModelImpl(get(), get(), get(), get()) }
     }
 }

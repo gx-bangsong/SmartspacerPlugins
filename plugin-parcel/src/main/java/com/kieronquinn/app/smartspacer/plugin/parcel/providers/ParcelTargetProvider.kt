@@ -8,6 +8,7 @@ import android.graphics.drawable.Icon as AndroidIcon
 import com.kieronquinn.app.smartspacer.plugin.parcel.R
 import com.kieronquinn.app.smartspacer.plugin.parcel.data.ParcelDao
 import com.kieronquinn.app.smartspacer.plugin.parcel.data.ParcelItem
+import com.kieronquinn.app.smartspacer.plugin.parcel.notifications.ParcelLiveUpdatePublisher
 import com.kieronquinn.app.smartspacer.plugin.parcel.ui.fragments.ParcelDetailFragment
 import com.kieronquinn.app.smartspacer.plugin.shared.ui.activities.DialogLauncherActivity
 import com.kieronquinn.app.smartspacer.sdk.model.SmartspaceTarget
@@ -23,6 +24,7 @@ import org.koin.core.component.inject
 class ParcelTargetProvider : SmartspacerTargetProvider(), KoinComponent {
 
     private val parcelDao by inject<ParcelDao>()
+    private val liveUpdatePublisher by inject<ParcelLiveUpdatePublisher>()
 
     override fun getConfig(smartspacerId: String?): Config {
         return Config(
@@ -37,7 +39,10 @@ class ParcelTargetProvider : SmartspacerTargetProvider(), KoinComponent {
         val context = this.context ?: return emptyList()
 
         // 过期逻辑已移至 ParcelWorker，这里只负责显示
-        val pendingParcels = runBlocking { parcelDao.getPendingParcelsList() }
+        val pendingParcels = runBlocking {
+            liveUpdatePublisher.publishPending()
+            parcelDao.getPendingParcelsList()
+        }
 
         return pendingParcels.map { parcel ->
             createTarget(context, parcel)

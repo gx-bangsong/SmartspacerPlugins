@@ -47,7 +47,7 @@ class LiveUpdateNotificationController(private val context: Context) {
         ensureChannel(spec)
 
         val promoted = allowPromoted && spec.requestPromoted && spec.isPromotableShape &&
-            LiveUpdateEligibility.isAtLeastBaklavaQpr1() &&
+            LiveUpdateEligibility.isPlatformSupported(Build.VERSION.SDK_INT) &&
             LiveUpdateEligibility.isPromotedSupported(context)
 
         val notification = buildCompat(spec, promoted)
@@ -100,18 +100,11 @@ class LiveUpdateNotificationController(private val context: Context) {
                 setChronometerCountDown(spec.chronometerCountDown)
             }
             if (promoted) {
-                // Only on Android 16 QPR1 (36.1)+: request promotion. ProgressStyle is the
-                // official required style for a stable status-bar chip; without it, setting
-                // shortCriticalText can make hasPromotableCharacteristics() fail and the
-                // capsule disappears.
+                // Compat APIs are safe on API 36.0 (they set extras / no-op). Always use
+                // indeterminate ProgressStyle — setProgress(0) with no segments is an invalid
+                // bar and OEMs drop the Live Update chip entirely.
                 setRequestPromotedOngoing(true)
-                setStyle(
-                    if (spec.progressIndeterminate) {
-                        NotificationCompat.ProgressStyle().setProgressIndeterminate(true)
-                    } else {
-                        NotificationCompat.ProgressStyle().setProgress(0)
-                    }
-                )
+                setStyle(NotificationCompat.ProgressStyle().setProgressIndeterminate(true))
                 spec.shortCriticalText
                     ?.toString()
                     ?.takeIf { it.isNotBlank() }

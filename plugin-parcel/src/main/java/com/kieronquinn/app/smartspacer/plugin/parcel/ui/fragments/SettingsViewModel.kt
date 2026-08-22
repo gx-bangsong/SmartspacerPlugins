@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kieronquinn.app.smartspacer.plugin.parcel.data.ParcelDao
 import com.kieronquinn.app.smartspacer.plugin.parcel.data.RuleDao
+import com.kieronquinn.app.smartspacer.plugin.parcel.notifications.ParcelLiveUpdatePublisher
 import com.kieronquinn.app.smartspacer.plugin.parcel.repositories.SettingsRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -27,7 +28,8 @@ abstract class SettingsViewModel : ViewModel() {
 class SettingsViewModelImpl(
     private val parcelDao: ParcelDao,
     private val ruleDao: RuleDao,
-    private val settingsRepository: SettingsRepository
+    private val settingsRepository: SettingsRepository,
+    private val liveUpdatePublisher: ParcelLiveUpdatePublisher
 ) : SettingsViewModel() {
     override val state = MutableStateFlow<State>(State.Loaded)
 
@@ -67,6 +69,9 @@ class SettingsViewModelImpl(
     override fun setPromotedLiveUpdates(enabled: Boolean) {
         viewModelScope.launch {
             settingsRepository.setPromotedLiveUpdates(enabled)
+            if (enabled) {
+                liveUpdatePublisher.publishPending()
+            }
         }
     }
 }
