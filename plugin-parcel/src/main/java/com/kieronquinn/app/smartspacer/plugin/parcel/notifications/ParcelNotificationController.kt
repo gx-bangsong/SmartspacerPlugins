@@ -37,18 +37,16 @@ class ParcelNotificationController(context: Context) {
 
     fun postParcel(parcel: ParcelItem, promoted: Boolean) {
         val notificationId = parcelNotificationId(parcel.id)
-        val title = context.getString(R.string.notification_title, parcel.pickupCode)
-        val content = parcel.stationName ?: context.getString(R.string.app_name)
-
         val capsule = ParcelLiveUpdateCapsule.text(parcel.pickupCode)
+        val content = parcel.stationName ?: context.getString(R.string.app_name)
         val spec = LiveUpdateSpec(
             channelId = CHANNEL_ID,
             channelNameRes = R.string.notification_channel,
             channelImportance = NotificationManager.IMPORTANCE_HIGH,
             notificationId = notificationId,
             smallIconRes = R.mipmap.ic_launcher,
-            // Shade title is the code itself so the promoted header matches the capsule.
-            contentTitle = if (promoted && capsule.isNotEmpty()) capsule else title,
+            // Live Update title + chip are the raw pickup code. Never prefix "取件码：".
+            contentTitle = if (capsule.isNotEmpty()) capsule else parcel.pickupCode,
             contentText = content,
             shortCriticalText = capsule.takeIf { it.isNotEmpty() },
             ongoing = promoted,

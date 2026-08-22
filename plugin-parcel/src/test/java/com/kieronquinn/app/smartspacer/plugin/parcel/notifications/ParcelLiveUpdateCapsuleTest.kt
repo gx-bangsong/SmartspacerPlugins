@@ -9,12 +9,14 @@ class ParcelLiveUpdateCapsuleTest {
     fun `capsule shows the pickup code itself`() {
         assertEquals("888888", ParcelLiveUpdateCapsule.text("888888"))
         assertEquals("123456", ParcelLiveUpdateCapsule.text("123456"))
+        assertEquals("9-2-1004", ParcelLiveUpdateCapsule.text("9-2-1004"))
     }
 
     @Test
-    fun `hyphenated locker codes keep the most useful tail`() {
-        // "9-2-1004" is 8 characters — too long for the chip, so the last 6 stay readable.
-        assertEquals("2-1004", ParcelLiveUpdateCapsule.text("9-2-1004"))
+    fun `capsule never includes the pickup-code label`() {
+        assertEquals("888888", ParcelLiveUpdateCapsule.text("取件码：888888"))
+        assertEquals("888888", ParcelLiveUpdateCapsule.text("取件码:888888"))
+        assertEquals("9-2-1004", ParcelLiveUpdateCapsule.text("Pickup code: 9-2-1004"))
     }
 
     @Test
@@ -24,16 +26,8 @@ class ParcelLiveUpdateCapsuleTest {
     }
 
     @Test
-    fun `overlong codes are truncated to fit the chip`() {
-        val longCode = "ABCDEFGHIJKLMNOP"
-        assertEquals(
-            longCode.takeLast(ParcelLiveUpdateCapsule.MAX_CHARS),
-            ParcelLiveUpdateCapsule.text(longCode)
-        )
-    }
-
-    @Test
     fun `blank codes do not put a placeholder in the chip`() {
         assertEquals("", ParcelLiveUpdateCapsule.text("   "))
+        assertEquals("", ParcelLiveUpdateCapsule.text("取件码："))
     }
 }
