@@ -6,13 +6,16 @@ package com.kieronquinn.app.smartspacer.plugin.parcel.notifications
  */
 object ParcelLiveUpdateCapsule {
 
-    /** Fits typical locker codes (e.g. 888888, 9-2-1004) without overflowing the chip. */
-    const val MAX_CHARS = 12
+    /**
+     * Status-bar chips are tiny. Android hides the text (icon only) when less than half of
+     * [setShortCriticalText] would fit — 6 characters is the practical ceiling for a locker code.
+     */
+    const val MAX_CHARS = 6
 
     fun text(pickupCode: String): String {
         val cleaned = pickupCode.trim().replace(WHITESPACE, "")
         if (cleaned.isEmpty()) return ""
-        return if (cleaned.length <= MAX_CHARS) cleaned else cleaned.take(MAX_CHARS)
+        return if (cleaned.length <= MAX_CHARS) cleaned else cleaned.takeLast(MAX_CHARS)
     }
 
     private val WHITESPACE = Regex("\\s+")

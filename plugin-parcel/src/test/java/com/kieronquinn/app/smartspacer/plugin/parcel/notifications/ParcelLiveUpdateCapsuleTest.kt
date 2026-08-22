@@ -7,8 +7,14 @@ class ParcelLiveUpdateCapsuleTest {
 
     @Test
     fun `capsule shows the pickup code itself`() {
-        assertEquals("9-2-1004", ParcelLiveUpdateCapsule.text("9-2-1004"))
         assertEquals("888888", ParcelLiveUpdateCapsule.text("888888"))
+        assertEquals("123456", ParcelLiveUpdateCapsule.text("123456"))
+    }
+
+    @Test
+    fun `hyphenated locker codes keep the most useful tail`() {
+        // "9-2-1004" is 8 characters — too long for the chip, so the last 6 stay readable.
+        assertEquals("2-1004", ParcelLiveUpdateCapsule.text("9-2-1004"))
     }
 
     @Test
@@ -21,7 +27,7 @@ class ParcelLiveUpdateCapsuleTest {
     fun `overlong codes are truncated to fit the chip`() {
         val longCode = "ABCDEFGHIJKLMNOP"
         assertEquals(
-            longCode.take(ParcelLiveUpdateCapsule.MAX_CHARS),
+            longCode.takeLast(ParcelLiveUpdateCapsule.MAX_CHARS),
             ParcelLiveUpdateCapsule.text(longCode)
         )
     }

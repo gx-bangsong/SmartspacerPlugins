@@ -52,13 +52,12 @@ class LiveUpdateNotificationController(private val context: Context) {
 
         val notification = buildCompat(spec, promoted)
 
-        // If the framework reports the notification cannot be promoted (e.g. initial Android 16.0
-        // release, OEM implementation, or user toggles), still post it — as a normal notification.
-        if (promoted && !LiveUpdateEligibility.hasPromotableCharacteristics(notification)) {
-            notificationManager.notify(spec.notificationId, buildCompat(spec, promoted = false))
-        } else {
-            notificationManager.notify(spec.notificationId, notification)
-        }
+        // Always post the builder we actually requested. Rebuilding with promoted=false
+        // strips setRequestPromotedOngoing and shortCriticalText, which removes the
+        // status-bar capsule entirely. If the framework still cannot promote, it simply
+        // renders this as a normal ongoing notification — same as the old fallback,
+        // without losing the chip request.
+        notificationManager.notify(spec.notificationId, notification)
         return notification
     }
 
@@ -101,12 +100,22 @@ class LiveUpdateNotificationController(private val context: Context) {
                 setChronometerCountDown(spec.chronometerCountDown)
             }
             if (promoted) {
-                // Only on Android 16 QPR1 (36.1)+: request promotion and apply the progress style.
+                // Only on Android 16 QPR1 (36.1)+: request promotion. ProgressStyle is the
+                // official required style for a stable status-bar chip; without it, setting
+                // shortCriticalText can make hasPromotableCharacteristics() fail and the
+                // capsule disappears.
                 setRequestPromotedOngoing(true)
-                if (spec.progressIndeterminate) {
-                    setStyle(NotificationCompat.ProgressStyle().setProgressIndeterminate(true))
-                }
-                spec.shortCriticalText?.let { setShortCriticalText(it.toString()) }
+                setStyle(
+                    if (spec.progressIndeterminate) {
+                        NotificationCompat.ProgressStyle().setProgressIndeterminate(true)
+                    } else {
+                        NotificationCompat.ProgressStyle().setProgress(0)
+                    }
+                )
+                spec.shortCriticalText
+                    ?.toString()
+                    ?.takeIf { it.isNotBlank() }
+                    ?.let { setShortCriticalText(it) }
             } else if (spec.progressIndeterminate) {
                 // Standard indeterminate progress on pre-36.1 devices (classic ProgressBar style).
                 setProgress(0, 0, true)
