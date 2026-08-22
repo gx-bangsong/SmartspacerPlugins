@@ -56,45 +56,43 @@ class WaterSettingsFragment : BaseFragment<FragmentSettingsBaseBinding>(Fragment
 
                 items.add(Slider(
                     state.dailyGoalMl.toFloat(), 500f, 5000f, 100f,
-                    "Daily Goal", "${state.dailyGoalMl}ml",
+                    getString(R.string.setting_daily_goal), "${state.dailyGoalMl}ml",
                     ContextCompat.getDrawable(requireContext(), R.drawable.ic_local_drink)
                 ) { viewModel.onDailyGoalChanged(it) })
 
                 items.add(Slider(
                     state.cupSizeMl.toFloat(), 100f, 1000f, 50f,
-                    "Cup Size", "${state.cupSizeMl}ml",
+                    getString(R.string.setting_cup_size), "${state.cupSizeMl}ml",
                     ContextCompat.getDrawable(requireContext(), R.drawable.ic_local_drink)
                 ) { viewModel.onCupSizeChanged(it) })
 
                 items.add(SwitchSetting(
                     state.resetAtActiveStart,
-                    "Automatic Progress Reset",
-                    "Reset daily progress at start time",
+                    getString(R.string.setting_auto_reset),
+                    getString(R.string.setting_auto_reset_desc),
                     null
                 ) { viewModel.onResetAtActiveStartChanged(it) })
 
                 items.add(SwitchSetting(
                     state.smartAdjust,
-                    "Smart Adjustments",
-                    "Adjust next reminder based on progress",
+                    getString(R.string.setting_smart_adjust),
+                    getString(R.string.setting_smart_adjust_desc),
                     null
                 ) { viewModel.onSmartAdjustChanged(it) })
 
                 items.add(Dropdown(
-                    "Display Mode", state.displayMode.name,
+                    getString(R.string.setting_display_mode),
+                    getString(displayModeLabel(state.displayMode)),
                     null, state.displayMode,
                     { viewModel.onDisplayModeChanged(it) },
                     DisplayMode.values().toList()
                 ) {
-                    when(it) {
-                        DisplayMode.PROGRESS -> R.string.display_mode_progress
-                        DisplayMode.REMINDER -> R.string.display_mode_reminder
-                        else -> R.string.display_mode_dynamic
-                    }
+                    displayModeLabel(it)
                 })
 
                 items.add(Setting(
-                    "Save Changes", "Apply new settings and reschedule",
+                    getString(R.string.setting_save),
+                    getString(R.string.setting_save_desc),
                     ContextCompat.getDrawable(requireContext(), SharedR.drawable.ic_info)
                 ) { viewModel.saveChanges(requireContext()) })
 
@@ -102,5 +100,11 @@ class WaterSettingsFragment : BaseFragment<FragmentSettingsBaseBinding>(Fragment
                 binding.settingsBaseLoading.visibility = View.GONE
             }
         }
+    }
+
+    private fun displayModeLabel(mode: DisplayMode): Int = when (mode) {
+        DisplayMode.PROGRESS -> R.string.display_mode_progress
+        DisplayMode.REMINDER -> R.string.display_mode_reminder
+        DisplayMode.DYNAMIC -> R.string.display_mode_dynamic
     }
 }

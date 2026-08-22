@@ -86,7 +86,7 @@ class MedicationProvider : SmartspacerTargetProvider(), KoinComponent {
         return Config(
             label = "Medication Reminder",
             description = "A medication reminder",
-            icon = AndroidIcon.createWithResource(context, R.mipmap.ic_launcher),
+            icon = AndroidIcon.createWithResource(context, R.drawable.ic_launcher_greyscale),
             configActivity = Intent(context, SettingsActivity::class.java)
         )
     }

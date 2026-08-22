@@ -85,7 +85,7 @@ class MedicationSettingsFragment : BaseFragment<FragmentMedicationSettingsBindin
     }
 
     private fun updateNotificationPermissionRow() {
-        binding.notificationPermissionRow.text = if (NotificationPermissionHelper.hasNotificationPermission(requireContext())) {
+        binding.notificationPermissionRow.text = if (NotificationPermissionHelper.isNotificationAccessGranted(requireContext())) {
             getString(R.string.notification_permission_granted)
         } else {
             getString(R.string.notification_permission_denied)

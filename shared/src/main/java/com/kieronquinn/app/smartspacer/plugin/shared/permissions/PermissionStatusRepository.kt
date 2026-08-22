@@ -19,7 +19,8 @@ class PermissionStatusRepository(private val context: Context) {
         return when (capability) {
             PluginCapability.NOTIFICATIONS -> PermissionStatusEvaluator.evaluateNotifications(
                 sdkInt = Build.VERSION.SDK_INT,
-                runtimeGranted = NotificationPermissionHelper.hasNotificationPermission(context)
+                runtimeGranted = NotificationPermissionHelper.hasNotificationPermission(context),
+                notificationsEnabled = NotificationPermissionHelper.areNotificationsEnabled(context)
             )
             PluginCapability.SMS_RECEIVE -> PermissionStatusEvaluator.evaluateSms(
                 PluginCapability.SMS_RECEIVE,

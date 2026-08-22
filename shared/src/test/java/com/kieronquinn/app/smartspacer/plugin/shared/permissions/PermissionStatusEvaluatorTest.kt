@@ -26,6 +26,12 @@ class PermissionStatusEvaluatorTest {
         val granted = PermissionStatusEvaluator.evaluateNotifications(33, runtimeGranted = true)
         assertEquals(CapabilityStatus.GRANTED, granted.status)
         assertEquals(CapabilityAction.OPEN_APP_NOTIFICATION_SETTINGS, granted.action)
+
+        val enabledInSettings = PermissionStatusEvaluator.evaluateNotifications(
+            33, runtimeGranted = false, notificationsEnabled = true
+        )
+        assertEquals(CapabilityStatus.GRANTED, enabledInSettings.status)
+        assertFalse(enabledInSettings.needsUserAction)
     }
 
     @Test
@@ -74,7 +80,7 @@ class PermissionStatusEvaluatorTest {
         assertEquals(CapabilityStatus.SETTINGS_DISABLED, snapshot.status)
         assertEquals(CapabilityAction.OPEN_PROMOTED_SETTINGS, snapshot.action)
         assertTrue(PermissionStatusEvaluator.canOpenPromotedSettings(true))
-        assertTrue(snapshot.needsUserAction)
+        assertFalse(snapshot.needsUserAction)
     }
 
     @Test

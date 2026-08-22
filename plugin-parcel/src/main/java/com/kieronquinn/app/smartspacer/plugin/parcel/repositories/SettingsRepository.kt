@@ -17,7 +17,7 @@ interface SettingsRepository : BaseSettingsRepository {
     suspend fun setCleanupDurationHours(value: Int)
 
     /**
-     * EXPERIMENTAL, default OFF: renders pickup-code notifications as promoted Live Updates.
+     * EXPERIMENTAL, default ON: renders pickup-code notifications as promoted Live Updates.
      * Officially, ordinary package tracking is not recommended for promoted notifications; this
      * toggle lets power users opt in while keeping the default behaviour compliant.
      */
@@ -31,7 +31,7 @@ class SettingsRepositoryImpl(context: Context) : BaseSettingsRepositoryImpl(), S
         private const val CLEANUP_DURATION_KEY = "cleanup_duration_hours"
         private const val DEFAULT_CLEANUP_DURATION = 24
         private const val PROMOTED_LIVE_UPDATES_KEY = "promoted_live_updates"
-        private const val DEFAULT_PROMOTED_LIVE_UPDATES = false
+        private const val DEFAULT_PROMOTED_LIVE_UPDATES = true
     }
 
     override val sharedPreferences =

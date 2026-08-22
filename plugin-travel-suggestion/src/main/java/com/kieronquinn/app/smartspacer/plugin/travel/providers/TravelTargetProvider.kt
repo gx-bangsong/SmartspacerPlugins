@@ -35,7 +35,7 @@ class TravelTargetProvider : SmartspacerTargetProvider(), KoinComponent {
         return Config(
             label = safeContext.getString(R.string.app_name),
             description = safeContext.getString(R.string.settings_enable_sms_summary),
-            icon = AndroidIcon.createWithResource(safeContext, R.mipmap.ic_launcher),
+            icon = AndroidIcon.createWithResource(safeContext, R.drawable.ic_launcher_greyscale),
             configActivity = Intent(safeContext, com.kieronquinn.app.smartspacer.plugin.travel.ui.activities.SettingsActivity::class.java)
         )
     }

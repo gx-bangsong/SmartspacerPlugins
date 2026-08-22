@@ -28,6 +28,11 @@ object NotificationPermissionHelper {
             PackageManager.PERMISSION_GRANTED
     }
 
+    /** User-facing grant: either the runtime permission or the notification settings toggle. */
+    fun isNotificationAccessGranted(context: Context): Boolean {
+        return hasNotificationPermission(context) || areNotificationsEnabled(context)
+    }
+
     /**
      * `android.permission.POST_PROMOTED_NOTIFICATIONS` — the non-runtime permission introduced
      * with Android 16 QPR1 (minor SDK 36.1). The Manifest.permission constant is absent from the

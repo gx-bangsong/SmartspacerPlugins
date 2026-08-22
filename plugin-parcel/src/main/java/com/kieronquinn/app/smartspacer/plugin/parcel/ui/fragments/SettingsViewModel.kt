@@ -36,7 +36,7 @@ class SettingsViewModelImpl(
     private val _cleanupDurationHours = MutableStateFlow(24)
     override val cleanupDurationHours: StateFlow<Int> = _cleanupDurationHours
 
-    private val _promotedLiveUpdates = MutableStateFlow(false)
+    private val _promotedLiveUpdates = MutableStateFlow(true)
     override val promotedLiveUpdates: StateFlow<Boolean> = _promotedLiveUpdates
 
     init {

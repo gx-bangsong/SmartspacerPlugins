@@ -37,7 +37,7 @@ data class CapabilitySnapshot(
 ) {
     /** True when the settings page should highlight this capability as missing. */
     val needsUserAction: Boolean
-        get() = status == CapabilityStatus.DENIED || status == CapabilityStatus.SETTINGS_DISABLED
+        get() = status == CapabilityStatus.DENIED
 
     /** True when the UI should treat the capability as satisfied. */
     val isSatisfied: Boolean

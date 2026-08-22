@@ -9,7 +9,11 @@ object PermissionStatusEvaluator {
     const val TIRAMISU = 33
     const val S = 31
 
-    fun evaluateNotifications(sdkInt: Int, runtimeGranted: Boolean): CapabilitySnapshot {
+    fun evaluateNotifications(
+        sdkInt: Int,
+        runtimeGranted: Boolean,
+        notificationsEnabled: Boolean = runtimeGranted
+    ): CapabilitySnapshot {
         if (sdkInt < TIRAMISU) {
             return CapabilitySnapshot(
                 PluginCapability.NOTIFICATIONS,
@@ -17,7 +21,8 @@ object PermissionStatusEvaluator {
                 CapabilityAction.OPEN_APP_NOTIFICATION_SETTINGS
             )
         }
-        return if (runtimeGranted) {
+        val granted = runtimeGranted || notificationsEnabled
+        return if (granted) {
             CapabilitySnapshot(
                 PluginCapability.NOTIFICATIONS,
                 CapabilityStatus.GRANTED,
@@ -83,13 +88,8 @@ object PermissionStatusEvaluator {
                 CapabilityAction.NONE
             )
         }
-        if (!manifestPermissionGranted) {
-            return CapabilitySnapshot(
-                PluginCapability.PROMOTED_LIVE_UPDATES,
-                CapabilityStatus.DENIED,
-                CapabilityAction.NONE
-            )
-        }
+        // POST_PROMOTED_NOTIFICATIONS is not a runtime permission. checkSelfPermission() is
+        // unreliable here and must not be reported as "user denied".
         return if (canPostPromotedNotifications) {
             CapabilitySnapshot(
                 PluginCapability.PROMOTED_LIVE_UPDATES,

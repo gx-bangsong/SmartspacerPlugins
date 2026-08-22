@@ -27,6 +27,7 @@ import com.kieronquinn.app.smartspacer.plugin.shared.model.settings.GenericSetti
 import com.kieronquinn.app.smartspacer.plugin.shared.ui.base.settings.BaseFragment
 import com.kieronquinn.app.smartspacer.plugin.shared.ui.base.settings.BaseSettingsAdapter
 import com.kieronquinn.app.smartspacer.plugin.shared.ui.views.LifecycleAwareRecyclerView
+import com.kieronquinn.app.smartspacer.plugin.shared.utils.extensions.whenResumed
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider
 import com.google.android.material.progressindicator.LinearProgressIndicator
 import kotlinx.coroutines.flow.collect
@@ -63,7 +64,7 @@ class CheckInSettingsFragment : BaseFragment<FragmentCheckInSettingsBinding>(Fra
     }
 
     private fun setupSettingsAndHistory() {
-        lifecycleScope.launch {
+        whenResumed {
             viewModel.uiState.collect { state ->
                 val records = state.records
                 val isRemEnabled = state.reminderEnabled
@@ -262,7 +263,7 @@ class CheckInSettingsFragment : BaseFragment<FragmentCheckInSettingsBinding>(Fra
     }
 
     private fun notificationPermissionSubtitle(): String {
-        return if (NotificationPermissionHelper.hasNotificationPermission(requireContext())) {
+        return if (NotificationPermissionHelper.isNotificationAccessGranted(requireContext())) {
             getString(R.string.settings_notification_permission_granted)
         } else {
             getString(R.string.settings_notification_permission_denied)
