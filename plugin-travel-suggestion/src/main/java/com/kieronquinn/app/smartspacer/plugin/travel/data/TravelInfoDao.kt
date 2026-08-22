@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.Flow
 interface TravelInfoDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(item: TravelInfoItem)
+    suspend fun insert(item: TravelInfoItem): Long
 
     @Update
     suspend fun update(item: TravelInfoItem)

@@ -6,11 +6,14 @@ import androidx.core.content.ContextCompat
 import com.google.android.material.progressindicator.LinearProgressIndicator
 import com.kieronquinn.app.smartspacer.plugin.shared.model.settings.BaseSettingsItem
 import com.kieronquinn.app.smartspacer.plugin.shared.model.settings.GenericSettingsItem.*
+import com.kieronquinn.app.smartspacer.plugin.shared.permissions.PermissionOnboardingLauncher
+import com.kieronquinn.app.smartspacer.plugin.shared.permissions.PermissionOnboardingSettings
 import com.kieronquinn.app.smartspacer.plugin.shared.ui.base.settings.BaseFragment
 import com.kieronquinn.app.smartspacer.plugin.shared.ui.base.settings.BaseSettingsAdapter
 import com.kieronquinn.app.smartspacer.plugin.shared.ui.views.LifecycleAwareRecyclerView
 import com.kieronquinn.app.smartspacer.plugin.shared.utils.extensions.whenResumed
 import com.kieronquinn.app.smartspacer.plugin.water.R
+import com.kieronquinn.app.smartspacer.plugin.water.permissions.WaterPermissions
 import com.kieronquinn.app.smartspacer.plugin.water.repositories.DisplayMode
 import com.kieronquinn.app.smartspacer.plugin.water.ui.screens.settings.WaterSettingsViewModel
 import com.kieronquinn.app.smartspacer.plugin.water.work.WaterWorker
@@ -44,6 +47,12 @@ class WaterSettingsFragment : BaseFragment<FragmentSettingsBaseBinding>(Fragment
         whenResumed {
             viewModel.uiState.collect { state ->
                 val items = mutableListOf<BaseSettingsItem>()
+
+                items.add(Setting(
+                    getString(SharedR.string.permission_onboarding_settings_entry),
+                    PermissionOnboardingSettings.subtitle(requireContext(), WaterPermissions.config),
+                    ContextCompat.getDrawable(requireContext(), SharedR.drawable.ic_info)
+                ) { PermissionOnboardingLauncher.launch(requireContext(), WaterPermissions.config) })
 
                 items.add(Slider(
                     state.dailyGoalMl.toFloat(), 500f, 5000f, 100f,

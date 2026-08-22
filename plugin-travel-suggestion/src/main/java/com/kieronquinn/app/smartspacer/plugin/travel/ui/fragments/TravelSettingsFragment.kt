@@ -11,6 +11,9 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.kieronquinn.app.smartspacer.plugin.shared.notifications.LiveUpdateEligibility
 import com.kieronquinn.app.smartspacer.plugin.shared.notifications.NotificationPermissionHelper
+import com.kieronquinn.app.smartspacer.plugin.shared.permissions.PermissionOnboardingLauncher
+import com.kieronquinn.app.smartspacer.plugin.shared.permissions.PermissionOnboardingSettings
+import com.kieronquinn.app.smartspacer.plugin.travel.permissions.TravelPermissions
 import com.kieronquinn.app.smartspacer.plugin.travel.R
 import com.kieronquinn.app.smartspacer.plugin.travel.data.TravelInfoItem
 import com.kieronquinn.app.smartspacer.plugin.travel.databinding.FragmentTravelSettingsBinding
@@ -110,6 +113,14 @@ class TravelSettingsFragment : BaseFragment<FragmentTravelSettingsBinding>(Fragm
                 )
 
                 val settingsItems = mutableListOf<BaseSettingsItem>(
+                    Setting(
+                        getString(SharedR.string.permission_onboarding_settings_entry),
+                        PermissionOnboardingSettings.subtitle(requireContext(), TravelPermissions.config),
+                        ContextCompat.getDrawable(requireContext(), SharedR.drawable.ic_info),
+                        onClick = {
+                            PermissionOnboardingLauncher.launch(requireContext(), TravelPermissions.config)
+                        }
+                    ),
                     SwitchSetting(
                         checked = isSmsEnabled,
                         title = getString(R.string.settings_enable_sms),

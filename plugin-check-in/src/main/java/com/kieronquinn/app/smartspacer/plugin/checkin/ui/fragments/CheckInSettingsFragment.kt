@@ -13,6 +13,9 @@ import java.util.Calendar
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.kieronquinn.app.smartspacer.plugin.shared.notifications.NotificationPermissionHelper
+import com.kieronquinn.app.smartspacer.plugin.shared.permissions.PermissionOnboardingLauncher
+import com.kieronquinn.app.smartspacer.plugin.shared.permissions.PermissionOnboardingSettings
+import com.kieronquinn.app.smartspacer.plugin.checkin.permissions.CheckInPermissions
 import com.kieronquinn.app.smartspacer.plugin.checkin.R
 import com.kieronquinn.app.smartspacer.plugin.checkin.databinding.FragmentCheckInSettingsBinding
 import com.kieronquinn.app.smartspacer.plugin.checkin.providers.CheckInProvider
@@ -87,6 +90,14 @@ class CheckInSettingsFragment : BaseFragment<FragmentCheckInSettingsBinding>(Fra
                 )
 
                 val settingsItems = mutableListOf<BaseSettingsItem>(
+                    Setting(
+                        getString(SharedR.string.permission_onboarding_settings_entry),
+                        PermissionOnboardingSettings.subtitle(requireContext(), CheckInPermissions.config),
+                        ContextCompat.getDrawable(requireContext(), SharedR.drawable.ic_info),
+                        onClick = {
+                            PermissionOnboardingLauncher.launch(requireContext(), CheckInPermissions.config)
+                        }
+                    ),
                     SwitchSetting(
                         checked = isRemEnabled,
                         title = getString(R.string.settings_enable_reminder),

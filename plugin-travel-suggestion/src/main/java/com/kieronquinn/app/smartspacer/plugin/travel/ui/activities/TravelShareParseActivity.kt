@@ -11,6 +11,7 @@ import androidx.lifecycle.lifecycleScope
 import com.kieronquinn.app.smartspacer.plugin.travel.R
 import com.kieronquinn.app.smartspacer.plugin.travel.data.TravelInfoDao
 import com.kieronquinn.app.smartspacer.plugin.travel.data.TravelInfoItem
+import com.kieronquinn.app.smartspacer.plugin.travel.data.TravelTripSave
 import com.kieronquinn.app.smartspacer.plugin.travel.logic.ShareTextResult
 import com.kieronquinn.app.smartspacer.plugin.travel.logic.TravelDedupe
 import com.kieronquinn.app.smartspacer.plugin.travel.logic.TravelShareDraft
@@ -378,9 +379,9 @@ class TravelShareParseActivity : FragmentActivity() {
             }
 
             val itemWithSource = item.copy(source = "share")
-            travelInfoDao.insert(itemWithSource)
-            travelScheduler.scheduleReminder(itemWithSource)
-            suppressionRepository.clearForTrip(itemWithSource.id)
+            val savedItem = TravelTripSave.afterInsert(itemWithSource, travelInfoDao.insert(itemWithSource))
+            travelScheduler.scheduleReminder(savedItem)
+            suppressionRepository.clearForTrip(savedItem.id)
             SmartspacerTargetProvider.notifyChange(this@TravelShareParseActivity, TravelTargetProvider::class.java)
 
             val confirmed = TravelShareStateMachine.transition(
@@ -388,7 +389,7 @@ class TravelShareParseActivity : FragmentActivity() {
             )
             saveDraft(draft.withState(confirmed, now))
             notificationController.cancelShareOp(id)
-            notificationController.postShareSaved(shortTripSummary(itemWithSource))
+            notificationController.postShareSaved(shortTripSummary(savedItem))
             finish()
         }
     }

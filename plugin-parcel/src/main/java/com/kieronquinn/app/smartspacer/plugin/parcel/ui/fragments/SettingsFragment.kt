@@ -17,6 +17,9 @@ import com.kieronquinn.app.smartspacer.plugin.shared.model.settings.GenericSetti
 import com.kieronquinn.app.smartspacer.plugin.shared.model.settings.GenericSettingsItem.Dropdown
 import com.kieronquinn.app.smartspacer.plugin.shared.model.settings.GenericSettingsItem.SwitchSetting
 import com.kieronquinn.app.smartspacer.plugin.shared.notifications.NotificationPermissionHelper
+import com.kieronquinn.app.smartspacer.plugin.shared.permissions.PermissionOnboardingLauncher
+import com.kieronquinn.app.smartspacer.plugin.shared.permissions.PermissionOnboardingSettings
+import com.kieronquinn.app.smartspacer.plugin.parcel.permissions.ParcelPermissions
 import com.kieronquinn.app.smartspacer.plugin.shared.ui.base.settings.BaseSettingsFragment
 import com.kieronquinn.app.smartspacer.plugin.shared.ui.base.settings.BaseSettingsAdapter
 import kotlinx.coroutines.launch
@@ -80,6 +83,14 @@ class SettingsFragment : BaseSettingsFragment() {
     private fun setupSettings(currentDuration: Int, promotedEnabled: Boolean) {
         val durationOptions = listOf(12, 24, 48, 72)
         val items = mutableListOf<BaseSettingsItem>(
+            Setting(
+                getString(SharedR.string.permission_onboarding_settings_entry),
+                PermissionOnboardingSettings.subtitle(requireContext(), ParcelPermissions.config),
+                ContextCompat.getDrawable(requireContext(), SharedR.drawable.ic_info),
+                onClick = {
+                    PermissionOnboardingLauncher.launch(requireContext(), ParcelPermissions.config)
+                }
+            ),
             Setting(
                 getString(R.string.plugin_description),
                 getString(R.string.privacy_note),

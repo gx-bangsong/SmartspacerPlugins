@@ -5,6 +5,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.os.Build
 import com.kieronquinn.app.smartspacer.plugin.checkin.receivers.CheckInAlarmReceiver
+import com.kieronquinn.app.smartspacer.plugin.shared.permissions.ExactAlarmCompat
 import com.kieronquinn.app.smartspacer.plugin.shared.utils.extensions.PendingIntent_MUTABLE_FLAGS
 import kotlinx.coroutines.flow.first
 import java.util.Calendar
@@ -31,7 +32,7 @@ class CheckInSchedulerImpl(
         cancelAlarms()
 
         val isEnabled = settingsRepository.isReminderEnabled.first()
-        if (!isEnabled || !hasPermission()) {
+        if (!isEnabled) {
             return
         }
 
@@ -71,10 +72,11 @@ class CheckInSchedulerImpl(
             PendingIntent_MUTABLE_FLAGS
         )
 
-        alarmManager.setExactAndAllowWhileIdle(
-            AlarmManager.RTC_WAKEUP,
-            calendar.timeInMillis,
-            pendingIntent
+        ExactAlarmCompat.schedule(
+            alarmManager = alarmManager,
+            triggerAtMillis = calendar.timeInMillis,
+            pendingIntent = pendingIntent,
+            exact = hasPermission()
         )
     }
 

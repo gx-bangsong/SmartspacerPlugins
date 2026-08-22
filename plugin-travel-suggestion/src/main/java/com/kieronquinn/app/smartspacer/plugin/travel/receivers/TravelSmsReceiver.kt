@@ -6,6 +6,7 @@ import android.content.Intent
 import android.provider.Telephony
 import com.kieronquinn.app.smartspacer.plugin.travel.data.TravelInfoDao
 import com.kieronquinn.app.smartspacer.plugin.travel.data.TravelInfoItem
+import com.kieronquinn.app.smartspacer.plugin.travel.data.TravelTripSave
 import com.kieronquinn.app.smartspacer.plugin.travel.logic.TravelDedupe
 import com.kieronquinn.app.smartspacer.plugin.travel.logic.TripKey
 import com.kieronquinn.app.smartspacer.plugin.travel.notifications.TravelNotificationController

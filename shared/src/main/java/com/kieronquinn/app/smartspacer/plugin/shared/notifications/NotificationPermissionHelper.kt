@@ -52,11 +52,11 @@ object NotificationPermissionHelper {
     }
 
     /**
-     * Opens the per-app "promoted notifications / live updates" settings screen on Android 16+.
-     * No-op on older platforms.
+     * Opens the per-app "promoted notifications / live updates" settings screen on Android 16
+     * QPR1 (36.1) and newer. No-op below 36.1 — the settings page does not exist there.
      */
     fun openPromotedSettings(context: Context) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.BAKLAVA) return
+        if (!LiveUpdateEligibility.isAtLeastBaklavaQpr1()) return
         val intent = Intent(Settings.ACTION_APP_NOTIFICATION_PROMOTION_SETTINGS)
             .putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
         try {
