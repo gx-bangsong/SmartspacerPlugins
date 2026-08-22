@@ -30,7 +30,8 @@ class WaterPlugin: SmartspacerPlugin() {
         single<ExactAlarmRescheduler> {
             val scheduler = get<WaterScheduler>()
             val repository = get<WaterDataRepository>()
-            ExactAlarmRescheduler { scheduler.rescheduleAll(get<Context>(), repository) }
+            val appContext = get<Context>()
+            ExactAlarmRescheduler { scheduler.rescheduleAll(appContext, repository) }
         }
         single<NavGraphRepository> { NavGraphRepositoryImpl() }
         viewModel<WaterSettingsViewModel> { WaterSettingsViewModelImpl(get(), get()) }
