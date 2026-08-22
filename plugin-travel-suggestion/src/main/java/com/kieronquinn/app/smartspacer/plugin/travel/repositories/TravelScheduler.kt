@@ -8,6 +8,7 @@ import com.kieronquinn.app.smartspacer.plugin.shared.permissions.ExactAlarmCompa
 import com.kieronquinn.app.smartspacer.plugin.shared.utils.extensions.PendingIntent_MUTABLE_FLAGS
 import com.kieronquinn.app.smartspacer.plugin.travel.data.TravelInfoDao
 import com.kieronquinn.app.smartspacer.plugin.travel.data.TravelInfoItem
+import com.kieronquinn.app.smartspacer.plugin.travel.notifications.TravelLiveUpdateGate
 import com.kieronquinn.app.smartspacer.plugin.travel.notifications.TravelNotificationController
 import com.kieronquinn.app.smartspacer.plugin.travel.receivers.TravelAlarmReceiver
 
@@ -30,7 +31,9 @@ interface TravelScheduler {
  */
 class TravelSchedulerImpl(
     private val context: Context,
-    private val travelInfoDao: TravelInfoDao
+    private val travelInfoDao: TravelInfoDao,
+    private val notificationController: TravelNotificationController,
+    private val suppressionRepository: TravelSuppressionRepository
 ) : TravelScheduler {
 
     companion object {
@@ -99,7 +102,13 @@ class TravelSchedulerImpl(
 
     override fun scheduleReminder(item: TravelInfoItem) {
         cancelReminder(item.id)
-        val planned = planAlarms(item, System.currentTimeMillis(), hasPermission())
+        if (item.isUsed) return
+        val now = System.currentTimeMillis()
+        // Already inside T-30: do not wait for an alarm whose trigger is in the past.
+        if (TravelLiveUpdateGate.shouldPostNow(item, now, suppressionRepository.isSuppressed(item.id))) {
+            notificationController.postTripLiveUpdate(item)
+        }
+        val planned = planAlarms(item, now, hasPermission())
         for (alarm in planned) {
             scheduleAlarm(alarm)
         }

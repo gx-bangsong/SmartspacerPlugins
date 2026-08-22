@@ -28,7 +28,10 @@ class TravelPlugin : SmartspacerPlugin() {
     override fun getModule(context: Context) = module {
         single { TravelInfoDatabase.getDatabase(get()).travelInfoDao() }
         single<TravelSettingsRepository> { TravelSettingsRepositoryImpl(get()) }
-        single<TravelScheduler> { TravelSchedulerImpl(get(), get()) }
+        single { TravelShareOperationRepository(get()) }
+        single { TravelSuppressionRepository(get()) }
+        single { TravelNotificationController(get()) }
+        single<TravelScheduler> { TravelSchedulerImpl(get(), get(), get(), get()) }
         single<PluginPermissionConfig> { TravelPermissions.config }
         single<ExactAlarmRescheduler> {
             ExactAlarmRescheduler { get<TravelScheduler>().rescheduleAll() }
@@ -41,9 +44,6 @@ class TravelPlugin : SmartspacerPlugin() {
                 }
             }
         }
-        single { TravelShareOperationRepository(get()) }
-        single { TravelSuppressionRepository(get()) }
-        single { TravelNotificationController(get()) }
         single<NavGraphRepository> { NavGraphRepositoryImpl() }
         viewModel { TravelSettingsViewModel(get(), get(), get(), get(), get()) }
     }

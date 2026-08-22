@@ -8,6 +8,7 @@ import android.graphics.drawable.Icon as AndroidIcon
 import com.kieronquinn.app.smartspacer.plugin.travel.R
 import com.kieronquinn.app.smartspacer.plugin.travel.data.TravelInfoDao
 import com.kieronquinn.app.smartspacer.plugin.travel.data.TravelInfoItem
+import com.kieronquinn.app.smartspacer.plugin.travel.notifications.TravelLiveUpdateGate
 import com.kieronquinn.app.smartspacer.plugin.travel.ui.activities.TravelActionActivity
 import com.kieronquinn.app.smartspacer.sdk.model.SmartspaceTarget
 import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.TapAction
@@ -44,6 +45,17 @@ class TravelTargetProvider : SmartspacerTargetProvider(), KoinComponent {
 
         val now = System.currentTimeMillis()
         val trips = runBlocking { travelInfoDao.getUnusedTrips(now) }
+
+        // Catch-up: if Smartspacer refreshes while a trip is already inside T-30, post the
+        // Live Update even when the original alarm was missed (doze / reboot / inexact fallback).
+        for (trip in trips) {
+            if (TravelLiveUpdateGate.shouldPostNow(
+                    trip, now, suppressionRepository.isSuppressed(trip.id)
+                )
+            ) {
+                notificationController.postTripLiveUpdate(trip)
+            }
+        }
 
         return trips.map { trip ->
             createTarget(context, trip)
