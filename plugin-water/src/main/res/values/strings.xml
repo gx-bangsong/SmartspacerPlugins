@@ -7,6 +7,7 @@
     <string name="action_skip">跳过</string>
     <string name="action_drank">已喝</string>
     <string name="water_record_success">喝水记录成功</string>
+    <string name="water_record_amount">Drink %1$d ml</string>
 
     <string name="setting_daily_goal">Daily Goal</string>
     <string name="setting_cup_size">Cup Size</string>

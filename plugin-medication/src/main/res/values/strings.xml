@@ -17,6 +17,9 @@
     <string name="notification_dose_content_with_dosage">Dosage: %1$s</string>
     <string name="notification_action_taken">Taken</string>
     <string name="notification_action_snooze">Snooze</string>
+    <string name="notification_live_channel">Medication progress</string>
+    <string name="notification_live_content">%1$d / %2$d doses today</string>
+    <string name="notification_live_public_title">Medication</string>
     <string name="notification_permission_granted">Notifications: granted — tap to open settings</string>
     <string name="notification_permission_denied">Notifications: denied — tap to grant</string>
 </resources>

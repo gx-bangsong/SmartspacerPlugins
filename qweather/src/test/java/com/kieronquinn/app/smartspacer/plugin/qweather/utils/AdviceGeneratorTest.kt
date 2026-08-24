@@ -69,7 +69,7 @@ class AdviceGeneratorTest {
             Daily("2024-01-01", "1", "钓鱼指数", "1", "极适宜", "Test"),
             Daily("2024-01-01", "1", "晾晒指数", "1", "极适宜", "Test")
         )
-        // "宜:运动 洗车 钓鱼 晾晒" is length 13, under the native 16-unit budget.
+        // "宜:运动 洗车 钓鱼 晾晒" is length 13, under the native 28-unit budget.
         val advice = AdviceGenerator.generateActivityAdvice(longItems, false, AdvicePaging.NATIVE)
         assertEquals(listOf("宜:运动 洗车 钓鱼 晾晒"), advice)
     }

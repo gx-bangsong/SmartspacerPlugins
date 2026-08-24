@@ -25,11 +25,18 @@ import android.graphics.drawable.Icon as AndroidIcon
 class WaterProvider : SmartspacerTargetProvider(), KoinComponent {
 
     private val waterDataRepository by inject<WaterDataRepository>()
+    private val liveUpdatePublisher by inject<com.kieronquinn.app.smartspacer.plugin.water.notifications.WaterLiveUpdatePublisher>()
 
     override fun getSmartspaceTargets(smartspacerId: String): List<SmartspaceTarget> {
         val context = this.context ?: return emptyList()
         val today = LocalDate.now()
-        val drinks = runBlocking { waterDataRepository.getDrinksForDate(today) }
+        val drinks = runBlocking {
+            try {
+                liveUpdatePublisher.publish()
+            } catch (_: Throwable) {
+            }
+            waterDataRepository.getDrinksForDate(today)
+        }
         val fulfilledCount = drinks.size
         val cupsTotal = ceil(waterDataRepository.dailyGoalMl.toDouble() / waterDataRepository.cupMl).toInt()
         val totalMlDrank = drinks.sumOf { it.amount }

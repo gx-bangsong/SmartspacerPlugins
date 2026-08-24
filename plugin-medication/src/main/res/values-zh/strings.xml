@@ -18,6 +18,9 @@
     <string name="notification_dose_content_with_dosage">剂量：%1$s</string>
     <string name="notification_action_taken">已服用</string>
     <string name="notification_action_snooze">稍后提醒</string>
+    <string name="notification_live_channel">服药进度</string>
+    <string name="notification_live_content">今日已服 %1$d / %2$d 次</string>
+    <string name="notification_live_public_title">服药</string>
     <string name="notification_permission_granted">通知：已授权——点击打开设置</string>
     <string name="notification_permission_denied">通知：未授权——点击授权</string>
 </resources>

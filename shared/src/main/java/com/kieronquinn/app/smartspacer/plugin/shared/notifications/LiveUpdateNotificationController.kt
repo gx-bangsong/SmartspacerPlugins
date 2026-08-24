@@ -100,15 +100,15 @@ class LiveUpdateNotificationController(private val context: Context) {
                 setChronometerCountDown(spec.chronometerCountDown)
             }
             if (promoted) {
-                // Compat APIs are safe on API 36.0 (they set extras / no-op). Always use
-                // indeterminate ProgressStyle — setProgress(0) with no segments is an invalid
-                // bar and OEMs drop the Live Update chip entirely.
+                // Compat APIs are safe on API 36.0 (they set extras / no-op).
                 setRequestPromotedOngoing(true)
-                setStyle(NotificationCompat.ProgressStyle().setProgressIndeterminate(true))
+                setStyle(promotedProgressStyle(spec))
                 spec.shortCriticalText
                     ?.toString()
                     ?.takeIf { it.isNotBlank() }
                     ?.let { setShortCriticalText(it) }
+            } else if (spec.progressMax != null && spec.progressMax > 0) {
+                setProgress(spec.progressMax, (spec.progress ?: 0).coerceIn(0, spec.progressMax), false)
             } else if (spec.progressIndeterminate) {
                 // Standard indeterminate progress on pre-36.1 devices (classic ProgressBar style).
                 setProgress(0, 0, true)
@@ -129,5 +129,21 @@ class LiveUpdateNotificationController(private val context: Context) {
             }
         }
         return builder.build()
+    }
+
+    /**
+     * Live Update chips require a ProgressStyle. A determinate bar must have at least one
+     * segment — [setProgress] of 0 with no segments is dropped by some OEMs.
+     */
+    private fun promotedProgressStyle(spec: LiveUpdateSpec): NotificationCompat.ProgressStyle {
+        val max = spec.progressMax
+        val current = spec.progress
+        return if (!spec.progressIndeterminate && max != null && max > 0) {
+            NotificationCompat.ProgressStyle()
+                .setProgressSegments(listOf(NotificationCompat.ProgressStyle.Segment(max)))
+                .setProgress(current?.coerceIn(0, max) ?: 0)
+        } else {
+            NotificationCompat.ProgressStyle().setProgressIndeterminate(true)
+        }
     }
 }

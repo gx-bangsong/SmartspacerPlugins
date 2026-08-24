@@ -7,7 +7,7 @@ package com.kieronquinn.app.smartspacer.plugin.qweather.utils
  * because Native Smartspace can run on the lock screen regardless of home app.
  */
 enum class AdvicePaging(val prefValue: String, val maxChars: Int) {
-    NATIVE("native", 16),
+    NATIVE("native", 28),
     WIDGET("widget", 8);
 
     companion object {

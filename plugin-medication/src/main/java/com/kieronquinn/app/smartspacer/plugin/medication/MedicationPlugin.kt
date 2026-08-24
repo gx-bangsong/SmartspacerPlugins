@@ -17,6 +17,11 @@ class MedicationPlugin: SmartspacerPlugin() {
     override fun getModule(context: Context) = module {
         single { MedicationDatabase.getDatabase(get()).medicationDao() }
         single { MedicationDatabase.getDatabase(get()).doseHistoryDao() }
+        single {
+            com.kieronquinn.app.smartspacer.plugin.medication.notifications.MedicationLiveUpdatePublisher(
+                get(), get(), get()
+            )
+        }
         single<NavGraphRepository> { NavGraphRepositoryImpl() }
         single<MedicationScheduler> { MedicationSchedulerImpl(get(), get()) }
         single<PluginPermissionConfig> { MedicationPermissions.config }

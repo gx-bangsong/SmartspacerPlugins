@@ -23,6 +23,7 @@ class RecordDoseFragment : BottomSheetDialogFragment() {
     private val medicationDao by inject<MedicationDao>()
     private val doseHistoryDao by inject<DoseHistoryDao>()
     private val medicationScheduler by inject<MedicationScheduler>()
+    private val liveUpdatePublisher by inject<com.kieronquinn.app.smartspacer.plugin.medication.notifications.MedicationLiveUpdatePublisher>()
 
     private var _binding: FragmentRecordDoseBinding? = null
     private val binding get() = _binding!!
@@ -67,6 +68,7 @@ class RecordDoseFragment : BottomSheetDialogFragment() {
 
                     // 记录服药后立即刷新 Smartspace
                     MedicationWorker.enqueueImmediate(requireContext())
+                    runCatching { liveUpdatePublisher.publish(updatedMedication) }
                     dismiss()
                     activity?.finish()
                 }
@@ -98,6 +100,7 @@ class RecordDoseFragment : BottomSheetDialogFragment() {
 
                     // 跳过服药后也立即刷新
                     MedicationWorker.enqueueImmediate(requireContext())
+                    runCatching { liveUpdatePublisher.publish(updatedMedication) }
                     dismiss()
                     activity?.finish()
                 }

@@ -25,6 +25,7 @@ class WaterPlugin: SmartspacerPlugin() {
     override fun getModule(context: Context) = module {
         single { WaterDatabase.getDatabase(get()).drinkHistoryDao() }
         single<WaterDataRepository> { WaterDataRepositoryImpl(get(), get()) }
+        single { com.kieronquinn.app.smartspacer.plugin.water.notifications.WaterLiveUpdatePublisher(get(), get()) }
         single { WaterScheduler() }
         single<PluginPermissionConfig> { WaterPermissions.config }
         single<ExactAlarmRescheduler> {
