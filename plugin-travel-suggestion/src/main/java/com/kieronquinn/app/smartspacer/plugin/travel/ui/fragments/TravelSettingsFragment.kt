@@ -199,7 +199,7 @@ class TravelSettingsFragment : BaseFragment<FragmentTravelSettingsBinding>(Fragm
                     } else {
                         "${trip.trainNumber}  ${trip.departureStation}"
                     }
-                    val subtitle = "$dateStr | 座位: ${trip.seat ?: "无"} | 乘车人: ${trip.passengerName ?: "无"}"
+                    val subtitle = "$dateStr | 检票口: ${trip.gate ?: "无"} | 座位: ${trip.seat ?: "无"} | 乘车人: ${trip.passengerName ?: "无"}"
                     settingsItems.add(
                         Setting(
                             title,

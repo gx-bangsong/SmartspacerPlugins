@@ -54,6 +54,7 @@ class ManualPasteFragment : DialogFragment() {
                 arrivalStation = it.arrivalStation,
                 departureTime = it.departureTime,
                 seat = it.seat,
+                gate = it.gate,
                 passengerName = null,
                 rawText = ""
             )

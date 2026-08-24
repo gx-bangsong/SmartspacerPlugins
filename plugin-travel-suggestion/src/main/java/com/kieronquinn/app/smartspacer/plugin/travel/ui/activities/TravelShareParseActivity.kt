@@ -247,6 +247,7 @@ class TravelShareParseActivity : FragmentActivity() {
                         arrivalStation = null,
                         departureTime = 0L,
                         seat = null,
+                        gate = null,
                         createdAt = now,
                         updatedAt = now
                     )
@@ -268,6 +269,7 @@ class TravelShareParseActivity : FragmentActivity() {
                         arrivalStation = null,
                         departureTime = 0L,
                         seat = null,
+                        gate = null,
                         createdAt = now,
                         updatedAt = now
                     )
@@ -309,7 +311,8 @@ class TravelShareParseActivity : FragmentActivity() {
                     departureStation = info.departureStation,
                     arrivalStation = info.arrivalStation,
                     departureTime = info.departureTime,
-                    seat = info.seat
+                    seat = info.seat,
+                    gate = info.gate
                 )
                 val nextState = TravelShareStateMachine.transition(
                     parsed.state, TravelShareEvent.ParseSucceeded, now, parsed.createdAt

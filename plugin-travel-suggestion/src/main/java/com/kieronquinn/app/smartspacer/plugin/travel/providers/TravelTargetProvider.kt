@@ -89,7 +89,11 @@ class TravelTargetProvider : SmartspacerTargetProvider(), KoinComponent {
             )
         }
 
-        val subtitleText = trip.passengerName ?: context.getString(R.string.app_name)
+        val subtitleText = listOfNotNull(
+            trip.gate?.takeIf { it.isNotBlank() },
+            trip.seat?.takeIf { it.isNotBlank() },
+            trip.passengerName?.takeIf { it.isNotBlank() }
+        ).joinToString(" · ").ifBlank { context.getString(R.string.app_name) }
 
         val actionIntent = Intent(context, TravelActionActivity::class.java).apply {
             putExtra("trainNumber", trip.trainNumber)

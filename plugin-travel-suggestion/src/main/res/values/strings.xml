@@ -94,6 +94,7 @@
     <string name="manual_paste_field_to">Arrival station / airport (optional)</string>
     <string name="manual_paste_field_time">Departure time (yyyy-MM-dd HH:mm)</string>
     <string name="manual_paste_field_seat">Seat (optional)</string>
+    <string name="manual_paste_field_gate">Ticket gate / boarding gate (optional)</string>
     <string name="manual_paste_field_passenger">Passenger name (optional)</string>
     <string name="manual_paste_repaste">Paste again</string>
 

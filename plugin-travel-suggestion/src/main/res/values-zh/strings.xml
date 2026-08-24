@@ -94,6 +94,7 @@
     <string name="manual_paste_field_to">到达站 / 机场（选填）</string>
     <string name="manual_paste_field_time">出发时间 (格式: yyyy-MM-dd HH:mm)</string>
     <string name="manual_paste_field_seat">座位号（选填）</string>
+    <string name="manual_paste_field_gate">出发站检票口 / 登机口（选填）</string>
     <string name="manual_paste_field_passenger">乘车人姓名（选填）</string>
     <string name="manual_paste_repaste">重新粘贴</string>
 

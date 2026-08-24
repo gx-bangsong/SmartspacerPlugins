@@ -30,6 +30,8 @@ class SmsParserTest {
         assertEquals("南宁东站", info.departureStation)
         assertNull(info.arrivalStation)
         assertEquals("邓棚焕", info.passengerName)
+        assertNull(info.gate)
+        assertNull(info.seat)
 
         val cal = java.util.Calendar.getInstance()
         cal.timeInMillis = info.departureTime
@@ -71,6 +73,40 @@ class SmsParserTest {
         assertEquals(1, cal.get(java.util.Calendar.DAY_OF_MONTH))
         assertEquals(14, cal.get(java.util.Calendar.HOUR_OF_DAY))
         assertEquals(30, cal.get(java.util.Calendar.MINUTE))
+    }
+
+    @Test
+    fun test12306ItineraryExtractsGateAndSeat() {
+        val rawSms = "【铁路12306】张三您已购2月28日G5507次南宁东站16:28开往桂林北站17:30到15车12A号，检票口A12，请尽快取票。"
+        val result = parser.parseTravelInfo(rawSms)
+        assertEquals(ParseResultStatus.SUCCESS, result.status)
+        val info = result.travelInfo!!
+        assertEquals("G5507", info.trainNumber)
+        assertEquals("南宁东站", info.departureStation)
+        assertEquals("A12", info.gate)
+        assertEquals("15车12A", info.seat)
+    }
+
+    @Test
+    fun test12306ReminderExtractsGate() {
+        val rawSms = "【12306】您预订的G5507次列车将于2月28日16:28从南宁东站出发，检票口A12，座位15车12A。"
+        val result = parser.parseTravelInfo(rawSms)
+        assertEquals(ParseResultStatus.SUCCESS, result.status)
+        val info = result.travelInfo!!
+        assertEquals("G5507", info.trainNumber)
+        assertEquals("南宁东站", info.departureStation)
+        assertEquals("A12", info.gate)
+        assertEquals("15车12A", info.seat)
+    }
+
+    @Test
+    fun testFlightBoardingGate() {
+        val flightSms = "【国航】您的航班CA1234，8月1日北京首都-上海虹桥，起飞时间14:30，座位13F，登机口H12。"
+        val result = parser.parseTravelInfo(flightSms)
+        assertEquals(ParseResultStatus.SUCCESS, result.status)
+        val info = result.travelInfo!!
+        assertEquals("13F", info.seat)
+        assertEquals("H12", info.gate)
     }
 
     @Test

@@ -11,6 +11,26 @@
     }
   },
   {
+    "id": "12306_itinerary_date_first",
+    "pattern": "【(?:铁路)?12306】.*?(\\d+月\\d+日)([A-Z0-9]+)次(?:列车)?([^，。\\d检]{0,12}?)(\\d{1,2}:\\d{2})开",
+    "mappings": {
+      "departureDate": 1,
+      "trainNumber": 2,
+      "departureStation": 3,
+      "departureTime": 4
+    }
+  },
+  {
+    "id": "12306_itinerary_from_station",
+    "pattern": "【(?:铁路)?12306】.*?([A-Z0-9]+)次.*?(\\d+月\\d+日)(\\d{1,2}:\\d{2})从([^，。\\s出]{2,12}?)出发",
+    "mappings": {
+      "trainNumber": 1,
+      "departureDate": 2,
+      "departureTime": 3,
+      "departureStation": 4
+    }
+  },
+  {
     "id": "flight_default",
     "pattern": "【(?:[^】]+)】您的航班([A-Z0-9]{2,6})，(\\d+月\\d+日)?(?:(\\d{4}-\\d{2}-\\d{2}))?([^至\\-→\\s，]+)(?:-|→|至)([^，\\s]+)，起飞时间(\\d{1,2}:\\d{2})，?座位?([A-Z0-9\\d#一二三四五等舱]+)?",
     "mappings": {

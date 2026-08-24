@@ -69,6 +69,7 @@ class TravelSmsReceiver : BroadcastReceiver(), KoinComponent {
                             arrivalStation = parsed.arrivalStation,
                             departureTime = parsed.departureTime,
                             seat = parsed.seat,
+                            gate = parsed.gate,
                             passengerName = parsed.passengerName,
                             source = "sms"
                         )

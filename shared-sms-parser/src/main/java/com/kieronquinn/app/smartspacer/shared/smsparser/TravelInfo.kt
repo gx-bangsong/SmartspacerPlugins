@@ -6,6 +6,7 @@ data class TravelInfo(
     val arrivalStation: String?,
     val departureTime: Long, // Epoch milliseconds
     val seat: String?,
+    val gate: String? = null,
     val passengerName: String?,
     val rawText: String
 )
