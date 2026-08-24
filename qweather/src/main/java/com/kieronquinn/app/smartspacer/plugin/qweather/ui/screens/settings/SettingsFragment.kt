@@ -108,7 +108,7 @@ class SettingsFragment : BaseSettingsFragment() {
             Dropdown(
                 getString(R.string.settings_page_limit_title),
                 getString(R.string.settings_page_limit_summary, pageLimit),
-                ContextCompat.getDrawable(requireContext(), SharedR.drawable.ic_list),
+                ContextCompat.getDrawable(requireContext(), QWeatherR.drawable.ic_list),
                 pageLimit,
                 { viewModel.onPageLimitChanged(it) },
                 AdvicePaging.LIMIT_OPTIONS
