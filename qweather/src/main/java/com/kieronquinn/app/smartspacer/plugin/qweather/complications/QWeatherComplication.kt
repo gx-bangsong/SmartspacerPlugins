@@ -10,6 +10,7 @@ import com.kieronquinn.app.smartspacer.plugin.qweather.providers.SettingsReposit
 import com.kieronquinn.app.smartspacer.plugin.qweather.providers.getBlocking
 import com.kieronquinn.app.smartspacer.plugin.qweather.ui.activities.SettingsActivity
 import com.kieronquinn.app.smartspacer.plugin.qweather.utils.AdviceGenerator
+import com.kieronquinn.app.smartspacer.plugin.qweather.utils.AdvicePaging
 import com.kieronquinn.app.smartspacer.sdk.model.SmartspaceAction
 import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.Icon
 import com.kieronquinn.app.smartspacer.sdk.model.uitemplatedata.TapAction

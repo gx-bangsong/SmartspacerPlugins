@@ -54,6 +54,43 @@ class AdviceGeneratorTest {
     }
 
     @Test
+    fun `native paging keeps the four good activities on one page`() {
+        val longItems = listOf(
+            Daily("2024-01-01", "1", "运动指数", "1", "极适宜", "Test"),
+            Daily("2024-01-01", "1", "洗车指数", "1", "极适宜", "Test"),
+            Daily("2024-01-01", "1", "钓鱼指数", "1", "极适宜", "Test"),
+            Daily("2024-01-01", "1", "晾晒指数", "1", "极适宜", "Test")
+        )
+        // "宜:运动 洗车 钓鱼 晾晒" is length 13, under the native 16-unit budget.
+        val advice = AdviceGenerator.generateActivityAdvice(longItems, false, AdvicePaging.NATIVE)
+        assertEquals(listOf("宜:运动 洗车 钓鱼 晾晒"), advice)
+    }
+
+    @Test
+    fun `native emoji paging also stays on one page`() {
+        val longItems = listOf(
+            Daily("2024-01-01", "1", "运动指数", "1", "极适宜", "Test"),
+            Daily("2024-01-01", "1", "洗车指数", "1", "极适宜", "Test"),
+            Daily("2024-01-01", "1", "钓鱼指数", "1", "极适宜", "Test"),
+            Daily("2024-01-01", "1", "晾晒指数", "1", "极适宜", "Test")
+        )
+        val advice = AdviceGenerator.generateActivityAdvice(longItems, true, AdvicePaging.NATIVE)
+        assertEquals(listOf("✅ 🏃 🚗 🎣 👕"), advice)
+    }
+
+    @Test
+    fun `widget paging still splits at eight units`() {
+        val longItems = listOf(
+            Daily("2024-01-01", "1", "运动指数", "1", "极适宜", "Test"),
+            Daily("2024-01-01", "1", "洗车指数", "1", "极适宜", "Test"),
+            Daily("2024-01-01", "1", "钓鱼指数", "1", "极适宜", "Test"),
+            Daily("2024-01-01", "1", "晾晒指数", "1", "极适宜", "Test")
+        )
+        val advice = AdviceGenerator.generateActivityAdvice(longItems, false, AdvicePaging.WIDGET)
+        assertEquals(listOf("宜:运动 洗车", "宜:钓鱼 晾晒"), advice)
+    }
+
+    @Test
     fun `generateStatusAdvice without emoji`() {
         val advice = AdviceGenerator.generateStatusAdvice(dailyItems, false)
         assertEquals(listOf("穿衣:舒适", "紫外线:弱"), advice)
