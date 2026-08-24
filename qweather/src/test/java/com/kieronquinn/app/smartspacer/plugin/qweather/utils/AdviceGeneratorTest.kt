@@ -62,28 +62,30 @@ class AdviceGeneratorTest {
     }
 
     @Test
-    fun `native paging keeps the four good activities on one page`() {
+    fun `native paging splits at the 12-character threshold`() {
         val longItems = listOf(
             Daily("2024-01-01", "1", "运动指数", "1", "极适宜", "Test"),
             Daily("2024-01-01", "1", "洗车指数", "1", "极适宜", "Test"),
             Daily("2024-01-01", "1", "钓鱼指数", "1", "极适宜", "Test"),
             Daily("2024-01-01", "1", "晾晒指数", "1", "极适宜", "Test")
         )
-        // "宜:运动 洗车 钓鱼 晾晒" is length 13, under the native 28-unit budget.
+        // "宜:运动 洗车 钓鱼" is 10; adding " 晾晒" would be 13 > 12.
         val advice = AdviceGenerator.generateActivityAdvice(longItems, false, AdvicePaging.NATIVE)
-        assertEquals(listOf("宜:运动 洗车 钓鱼 晾晒"), advice)
+        assertEquals(listOf("宜:运动 洗车 钓鱼", "宜:晾晒"), advice)
     }
 
     @Test
-    fun `native emoji paging also stays on one page`() {
+    fun `custom threshold overrides the native preset`() {
         val longItems = listOf(
             Daily("2024-01-01", "1", "运动指数", "1", "极适宜", "Test"),
             Daily("2024-01-01", "1", "洗车指数", "1", "极适宜", "Test"),
             Daily("2024-01-01", "1", "钓鱼指数", "1", "极适宜", "Test"),
             Daily("2024-01-01", "1", "晾晒指数", "1", "极适宜", "Test")
         )
-        val advice = AdviceGenerator.generateActivityAdvice(longItems, true, AdvicePaging.NATIVE)
-        assertEquals(listOf("✅ 🏃 🚗 🎣 👕"), advice)
+        val advice = AdviceGenerator.generateActivityAdvice(
+            longItems, false, AdvicePaging.NATIVE, maxChars = 16
+        )
+        assertEquals(listOf("宜:运动 洗车 钓鱼 晾晒"), advice)
     }
 
     @Test

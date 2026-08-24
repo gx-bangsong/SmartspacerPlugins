@@ -105,6 +105,14 @@ class SettingsFragment : BaseSettingsFragment() {
                 { viewModel.onPagingModeChanged(it) },
                 AdvicePaging.entries.toList()
             ) { pagingModeLabel(it) },
+            Dropdown(
+                getString(R.string.settings_page_limit_title),
+                getString(R.string.settings_page_limit_summary, pageLimit),
+                ContextCompat.getDrawable(requireContext(), SharedR.drawable.ic_list),
+                pageLimit,
+                { viewModel.onPageLimitChanged(it) },
+                AdvicePaging.LIMIT_OPTIONS
+            ) { getString(R.string.settings_page_limit_option, it) },
             SwitchSetting(
                 bedtimeEnabled,
                 getString(R.string.settings_bedtime_title),

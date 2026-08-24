@@ -26,6 +26,7 @@ abstract class SettingsViewModel : ViewModel() {
     abstract fun onIndicesChanged(value: Set<String>)
     abstract fun onUseEmojiChanged(value: Boolean)
     abstract fun onPagingModeChanged(value: AdvicePaging)
+    abstract fun onPageLimitChanged(value: Int)
     abstract fun onBedtimeEnabledChanged(value: Boolean)
     abstract fun onBedtimeMinutesChanged(value: Int)
     abstract fun onWakeEnabledChanged(value: Boolean)
@@ -41,6 +42,7 @@ abstract class SettingsViewModel : ViewModel() {
             val selectedIndices: Set<String>,
             val useEmoji: Boolean,
             val paging: AdvicePaging,
+            val pageLimit: Int,
             val bedtimeEnabled: Boolean,
             val bedtimeMinutes: Int,
             val wakeEnabled: Boolean,
@@ -78,8 +80,9 @@ class SettingsViewModelImpl(
     override val state = combine(
         core,
         display,
-        settingsRepository.displayDurationMinutes
-    ) { coreState, displayState, duration ->
+        settingsRepository.displayDurationMinutes,
+        settingsRepository.pageLimit
+    ) { coreState, displayState, duration, pageLimit ->
         State.Loaded(
             apiKey = coreState.apiKey,
             apiHost = coreState.apiHost,
@@ -87,6 +90,7 @@ class SettingsViewModelImpl(
             selectedIndices = coreState.selectedIndices.split(",").filter { it.isNotEmpty() }.toSet(),
             useEmoji = coreState.useEmoji,
             paging = AdvicePaging.fromPreference(displayState.pagingMode),
+            pageLimit = AdvicePaging.sanitizeLimit(pageLimit),
             bedtimeEnabled = displayState.bedtimeEnabled,
             bedtimeMinutes = displayState.bedtimeMinutes,
             wakeEnabled = displayState.wakeEnabled,
@@ -133,6 +137,13 @@ class SettingsViewModelImpl(
     override fun onPagingModeChanged(value: AdvicePaging) {
         viewModelScope.launch {
             settingsRepository.setPagingMode(value.prefValue)
+            triggerUpdate()
+        }
+    }
+
+    override fun onPageLimitChanged(value: Int) {
+        viewModelScope.launch {
+            settingsRepository.setPageLimit(value)
             triggerUpdate()
         }
     }

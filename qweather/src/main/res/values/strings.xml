@@ -19,8 +19,11 @@
     <string name="settings_paging_mode_title">Display surface</string>
     <string name="settings_paging_mode_native">Native Smartspace</string>
     <string name="settings_paging_mode_widget">Smartspacer widget</string>
-    <string name="settings_paging_mode_native_summary">Longer pages for At a Glance / lock screen</string>
-    <string name="settings_paging_mode_widget_summary">Shorter pages for the home-screen widget</string>
+    <string name="settings_paging_mode_native_summary">Preset threshold 12 — matches the fixed At a Glance line</string>
+    <string name="settings_paging_mode_widget_summary">Preset threshold 8 — shorter widget slot</string>
+    <string name="settings_page_limit_title">Page threshold</string>
+    <string name="settings_page_limit_summary">Split a new page after %1$d characters. Native Smartspace cannot show more than one line.</string>
+    <string name="settings_page_limit_option">%1$d characters</string>
     <string name="settings_bedtime_title">Show before bed</string>
     <string name="settings_bedtime_summary">Show lifestyle advice starting at the bedtime you set</string>
     <string name="settings_bedtime_time_title">Bedtime</string>

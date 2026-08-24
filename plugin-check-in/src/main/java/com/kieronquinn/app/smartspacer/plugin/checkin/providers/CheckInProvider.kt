@@ -44,6 +44,12 @@ class CheckInProvider : SmartspacerTargetProvider(), KoinComponent {
 
         val todayDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
         val record = runBlocking { checkInDao.getByDate(todayDate) }
+        val checkInOnly = runBlocking { settingsRepository.checkInOnly.first() }
+        val endTime = runBlocking { settingsRepository.workEndTime.first() }
+        val endReached = timeReached(endTime)
+        if (!CheckInVisibility.shouldShow(record, checkInOnly, endReached)) {
+            return emptyList()
+        }
 
         return listOf(createTarget(context, record))
     }

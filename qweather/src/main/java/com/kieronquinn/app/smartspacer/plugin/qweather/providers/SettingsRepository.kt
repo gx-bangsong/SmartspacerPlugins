@@ -20,6 +20,7 @@ interface SettingsRepository : BaseSettingsRepository {
     val selectedIndices: Flow<String>
     val useEmoji: Flow<Boolean>
     val pagingMode: Flow<String>
+    val pageLimit: Flow<Int>
     val bedtimeEnabled: Flow<Boolean>
     val bedtimeMinutes: Flow<Int>
     val wakeEnabled: Flow<Boolean>
@@ -34,6 +35,7 @@ interface SettingsRepository : BaseSettingsRepository {
     suspend fun setSelectedIndices(value: String)
     suspend fun setUseEmoji(value: Boolean)
     suspend fun setPagingMode(value: String)
+    suspend fun setPageLimit(value: Int)
     suspend fun setBedtimeEnabled(value: Boolean)
     suspend fun setBedtimeMinutes(value: Int)
     suspend fun setWakeEnabled(value: Boolean)
@@ -51,6 +53,7 @@ class SettingsRepositoryImpl(context: Context) : BaseSettingsRepositoryImpl(), S
         private const val SELECTED_INDICES_KEY = "selected_indices"
         private const val USE_EMOJI_KEY = "use_emoji"
         private const val PAGING_MODE_KEY = "paging_mode"
+        private const val PAGE_LIMIT_KEY = "page_limit"
         private const val BEDTIME_ENABLED_KEY = "bedtime_enabled"
         private const val BEDTIME_MINUTES_KEY = "bedtime_minutes"
         private const val WAKE_ENABLED_KEY = "wake_enabled"
@@ -73,6 +76,11 @@ class SettingsRepositoryImpl(context: Context) : BaseSettingsRepositoryImpl(), S
     private val _pagingMode = MutableStateFlow(
         sharedPreferences.getString(PAGING_MODE_KEY, AdvicePaging.DEFAULT_PREF) ?: AdvicePaging.DEFAULT_PREF
     )
+    private val _pageLimit = MutableStateFlow(
+        AdvicePaging.sanitizeLimit(
+            sharedPreferences.getInt(PAGE_LIMIT_KEY, AdvicePaging.DEFAULT_LIMIT)
+        )
+    )
     private val _bedtimeEnabled = MutableStateFlow(sharedPreferences.getBoolean(BEDTIME_ENABLED_KEY, false))
     private val _bedtimeMinutes = MutableStateFlow(
         sharedPreferences.getInt(BEDTIME_MINUTES_KEY, DEFAULT_BEDTIME_MINUTES)
@@ -92,6 +100,7 @@ class SettingsRepositoryImpl(context: Context) : BaseSettingsRepositoryImpl(), S
     override val selectedIndices: Flow<String> = _selectedIndices.asStateFlow()
     override val useEmoji: Flow<Boolean> = _useEmoji.asStateFlow()
     override val pagingMode: Flow<String> = _pagingMode.asStateFlow()
+    override val pageLimit: Flow<Int> = _pageLimit.asStateFlow()
     override val bedtimeEnabled: Flow<Boolean> = _bedtimeEnabled.asStateFlow()
     override val bedtimeMinutes: Flow<Int> = _bedtimeMinutes.asStateFlow()
     override val wakeEnabled: Flow<Boolean> = _wakeEnabled.asStateFlow()
@@ -111,6 +120,9 @@ class SettingsRepositoryImpl(context: Context) : BaseSettingsRepositoryImpl(), S
                 PAGING_MODE_KEY -> _pagingMode.value =
                     sharedPreferences.getString(PAGING_MODE_KEY, AdvicePaging.DEFAULT_PREF)
                         ?: AdvicePaging.DEFAULT_PREF
+                PAGE_LIMIT_KEY -> _pageLimit.value = AdvicePaging.sanitizeLimit(
+                    sharedPreferences.getInt(PAGE_LIMIT_KEY, AdvicePaging.DEFAULT_LIMIT)
+                )
                 BEDTIME_ENABLED_KEY -> _bedtimeEnabled.value =
                     sharedPreferences.getBoolean(BEDTIME_ENABLED_KEY, false)
                 BEDTIME_MINUTES_KEY -> _bedtimeMinutes.value =
@@ -157,8 +169,19 @@ class SettingsRepositoryImpl(context: Context) : BaseSettingsRepositoryImpl(), S
     }
 
     override suspend fun setPagingMode(value: String) = withContext(Dispatchers.IO) {
-        sharedPreferences.edit().putString(PAGING_MODE_KEY, value).commit()
-        _pagingMode.value = value
+        val preset = AdvicePaging.fromPreference(value)
+        sharedPreferences.edit()
+            .putString(PAGING_MODE_KEY, preset.prefValue)
+            .putInt(PAGE_LIMIT_KEY, preset.maxChars)
+            .commit()
+        _pagingMode.value = preset.prefValue
+        _pageLimit.value = preset.maxChars
+    }
+
+    override suspend fun setPageLimit(value: Int) = withContext(Dispatchers.IO) {
+        val limit = AdvicePaging.sanitizeLimit(value)
+        sharedPreferences.edit().putInt(PAGE_LIMIT_KEY, limit).commit()
+        _pageLimit.value = limit
     }
 
     override suspend fun setBedtimeEnabled(value: Boolean) = withContext(Dispatchers.IO) {

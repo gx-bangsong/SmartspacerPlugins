@@ -58,7 +58,8 @@ object AdviceGenerator {
     fun generateActivityAdvice(
         dailyItems: List<Daily>,
         useEmoji: Boolean,
-        paging: AdvicePaging = AdvicePaging.NATIVE
+        paging: AdvicePaging = AdvicePaging.NATIVE,
+        maxChars: Int = paging.maxChars
     ): List<String> {
         val goodFor = mutableListOf<String>()
         val badFor = mutableListOf<String>()
@@ -74,11 +75,11 @@ object AdviceGenerator {
 
         val result = mutableListOf<String>()
         if (useEmoji) {
-            result.addAll(splitAdvice("✅ ", goodFor, paging.maxChars))
-            result.addAll(splitAdvice("❌ ", badFor, paging.maxChars))
+            result.addAll(splitAdvice("✅ ", goodFor, maxChars))
+            result.addAll(splitAdvice("❌ ", badFor, maxChars))
         } else {
-            result.addAll(splitAdvice("宜:", goodFor, paging.maxChars))
-            result.addAll(splitAdvice("不宜:", badFor, paging.maxChars))
+            result.addAll(splitAdvice("宜:", goodFor, maxChars))
+            result.addAll(splitAdvice("不宜:", badFor, maxChars))
         }
         return result
     }

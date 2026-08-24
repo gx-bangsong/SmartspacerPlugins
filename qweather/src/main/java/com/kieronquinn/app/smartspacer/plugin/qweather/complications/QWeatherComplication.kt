@@ -53,11 +53,15 @@ class QWeatherComplication : SmartspacerComplicationProvider() {
             ?: return listOf(getSetupAction("Loading weather data..."))
 
         val useEmoji = settingsRepository.useEmoji.getBlocking()
-        val paging = AdvicePaging.fromPreference(settingsRepository.pagingMode.getBlocking())
+        val pageLimit = AdvicePaging.sanitizeLimit(settingsRepository.pageLimit.getBlocking())
 
         val actions = mutableListOf<SmartspaceAction>()
 
-        AdviceGenerator.generateActivityAdvice(weatherData.daily, useEmoji, paging).forEachIndexed { index, advice ->
+        AdviceGenerator.generateActivityAdvice(
+            weatherData.daily,
+            useEmoji,
+            maxChars = pageLimit
+        ).forEachIndexed { index, advice ->
             actions.add(createAction("qweather_activity_advice_$index", advice))
         }
 
