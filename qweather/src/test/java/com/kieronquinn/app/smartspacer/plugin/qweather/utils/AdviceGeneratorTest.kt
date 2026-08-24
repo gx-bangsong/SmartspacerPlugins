@@ -14,6 +14,14 @@ class AdviceGeneratorTest {
     )
 
     @Test
+    fun `preference values map to paging modes`() {
+        assertEquals(AdvicePaging.NATIVE, AdvicePaging.fromPreference("native"))
+        assertEquals(AdvicePaging.WIDGET, AdvicePaging.fromPreference("widget"))
+        assertEquals(AdvicePaging.NATIVE, AdvicePaging.fromPreference(null))
+        assertEquals(AdvicePaging.NATIVE, AdvicePaging.fromPreference("nope"))
+    }
+
+    @Test
     fun `generateActivityAdvice without emoji`() {
         val advice = AdviceGenerator.generateActivityAdvice(dailyItems, false)
         assertEquals(listOf("宜:运动", "不宜:洗车"), advice)
@@ -35,7 +43,7 @@ class AdviceGeneratorTest {
         )
         // "宜:运动 洗车" is length 7
         // "宜:运动 洗车 钓鱼" would be length 10 -> Split!
-        val advice = AdviceGenerator.generateActivityAdvice(longItems, false)
+        val advice = AdviceGenerator.generateActivityAdvice(longItems, false, AdvicePaging.WIDGET)
         assertEquals(listOf("宜:运动 洗车", "宜:钓鱼 晾晒"), advice)
     }
 
@@ -49,7 +57,7 @@ class AdviceGeneratorTest {
         )
         // "✅ 🏃 🚗" -> 2 + 2 + 1 + 2 = 7
         // "✅ 🏃 🚗 🎣" -> 2 + 2 + 1 + 2 + 1 + 2 = 10 -> Split!
-        val advice = AdviceGenerator.generateActivityAdvice(longItems, true)
+        val advice = AdviceGenerator.generateActivityAdvice(longItems, true, AdvicePaging.WIDGET)
         assertEquals(listOf("✅ 🏃 🚗", "✅ 🎣 👕"), advice)
     }
 

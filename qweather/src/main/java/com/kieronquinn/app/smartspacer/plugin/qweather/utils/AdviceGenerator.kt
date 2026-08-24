@@ -58,7 +58,7 @@ object AdviceGenerator {
     fun generateActivityAdvice(
         dailyItems: List<Daily>,
         useEmoji: Boolean,
-        paging: AdvicePaging = AdvicePaging.WIDGET
+        paging: AdvicePaging = AdvicePaging.NATIVE
     ): List<String> {
         val goodFor = mutableListOf<String>()
         val badFor = mutableListOf<String>()
