@@ -59,7 +59,7 @@ object TravelShareStateMachine {
         now: Long,
         createdAt: Long
     ): TravelShareOpState {
-        if (now > createdAt + TravelShareDraft.DRAFT_TTL_MS) {
+        if (now >= createdAt + TravelShareDraft.DRAFT_TTL_MS) {
             return TravelShareOpState.CANCELLED
         }
         return when (event) {
