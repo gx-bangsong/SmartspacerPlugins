@@ -23,7 +23,7 @@ data class TravelShareDraft(
     fun withState(newState: TravelShareOpState, now: Long): TravelShareDraft =
         copy(state = newState, updatedAt = now)
 
-    fun isExpired(now: Long): Boolean = now > createdAt + DRAFT_TTL_MS
+    fun isExpired(now: Long): Boolean = now >= createdAt + DRAFT_TTL_MS
 
     companion object {
         /** Share drafts are pruned 30 minutes after they were created. */
@@ -58,7 +58,7 @@ object TravelShareStateMachine {
         now: Long,
         createdAt: Long
     ): TravelShareOpState {
-        if (now > createdAt + TravelShareDraft.DRAFT_TTL_MS) {
+        if (now >= createdAt + TravelShareDraft.DRAFT_TTL_MS) {
             return TravelShareOpState.CANCELLED
         }
         return when (event) {
