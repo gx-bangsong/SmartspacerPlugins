@@ -18,8 +18,10 @@ object NotificationIds {
     const val NAMESPACE_TRAVEL_TRIP = "travel_trip"
     const val NAMESPACE_PARCEL = "parcel"
     const val NAMESPACE_MEDICATION = "medication"
+    const val NAMESPACE_MEDICATION_PROGRESS = "medication_progress"
     const val NAMESPACE_FOOD = "food"
     const val NAMESPACE_WATER = "water"
+    const val NAMESPACE_WATER_PROGRESS = "water_progress"
 
     fun forEntity(namespace: String, entityId: Long): Int {
         val mixed = namespace.hashCode() * 31 + entityId.hashCode()

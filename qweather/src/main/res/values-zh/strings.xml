@@ -17,4 +17,21 @@
     <string name="settings_select_indices_summary">选择你希望在 Smartspace 上展示的天气生活指数</string>
     <string name="settings_use_emoji_title">使用 Emoji 表情</string>
     <string name="settings_use_emoji_summary">替换为简短的 Emoji 标志：✅宜 ❌不宜 🏃运动 🚗洗车 🎣钓鱼 ✈️旅游 👕晾晒 👔穿衣 ☀️紫外线 💄化妆 🤒感冒</string>
+    <string name="settings_paging_mode_title">显示位置</string>
+    <string name="settings_paging_mode_native">本机 Smartspace</string>
+    <string name="settings_paging_mode_widget">Smartspacer 小组件</string>
+    <string name="settings_paging_mode_native_summary">预设阈值 12，贴合本机 At a Glance 固定行宽</string>
+    <string name="settings_paging_mode_widget_summary">预设阈值 8，适合桌面小组件</string>
+    <string name="settings_page_limit_title">分页阈值</string>
+    <string name="settings_page_limit_summary">超过 %1$d 个字符就翻到下一页。本机一行能显示的字数改不了。</string>
+    <string name="settings_page_limit_option">%1$d 个字符</string>
+    <string name="settings_bedtime_title">睡前显示</string>
+    <string name="settings_bedtime_summary">到设定的睡前时间后自动显示生活指数</string>
+    <string name="settings_bedtime_time_title">睡前时间</string>
+    <string name="settings_wake_title">醒后显示</string>
+    <string name="settings_wake_summary">到设定的起床时间后自动显示生活指数</string>
+    <string name="settings_wake_time_title">起床时间</string>
+    <string name="settings_display_duration_title">显示多久后消失</string>
+    <string name="settings_display_duration_summary">显示 %1$d 分钟后自动隐藏</string>
+    <string name="settings_display_duration_option">%1$d 分钟</string>
 </resources>

@@ -6,6 +6,7 @@ import android.content.Intent
 import android.provider.Telephony
 import com.kieronquinn.app.smartspacer.plugin.travel.data.TravelInfoDao
 import com.kieronquinn.app.smartspacer.plugin.travel.data.TravelInfoItem
+import com.kieronquinn.app.smartspacer.plugin.travel.data.TravelTripSave
 import com.kieronquinn.app.smartspacer.plugin.travel.logic.TravelDedupe
 import com.kieronquinn.app.smartspacer.plugin.travel.logic.TripKey
 import com.kieronquinn.app.smartspacer.plugin.travel.notifications.TravelNotificationController
@@ -68,23 +69,27 @@ class TravelSmsReceiver : BroadcastReceiver(), KoinComponent {
                             arrivalStation = parsed.arrivalStation,
                             departureTime = parsed.departureTime,
                             seat = parsed.seat,
+                            gate = parsed.gate,
                             passengerName = parsed.passengerName,
                             source = "sms"
                         )
-                        travelInfoDao.insert(travelItem)
+                        val savedItem = TravelTripSave.afterInsert(
+                            travelItem,
+                            travelInfoDao.insert(travelItem)
+                        )
 
-                        travelScheduler.rescheduleAll()
+                        travelScheduler.scheduleReminder(savedItem)
 
                         SmartspacerTargetProvider.notifyChange(context, TravelTargetProvider::class.java)
 
                         val now = System.currentTimeMillis()
-                        if (travelItem.isWithinDepartureWindow(now)) {
+                        if (savedItem.isWithinDepartureWindow(now)) {
                             // Already inside the departure window: go straight to the Live Update.
-                            notificationController.postTripLiveUpdate(travelItem)
+                            notificationController.postTripLiveUpdate(savedItem)
                         } else {
                             // Departure is still far away: normal result notification; the T-30
                             // alarm upgrades the same notification ID to a Live Update later.
-                            notificationController.postTripResult(travelItem)
+                            notificationController.postTripResult(savedItem)
                         }
                     }
                 }

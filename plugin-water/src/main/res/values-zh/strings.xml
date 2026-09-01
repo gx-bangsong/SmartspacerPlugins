@@ -7,6 +7,7 @@
     <string name="action_skip">跳过</string>
     <string name="action_drank">已喝</string>
     <string name="water_record_success">喝水记录成功</string>
+    <string name="water_record_amount">喝水 %1$d ml</string>
 
     <string name="setting_daily_goal">每日目标</string>
     <string name="setting_cup_size">水杯容量</string>
@@ -28,6 +29,9 @@
     <string name="notification_drink_content">保持水分！记录一杯或稍后提醒。</string>
     <string name="notification_action_drink">记录喝水</string>
     <string name="notification_action_snooze">稍后提醒</string>
+    <string name="notification_live_channel">饮水进度</string>
+    <string name="notification_live_title">今日饮水</string>
+    <string name="notification_live_content">%1$d / %2$d ml（%3$d%%）</string>
 
     <!-- Notification permission row -->
     <string name="notification_permission_granted">通知：已授权</string>

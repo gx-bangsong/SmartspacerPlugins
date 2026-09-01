@@ -4,6 +4,7 @@ import android.content.Context
 import android.provider.Telephony
 import com.kieronquinn.app.smartspacer.plugin.parcel.data.ParcelDao
 import com.kieronquinn.app.smartspacer.plugin.parcel.data.ParcelItem
+import com.kieronquinn.app.smartspacer.plugin.parcel.notifications.ParcelLiveUpdatePublisher
 import com.kieronquinn.app.smartspacer.plugin.parcel.providers.ParcelTargetProvider
 import com.kieronquinn.app.smartspacer.sdk.provider.SmartspacerTargetProvider
 import kotlinx.coroutines.Dispatchers
@@ -14,6 +15,7 @@ import org.koin.core.component.inject
 class InboxScanner(private val context: Context) : KoinComponent {
 
     private val parcelDao by inject<ParcelDao>()
+    private val liveUpdatePublisher by inject<ParcelLiveUpdatePublisher>()
 
     suspend fun scan() = withContext(Dispatchers.IO) {
         val cursor = context.contentResolver.query(

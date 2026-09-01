@@ -2,10 +2,15 @@ package com.kieronquinn.app.smartspacer.plugin.food.ui.activities
 
 import androidx.annotation.NavigationRes
 import com.kieronquinn.app.smartspacer.plugin.food.R
+import com.kieronquinn.app.smartspacer.plugin.food.permissions.FoodPermissions
+import com.kieronquinn.app.smartspacer.plugin.shared.permissions.PluginPermissionConfig
 import com.kieronquinn.app.smartspacer.plugin.shared.repositories.NavGraphRepository
-import com.kieronquinn.app.smartspacer.plugin.shared.ui.activities.BaseConfigurationActivity
+import com.kieronquinn.app.smartspacer.plugin.shared.ui.activities.PermissionOnboardingSettingsActivity
 
-class SettingsActivity : BaseConfigurationActivity() {
+class SettingsActivity : PermissionOnboardingSettingsActivity() {
+
+    override val permissionConfig: PluginPermissionConfig = FoodPermissions.config
+
 
     enum class NavGraphMapping(
         override val className: String,

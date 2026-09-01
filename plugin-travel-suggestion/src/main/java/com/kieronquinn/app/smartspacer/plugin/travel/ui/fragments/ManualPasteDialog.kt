@@ -52,6 +52,7 @@ fun ManualPasteDialog(
         )
     }
     var seat by rememberSaveable { mutableStateOf(initialInfo?.seat ?: "") }
+    var gate by rememberSaveable { mutableStateOf(initialInfo?.gate ?: "") }
     var passengerName by rememberSaveable { mutableStateOf(initialInfo?.passengerName ?: "") }
 
     Dialog(
@@ -86,6 +87,7 @@ fun ManualPasteDialog(
                                     arrivalStation = arrivalStation.trim().ifBlank { null },
                                     departureTime = parsedTimeMs,
                                     seat = seat.trim().ifBlank { null },
+                                    gate = gate.trim().ifBlank { null },
                                     passengerName = passengerName.trim().ifBlank { null },
                                     source = source
                                 )
@@ -129,6 +131,7 @@ fun ManualPasteDialog(
                                 arrivalStation = info.arrivalStation ?: ""
                                 departureTimeStr = timeFormat.format(Date(info.departureTime))
                                 seat = info.seat ?: ""
+                                gate = info.gate ?: ""
                                 passengerName = info.passengerName ?: ""
                                 isParsed = true
                                 Toast.makeText(context, context.getString(R.string.manual_paste_parse_success), Toast.LENGTH_SHORT).show()
@@ -176,6 +179,13 @@ fun ManualPasteDialog(
                         value = seat,
                         onValueChange = { seat = it },
                         label = { Text(stringResource(R.string.manual_paste_field_seat)) },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+
+                    OutlinedTextField(
+                        value = gate,
+                        onValueChange = { gate = it },
+                        label = { Text(stringResource(R.string.manual_paste_field_gate)) },
                         modifier = Modifier.fillMaxWidth()
                     )
 

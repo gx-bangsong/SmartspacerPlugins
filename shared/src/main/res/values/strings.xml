@@ -11,4 +11,42 @@
     <string name="about_version">Version %1s\nCreated by Kieron Quinn</string>
     <string name="about_contributors">Contributors</string>
     <string name="search">Search</string>
+
+    <!-- Permission onboarding wizard -->
+    <string name="permission_onboarding_title">Permission setup</string>
+    <string name="permission_onboarding_step">%1$d / %2$d</string>
+    <string name="permission_onboarding_grant">Grant</string>
+    <string name="permission_onboarding_open_settings">Open settings</string>
+    <string name="permission_onboarding_next">Next</string>
+    <string name="permission_onboarding_done">Done</string>
+    <string name="permission_onboarding_skip_later">Set up later</string>
+    <string name="permission_onboarding_unsupported">Not supported on this device</string>
+    <string name="permission_onboarding_settings_entry">Permission check / reconfigure</string>
+    <string name="permission_onboarding_settings_all_ok">All required capabilities are ready. Tap to re-run the wizard.</string>
+    <string name="permission_onboarding_settings_missing">%1$d capability missing. Tap to review and reconfigure.</string>
+    <string name="permission_onboarding_status_granted">Status: granted</string>
+    <string name="permission_onboarding_status_denied">Status: not granted</string>
+    <string name="permission_onboarding_status_not_required">Status: no runtime grant required on this Android version</string>
+    <string name="permission_onboarding_status_unsupported">Status: not supported on this Android version</string>
+    <string name="permission_onboarding_status_settings_disabled">Status: turned off in system settings</string>
+
+    <string name="permission_onboarding_notifications_title">Notifications</string>
+    <string name="permission_onboarding_notifications_purpose">Used to show reminders and status updates from this plugin. On Android 13 and later this is a runtime permission requested with the system dialog.</string>
+    <string name="permission_onboarding_notifications_degradation">If you skip this, the database, parsers and Smartspacer target still work. Reminders simply will not appear as notifications. You can enable notifications later from the settings page.</string>
+
+    <string name="permission_onboarding_sms_receive_title">Receive SMS</string>
+    <string name="permission_onboarding_sms_receive_purpose">Used only to automatically parse incoming SMS for this plugin. The system permission dialog is shown after this explanation — it is never requested as a silent batch with other special permissions.</string>
+    <string name="permission_onboarding_sms_receive_degradation">If you skip this, automatic SMS parsing is turned off. Share-sheet parsing, manual paste and every other non-SMS feature stay available.</string>
+
+    <string name="permission_onboarding_sms_read_title">Read SMS</string>
+    <string name="permission_onboarding_sms_read_purpose">Used to scan existing conversations when you choose to import history. Requested only after this explanation, never together with special (non-runtime) permissions.</string>
+    <string name="permission_onboarding_sms_read_degradation">If you skip this, inbox scanning is unavailable. Share-sheet parsing, manual paste and other non-SMS features stay available.</string>
+
+    <string name="permission_onboarding_exact_alarms_title">Exact alarms</string>
+    <string name="permission_onboarding_exact_alarms_purpose">Used to fire time-sensitive reminders on schedule. This is a special permission — the wizard opens the system exact-alarm screen instead of a runtime permission dialog.</string>
+    <string name="permission_onboarding_exact_alarms_degradation">If you skip this, reminders are still scheduled with an inexact fallback (`setAndAllowWhileIdle`), so they may fire a few minutes off. They are never silently dropped.</string>
+
+    <string name="permission_onboarding_promoted_title">Promoted Live Updates</string>
+    <string name="permission_onboarding_promoted_purpose">Used only for ongoing, user-initiated, time-sensitive Live Updates. `POST_PROMOTED_NOTIFICATIONS` is a manifest permission, not a runtime dialog. On Android 16 QPR1 (36.1) and later you can enable the per-app toggle in system settings.</string>
+    <string name="permission_onboarding_promoted_degradation">If Live Updates are unavailable, this plugin still posts a normal ongoing notification. Static reminders are never upgraded just to request this capability.</string>
 </resources>

@@ -1,11 +1,16 @@
 package com.kieronquinn.app.smartspacer.plugin.water.ui.activities
 
 import androidx.annotation.NavigationRes
+import com.kieronquinn.app.smartspacer.plugin.shared.permissions.PluginPermissionConfig
 import com.kieronquinn.app.smartspacer.plugin.shared.repositories.NavGraphRepository
-import com.kieronquinn.app.smartspacer.plugin.shared.ui.activities.BaseConfigurationActivity
+import com.kieronquinn.app.smartspacer.plugin.shared.ui.activities.PermissionOnboardingSettingsActivity
 import com.kieronquinn.app.smartspacer.plugin.water.R
+import com.kieronquinn.app.smartspacer.plugin.water.permissions.WaterPermissions
 
-class SettingsActivity : BaseConfigurationActivity() {
+class SettingsActivity : PermissionOnboardingSettingsActivity() {
+
+    override val permissionConfig: PluginPermissionConfig = WaterPermissions.config
+
 
     enum class NavGraphMapping(
         override val className: String,

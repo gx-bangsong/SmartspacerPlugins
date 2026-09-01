@@ -50,6 +50,7 @@ class MedicationAlarmReceiver : BroadcastReceiver(), KoinComponent {
 
     private val medicationDao by inject<MedicationDao>()
     private val medicationScheduler by inject<MedicationScheduler>()
+    private val liveUpdatePublisher by inject<com.kieronquinn.app.smartspacer.plugin.medication.notifications.MedicationLiveUpdatePublisher>()
 
     override fun onReceive(context: Context, intent: Intent) {
         intent.verifySecurity(context)
@@ -69,6 +70,7 @@ class MedicationAlarmReceiver : BroadcastReceiver(), KoinComponent {
                         showNotification(context, medicationId, medication.name, medication.dosage)
                     }
                     medicationScheduler.scheduleAlarm(medication)
+                    runCatching { liveUpdatePublisher.publish(medication, now) }
                 }
             } finally {
                 pendingResult.finish()

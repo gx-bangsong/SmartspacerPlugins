@@ -81,9 +81,18 @@ class SmsParser {
                     } else null
 
                     val seatGroup = mappings["seat"]
-                    val seat = if (seatGroup != null && seatGroup <= matcher.groupCount()) {
+                    val seatFromRule = if (seatGroup != null && seatGroup <= matcher.groupCount()) {
                         matcher.group(seatGroup)
                     } else null
+                    val seat = seatFromRule?.trim()?.takeIf { it.isNotEmpty() }
+                        ?: TravelSeatExtractor.extract(rawText)
+
+                    val gateGroup = mappings["gate"]
+                    val gateFromRule = if (gateGroup != null && gateGroup <= matcher.groupCount()) {
+                        matcher.group(gateGroup)
+                    } else null
+                    val gate = gateFromRule?.trim()?.takeIf { it.isNotEmpty() }
+                        ?: TravelGateExtractor.extract(rawText)
 
                     val passengerNameGroup = mappings["passengerName"]
                     val passengerName = if (passengerNameGroup != null && passengerNameGroup <= matcher.groupCount()) {
@@ -102,6 +111,7 @@ class SmsParser {
                         arrivalStation = arrivalStation?.trim(),
                         departureTime = departureTimeMs,
                         seat = seat?.trim(),
+                        gate = gate?.trim(),
                         passengerName = passengerName?.trim(),
                         rawText = rawText
                     )

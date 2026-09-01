@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kieronquinn.app.smartspacer.plugin.travel.data.TravelInfoDao
 import com.kieronquinn.app.smartspacer.plugin.travel.data.TravelInfoItem
+import com.kieronquinn.app.smartspacer.plugin.travel.data.TravelTripSave
 import com.kieronquinn.app.smartspacer.plugin.travel.notifications.TravelNotificationController
 import com.kieronquinn.app.smartspacer.plugin.travel.repositories.TravelSettingsRepository
 import com.kieronquinn.app.smartspacer.plugin.travel.repositories.TravelScheduler
@@ -67,8 +68,8 @@ class TravelSettingsViewModel(
 
     fun addTrip(item: TravelInfoItem) {
         viewModelScope.launch {
-            travelInfoDao.insert(item)
-            travelScheduler.scheduleReminder(item)
+            val savedItem = TravelTripSave.afterInsert(item, travelInfoDao.insert(item))
+            travelScheduler.scheduleReminder(savedItem)
         }
     }
 }

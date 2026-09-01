@@ -7,6 +7,7 @@
     <string name="action_skip">跳过</string>
     <string name="action_drank">已喝</string>
     <string name="water_record_success">喝水记录成功</string>
+    <string name="water_record_amount">Drink %1$d ml</string>
 
     <string name="setting_daily_goal">Daily Goal</string>
     <string name="setting_cup_size">Cup Size</string>
@@ -28,6 +29,9 @@
     <string name="notification_drink_content">Stay hydrated! Record a cup or snooze.</string>
     <string name="notification_action_drink">Record drink</string>
     <string name="notification_action_snooze">Snooze</string>
+    <string name="notification_live_channel">Water progress</string>
+    <string name="notification_live_title">Water intake</string>
+    <string name="notification_live_content">%1$d / %2$d ml (%3$d%%)</string>
 
     <!-- Notification permission row -->
     <string name="notification_permission_granted">Notifications: granted</string>

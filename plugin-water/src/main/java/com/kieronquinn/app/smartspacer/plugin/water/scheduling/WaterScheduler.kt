@@ -4,9 +4,12 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import com.kieronquinn.app.smartspacer.plugin.shared.permissions.ExactAlarmCompat
 import com.kieronquinn.app.smartspacer.plugin.water.receivers.WaterReminderReceiver
+import com.kieronquinn.app.smartspacer.plugin.water.repositories.WaterDataRepository
 import java.time.LocalDate
 import java.time.ZoneId
+import kotlin.math.ceil
 
 class WaterScheduler {
 
@@ -55,6 +58,7 @@ class WaterScheduler {
 
     fun scheduleAlarmsForDate(context: Context, scheduledTimes: List<Long>) {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val exact = ExactAlarmCompat.hasPermission(context)
         scheduledTimes.forEachIndexed { index, time ->
             val intent = Intent(context, WaterReminderReceiver::class.java).apply {
                 putExtra(WaterReminderReceiver.EXTRA_REMINDER_TIME, time)
@@ -65,7 +69,7 @@ class WaterScheduler {
                 intent,
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
-            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, time, pendingIntent)
+            ExactAlarmCompat.schedule(alarmManager, time, pendingIntent, exact)
         }
     }
 
@@ -100,6 +104,24 @@ class WaterScheduler {
             intent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
-        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, snoozeTime, pendingIntent)
+        ExactAlarmCompat.schedule(
+            alarmManager,
+            snoozeTime,
+            pendingIntent,
+            ExactAlarmCompat.hasPermission(context)
+        )
+    }
+
+    fun rescheduleAll(context: Context, repository: WaterDataRepository) {
+        val today = LocalDate.now()
+        val cupMl = repository.cupMl.coerceAtLeast(1)
+        val totalCups = ceil(repository.dailyGoalMl.toDouble() / cupMl).toInt()
+        val schedule = computeDailySchedule(
+            today,
+            repository.activeStartMinutes,
+            repository.activeEndMinutes,
+            totalCups
+        )
+        scheduleAlarmsForDate(context, schedule)
     }
 }

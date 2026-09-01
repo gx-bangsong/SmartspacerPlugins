@@ -46,8 +46,10 @@ class NotificationIdsTest {
             NotificationIds.NAMESPACE_TRAVEL_TRIP,
             NotificationIds.NAMESPACE_PARCEL,
             NotificationIds.NAMESPACE_MEDICATION,
+            NotificationIds.NAMESPACE_MEDICATION_PROGRESS,
             NotificationIds.NAMESPACE_FOOD,
-            NotificationIds.NAMESPACE_WATER
+            NotificationIds.NAMESPACE_WATER,
+            NotificationIds.NAMESPACE_WATER_PROGRESS
         )
         // For every pair of namespaces, no collision across a wide range of entity ids.
         for (i in namespaces.indices) {

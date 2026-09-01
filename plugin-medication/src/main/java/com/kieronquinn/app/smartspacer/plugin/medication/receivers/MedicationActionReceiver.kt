@@ -38,6 +38,7 @@ class MedicationActionReceiver : BroadcastReceiver(), KoinComponent {
     private val medicationDao by inject<MedicationDao>()
     private val doseHistoryDao by inject<DoseHistoryDao>()
     private val medicationScheduler by inject<MedicationScheduler>()
+    private val liveUpdatePublisher by inject<com.kieronquinn.app.smartspacer.plugin.medication.notifications.MedicationLiveUpdatePublisher>()
 
     override fun onReceive(context: Context, intent: Intent) {
         val medicationId = intent.getIntExtra(EXTRA_MEDICATION_ID, -1)
@@ -73,6 +74,7 @@ class MedicationActionReceiver : BroadcastReceiver(), KoinComponent {
                     }
                     SmartspacerTargetProvider.notifyChange(context, MedicationProvider::class.java)
                     MedicationWorker.enqueueImmediate(context)
+                    runCatching { liveUpdatePublisher.publish(medicationDao.getById(medicationId) ?: medication) }
                 }
 
                 val notificationId = intent.getIntExtra(EXTRA_NOTIFICATION_ID, -1)

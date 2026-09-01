@@ -25,11 +25,18 @@ import android.graphics.drawable.Icon as AndroidIcon
 class WaterProvider : SmartspacerTargetProvider(), KoinComponent {
 
     private val waterDataRepository by inject<WaterDataRepository>()
+    private val liveUpdatePublisher by inject<com.kieronquinn.app.smartspacer.plugin.water.notifications.WaterLiveUpdatePublisher>()
 
     override fun getSmartspaceTargets(smartspacerId: String): List<SmartspaceTarget> {
         val context = this.context ?: return emptyList()
         val today = LocalDate.now()
-        val drinks = runBlocking { waterDataRepository.getDrinksForDate(today) }
+        val drinks = runBlocking {
+            try {
+                liveUpdatePublisher.publish()
+            } catch (_: Throwable) {
+            }
+            waterDataRepository.getDrinksForDate(today)
+        }
         val fulfilledCount = drinks.size
         val cupsTotal = ceil(waterDataRepository.dailyGoalMl.toDouble() / waterDataRepository.cupMl).toInt()
         val totalMlDrank = drinks.sumOf { it.amount }
@@ -86,7 +93,10 @@ class WaterProvider : SmartspacerTargetProvider(), KoinComponent {
             featureType = SmartspaceTarget.FEATURE_UNDEFINED,
             title = Text(text),
             subtitle = Text(""),
-            icon = SmartspaceIcon(AndroidIcon.createWithResource(context, R.mipmap.ic_launcher), shouldTint = false),
+            icon = SmartspaceIcon(
+                AndroidIcon.createWithResource(context, R.drawable.ic_launcher_greyscale),
+                shouldTint = true
+            ),
             onClick = TapAction(intent = intent)
         ).create()
 
@@ -97,7 +107,7 @@ class WaterProvider : SmartspacerTargetProvider(), KoinComponent {
         return Config(
             label = "Water Reminder",
             description = "Track your water intake",
-            icon = AndroidIcon.createWithResource(context, R.mipmap.ic_launcher),
+            icon = AndroidIcon.createWithResource(context, R.drawable.ic_launcher_greyscale),
             configActivity = Intent(context, com.kieronquinn.app.smartspacer.plugin.water.ui.activities.SettingsActivity::class.java)
         )
     }

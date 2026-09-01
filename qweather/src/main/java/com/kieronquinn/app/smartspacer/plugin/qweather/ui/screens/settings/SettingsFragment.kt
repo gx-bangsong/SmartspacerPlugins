@@ -1,5 +1,6 @@
 package com.kieronquinn.app.smartspacer.plugin.qweather.ui.screens.settings
 
+import android.app.TimePickerDialog
 import android.content.Context
 import android.os.Bundle
 import android.view.View
@@ -9,7 +10,10 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.kieronquinn.app.smartspacer.plugin.qweather.R
+import com.kieronquinn.app.smartspacer.plugin.qweather.utils.AdvicePaging
+import com.kieronquinn.app.smartspacer.plugin.qweather.utils.LifestyleDisplayWindow
 import com.kieronquinn.app.smartspacer.plugin.shared.model.settings.BaseSettingsItem
+import com.kieronquinn.app.smartspacer.plugin.shared.model.settings.GenericSettingsItem.Dropdown
 import com.kieronquinn.app.smartspacer.plugin.shared.model.settings.GenericSettingsItem.Setting
 import com.kieronquinn.app.smartspacer.plugin.shared.model.settings.GenericSettingsItem.SwitchSetting
 import com.kieronquinn.app.smartspacer.plugin.shared.ui.base.settings.BaseSettingsAdapter
@@ -60,7 +64,8 @@ class SettingsFragment : BaseSettingsFragment() {
     }
 
     private fun SettingsViewModel.State.Loaded.loadItems(): List<BaseSettingsItem> {
-        return listOf(
+        val durationOptions = listOf(15, 30, 45, 60, 90, 120)
+        val items = mutableListOf<BaseSettingsItem>(
             Setting(
                 getString(R.string.settings_api_key_title),
                 apiKey.ifEmpty { getString(R.string.settings_api_key_summary) },
@@ -91,8 +96,101 @@ class SettingsFragment : BaseSettingsFragment() {
                 getString(R.string.settings_use_emoji_summary),
                 ContextCompat.getDrawable(requireContext(), QWeatherR.drawable.ic_face),
                 onChanged = viewModel::onUseEmojiChanged
+            ),
+            Dropdown(
+                getString(R.string.settings_paging_mode_title),
+                getString(pagingModeSummary(paging)),
+                ContextCompat.getDrawable(requireContext(), SharedR.drawable.ic_smartspacer),
+                paging,
+                { viewModel.onPagingModeChanged(it) },
+                AdvicePaging.entries.toList()
+            ) { pagingModeLabel(it) },
+            Dropdown(
+                getString(R.string.settings_page_limit_title),
+                getString(R.string.settings_page_limit_summary, pageLimit),
+                ContextCompat.getDrawable(requireContext(), QWeatherR.drawable.ic_list),
+                pageLimit,
+                { viewModel.onPageLimitChanged(it) },
+                AdvicePaging.LIMIT_OPTIONS
+            ) { getString(R.string.settings_page_limit_option, it) },
+            SwitchSetting(
+                bedtimeEnabled,
+                getString(R.string.settings_bedtime_title),
+                getString(R.string.settings_bedtime_summary),
+                ContextCompat.getDrawable(requireContext(), SharedR.drawable.ic_info),
+                onChanged = viewModel::onBedtimeEnabledChanged
             )
         )
+        if (bedtimeEnabled) {
+            items.add(
+                Setting(
+                    getString(R.string.settings_bedtime_time_title),
+                    LifestyleDisplayWindow.formatClock(bedtimeMinutes),
+                    ContextCompat.getDrawable(requireContext(), SharedR.drawable.ic_info),
+                    onClick = {
+                        showTimePicker(bedtimeMinutes) { viewModel.onBedtimeMinutesChanged(it) }
+                    }
+                )
+            )
+        }
+        items.add(
+            SwitchSetting(
+                wakeEnabled,
+                getString(R.string.settings_wake_title),
+                getString(R.string.settings_wake_summary),
+                ContextCompat.getDrawable(requireContext(), SharedR.drawable.ic_info),
+                onChanged = viewModel::onWakeEnabledChanged
+            )
+        )
+        if (wakeEnabled) {
+            items.add(
+                Setting(
+                    getString(R.string.settings_wake_time_title),
+                    LifestyleDisplayWindow.formatClock(wakeMinutes),
+                    ContextCompat.getDrawable(requireContext(), SharedR.drawable.ic_info),
+                    onClick = {
+                        showTimePicker(wakeMinutes) { viewModel.onWakeMinutesChanged(it) }
+                    }
+                )
+            )
+        }
+        if (bedtimeEnabled || wakeEnabled) {
+            items.add(
+                Dropdown(
+                    getString(R.string.settings_display_duration_title),
+                    getString(R.string.settings_display_duration_summary, displayDurationMinutes),
+                    ContextCompat.getDrawable(requireContext(), SharedR.drawable.ic_info),
+                    displayDurationMinutes,
+                    { viewModel.onDisplayDurationChanged(it) },
+                    durationOptions
+                ) { getString(R.string.settings_display_duration_option, it) }
+            )
+        }
+        return items
+    }
+
+    private fun pagingModeLabel(mode: AdvicePaging): String {
+        return when (mode) {
+            AdvicePaging.NATIVE -> getString(R.string.settings_paging_mode_native)
+            AdvicePaging.WIDGET -> getString(R.string.settings_paging_mode_widget)
+        }
+    }
+
+    private fun pagingModeSummary(mode: AdvicePaging): Int {
+        return when (mode) {
+            AdvicePaging.NATIVE -> R.string.settings_paging_mode_native_summary
+            AdvicePaging.WIDGET -> R.string.settings_paging_mode_widget_summary
+        }
+    }
+
+    private fun showTimePicker(initialMinutes: Int, onSet: (Int) -> Unit) {
+        TimePickerDialog(
+            requireContext(),
+            { _, hour, minute -> onSet(hour * 60 + minute) },
+            initialMinutes / 60,
+            initialMinutes % 60,
+            true
+        ).show()
     }
 
     private fun showInputDialog(context: Context, title: String, initialValue: String, onValueConfirmed: (String) -> Unit) {

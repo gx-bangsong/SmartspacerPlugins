@@ -248,7 +248,8 @@ class TravelNotificationController(context: Context) {
                 whenTime = item.departureTime,
                 usesChronometer = true,
                 chronometerCountDown = true,
-                shortCriticalText = context.getString(R.string.notification_short_critical),
+                shortCriticalText = TravelLiveUpdateCapsule.text(item.gate, item.seat)
+                    .ifBlank { context.getString(R.string.notification_short_critical) },
                 contentIntent = tripViewIntent(item),
                 deleteIntent = tripDismissedIntent(item.id),
                 actions = listOf(

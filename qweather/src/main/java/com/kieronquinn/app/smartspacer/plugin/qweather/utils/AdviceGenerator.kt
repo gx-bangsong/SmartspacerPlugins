@@ -55,7 +55,12 @@ object AdviceGenerator {
     /**
      * Generates a list of summaries for "Good for" and "Bad for" activities.
      */
-    fun generateActivityAdvice(dailyItems: List<Daily>, useEmoji: Boolean): List<String> {
+    fun generateActivityAdvice(
+        dailyItems: List<Daily>,
+        useEmoji: Boolean,
+        paging: AdvicePaging = AdvicePaging.NATIVE,
+        maxChars: Int = paging.maxChars
+    ): List<String> {
         val goodFor = mutableListOf<String>()
         val badFor = mutableListOf<String>()
 
@@ -70,22 +75,22 @@ object AdviceGenerator {
 
         val result = mutableListOf<String>()
         if (useEmoji) {
-            result.addAll(splitAdvice("✅ ", goodFor))
-            result.addAll(splitAdvice("❌ ", badFor))
+            result.addAll(splitAdvice("✅ ", goodFor, maxChars))
+            result.addAll(splitAdvice("❌ ", badFor, maxChars))
         } else {
-            result.addAll(splitAdvice("宜:", goodFor))
-            result.addAll(splitAdvice("不宜:", badFor))
+            result.addAll(splitAdvice("宜:", goodFor, maxChars))
+            result.addAll(splitAdvice("不宜:", badFor, maxChars))
         }
         return result
     }
 
-    private fun splitAdvice(prefix: String, items: List<String>): List<String> {
+    private fun splitAdvice(prefix: String, items: List<String>, maxChars: Int): List<String> {
         if (items.isEmpty()) return emptyList()
         val result = mutableListOf<String>()
         var currentBuilder = StringBuilder(prefix)
         items.forEach { item ->
             val potential = if (currentBuilder.length == prefix.length) item else " $item"
-            if (currentBuilder.length + potential.length > 8) {
+            if (currentBuilder.length + potential.length > maxChars) {
                 if (currentBuilder.length > prefix.length) {
                     result.add(currentBuilder.toString())
                     currentBuilder = StringBuilder(prefix).append(item)

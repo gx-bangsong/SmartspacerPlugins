@@ -57,7 +57,10 @@ class FoodProvider : SmartspacerTargetProvider(), KoinComponent {
                     featureType = SmartspaceTarget.FEATURE_REMINDER,
                     title = Text(title),
                     subtitle = Text(""),
-                    icon = SmartspaceIcon(AndroidIcon.createWithResource(context, R.mipmap.ic_launcher), shouldTint = false),
+                    icon = SmartspaceIcon(
+                        AndroidIcon.createWithResource(context, R.drawable.ic_launcher_greyscale),
+                        shouldTint = true
+                    ),
                     onClick = TapAction(intent = intent)
                 ).create()
             }
@@ -67,7 +70,7 @@ class FoodProvider : SmartspacerTargetProvider(), KoinComponent {
         return Config(
             label = "Food Shelf Life Reminder",
             description = "Track the shelf life of your food",
-            icon = AndroidIcon.createWithResource(context, R.mipmap.ic_launcher),
+            icon = AndroidIcon.createWithResource(context, R.drawable.ic_launcher_greyscale),
             configActivity = Intent(context, com.kieronquinn.app.smartspacer.plugin.food.ui.activities.SettingsActivity::class.java)
         )
     }

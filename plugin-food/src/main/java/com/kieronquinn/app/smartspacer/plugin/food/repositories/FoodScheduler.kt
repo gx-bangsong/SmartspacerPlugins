@@ -7,6 +7,7 @@ import android.os.Build
 import com.kieronquinn.app.smartspacer.plugin.food.data.FoodItem
 import com.kieronquinn.app.smartspacer.plugin.food.data.FoodItemDao
 import com.kieronquinn.app.smartspacer.plugin.food.receivers.FoodAlarmReceiver
+import com.kieronquinn.app.smartspacer.plugin.shared.permissions.ExactAlarmCompat
 import com.kieronquinn.app.smartspacer.plugin.shared.utils.extensions.PendingIntent_MUTABLE_FLAGS
 import kotlinx.coroutines.flow.first
 import java.util.Calendar
@@ -34,7 +35,7 @@ class FoodSchedulerImpl(
     override fun scheduleReminder(foodItem: FoodItem) {
         cancelReminder(foodItem.id) // 取消该物品的已有闹钟
 
-        if (!hasPermission() || !foodItem.enabled) {
+        if (!foodItem.enabled) {
             return
         }
 
@@ -64,10 +65,11 @@ class FoodSchedulerImpl(
                 intent,
                 PendingIntent_MUTABLE_FLAGS
             )
-            alarmManager.setExactAndAllowWhileIdle(
-                AlarmManager.RTC_WAKEUP,
-                alarmTime,
-                pendingIntent
+            ExactAlarmCompat.schedule(
+                alarmManager = alarmManager,
+                triggerAtMillis = alarmTime,
+                pendingIntent = pendingIntent,
+                exact = hasPermission()
             )
         }
     }

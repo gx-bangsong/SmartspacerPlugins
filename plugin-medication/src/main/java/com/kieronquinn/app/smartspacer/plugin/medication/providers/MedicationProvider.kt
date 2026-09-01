@@ -28,10 +28,17 @@ import android.graphics.drawable.Icon as AndroidIcon
 class MedicationProvider : SmartspacerTargetProvider(), KoinComponent {
 
     private val medicationDao by inject<MedicationDao>()
+    private val liveUpdatePublisher by inject<com.kieronquinn.app.smartspacer.plugin.medication.notifications.MedicationLiveUpdatePublisher>()
 
     override fun getSmartspaceTargets(smartspacerId: String): List<SmartspaceTarget> {
         val context = this.context ?: return emptyList()
-        val medications = runBlocking { medicationDao.getAll().first() }
+        val medications = runBlocking {
+            try {
+                liveUpdatePublisher.publishAll()
+            } catch (_: Throwable) {
+            }
+            medicationDao.getAll().first()
+        }
         val now = System.currentTimeMillis()
 
         return medications
@@ -76,7 +83,10 @@ class MedicationProvider : SmartspacerTargetProvider(), KoinComponent {
                     featureType = SmartspaceTarget.FEATURE_REMINDER,
                     title = Text(title),
                     subtitle = Text(""),
-                    icon = SmartspaceIcon(AndroidIcon.createWithResource(context, R.mipmap.ic_launcher), shouldTint = false),
+                    icon = SmartspaceIcon(
+                        AndroidIcon.createWithResource(context, R.drawable.ic_launcher_greyscale),
+                        shouldTint = true
+                    ),
                     onClick = TapAction(intent = intent)
                 ).create()
             }
@@ -86,7 +96,7 @@ class MedicationProvider : SmartspacerTargetProvider(), KoinComponent {
         return Config(
             label = "Medication Reminder",
             description = "A medication reminder",
-            icon = AndroidIcon.createWithResource(context, R.mipmap.ic_launcher),
+            icon = AndroidIcon.createWithResource(context, R.drawable.ic_launcher_greyscale),
             configActivity = Intent(context, SettingsActivity::class.java)
         )
     }

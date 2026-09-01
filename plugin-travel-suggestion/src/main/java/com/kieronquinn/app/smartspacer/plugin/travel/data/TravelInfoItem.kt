@@ -12,6 +12,7 @@ data class TravelInfoItem(
     val arrivalStation: String?,
     val departureTime: Long, // Epoch millis
     val seat: String?,
+    val gate: String? = null,
     val passengerName: String?,
     val source: String, // "sms" or "manual"
     val timestamp: Long = System.currentTimeMillis(),

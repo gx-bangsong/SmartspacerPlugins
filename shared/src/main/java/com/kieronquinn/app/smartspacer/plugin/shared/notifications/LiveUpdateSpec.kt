@@ -36,6 +36,9 @@ data class LiveUpdateSpec(
     val shortCriticalText: CharSequence? = null,
     /** Indeterminate progress style; used for the "parsing" state of the travel share flow. */
     val progressIndeterminate: Boolean = false,
+    /** Determinate progress for water / medication Live Updates. Requires [progressMax] > 0. */
+    val progress: Int? = null,
+    val progressMax: Int? = null,
     val contentIntent: PendingIntent? = null,
     /** Handles user dismissal / un-pinning so the notification is not re-posted. */
     val deleteIntent: PendingIntent? = null,

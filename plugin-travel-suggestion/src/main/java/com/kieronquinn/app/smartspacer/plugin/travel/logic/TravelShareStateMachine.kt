@@ -17,6 +17,7 @@ data class TravelShareDraft(
     val arrivalStation: String?,
     val departureTime: Long,
     val seat: String?,
+    val gate: String? = null,
     val createdAt: Long,
     val updatedAt: Long
 ) {

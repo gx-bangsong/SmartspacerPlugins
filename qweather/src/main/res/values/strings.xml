@@ -16,4 +16,21 @@
     <string name="settings_select_indices_summary">Choose which lifestyle indices to display</string>
     <string name="settings_use_emoji_title">Use Emoji</string>
     <string name="settings_use_emoji_summary">Replace with emojis: ✅宜 ❌不宜 🏃运动 🚗洗车 🎣钓鱼 ✈️旅游 👕晾晒 👔穿衣 ☀️紫外线 💄化妆 🤒感冒</string>
+    <string name="settings_paging_mode_title">Display surface</string>
+    <string name="settings_paging_mode_native">Native Smartspace</string>
+    <string name="settings_paging_mode_widget">Smartspacer widget</string>
+    <string name="settings_paging_mode_native_summary">Preset threshold 12 — matches the fixed At a Glance line</string>
+    <string name="settings_paging_mode_widget_summary">Preset threshold 8 — shorter widget slot</string>
+    <string name="settings_page_limit_title">Page threshold</string>
+    <string name="settings_page_limit_summary">Split a new page after %1$d characters. Native Smartspace cannot show more than one line.</string>
+    <string name="settings_page_limit_option">%1$d characters</string>
+    <string name="settings_bedtime_title">Show before bed</string>
+    <string name="settings_bedtime_summary">Show lifestyle advice starting at the bedtime you set</string>
+    <string name="settings_bedtime_time_title">Bedtime</string>
+    <string name="settings_wake_title">Show after waking</string>
+    <string name="settings_wake_summary">Show lifestyle advice starting at the wake time you set</string>
+    <string name="settings_wake_time_title">Wake time</string>
+    <string name="settings_display_duration_title">How long to keep showing</string>
+    <string name="settings_display_duration_summary">Hide automatically after %1$d minutes</string>
+    <string name="settings_display_duration_option">%1$d minutes</string>
 </resources>

@@ -35,6 +35,7 @@ class WaterActionReceiver : BroadcastReceiver(), KoinComponent {
     private val drinkHistoryDao by inject<DrinkHistoryDao>()
     private val waterDataRepository by inject<WaterDataRepository>()
     private val waterScheduler by inject<WaterScheduler>()
+    private val liveUpdatePublisher by inject<com.kieronquinn.app.smartspacer.plugin.water.notifications.WaterLiveUpdatePublisher>()
 
     override fun onReceive(context: Context, intent: Intent) {
         val notificationId = intent.getIntExtra(EXTRA_NOTIFICATION_ID, -1)

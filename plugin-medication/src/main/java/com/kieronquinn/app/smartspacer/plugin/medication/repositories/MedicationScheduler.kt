@@ -7,6 +7,7 @@ import android.os.Build
 import com.kieronquinn.app.smartspacer.plugin.medication.data.Medication
 import com.kieronquinn.app.smartspacer.plugin.medication.data.MedicationDao
 import com.kieronquinn.app.smartspacer.plugin.medication.receivers.MedicationAlarmReceiver
+import com.kieronquinn.app.smartspacer.plugin.shared.permissions.ExactAlarmCompat
 import com.kieronquinn.app.smartspacer.plugin.shared.utils.extensions.PendingIntent_MUTABLE_FLAGS
 import kotlinx.coroutines.flow.first
 
@@ -32,7 +33,7 @@ class MedicationSchedulerImpl(
     override fun scheduleAlarm(medication: Medication) {
         cancelAlarm(medication.id) // Cancel existing alarms first
 
-        if (!hasPermission() || !medication.enabled) {
+        if (!medication.enabled) {
             return
         }
 
@@ -49,10 +50,11 @@ class MedicationSchedulerImpl(
                 intent,
                 PendingIntent_MUTABLE_FLAGS
             )
-            alarmManager.setExactAndAllowWhileIdle(
-                AlarmManager.RTC_WAKEUP,
-                nextDoseAlarmTime,
-                pendingIntent
+            ExactAlarmCompat.schedule(
+                alarmManager = alarmManager,
+                triggerAtMillis = nextDoseAlarmTime,
+                pendingIntent = pendingIntent,
+                exact = hasPermission()
             )
         }
 
@@ -65,10 +67,11 @@ class MedicationSchedulerImpl(
                 intent,
                 PendingIntent_MUTABLE_FLAGS
             )
-            alarmManager.setExactAndAllowWhileIdle(
-                AlarmManager.RTC_WAKEUP,
-                warningAlarmTime,
-                pendingIntent
+            ExactAlarmCompat.schedule(
+                alarmManager = alarmManager,
+                triggerAtMillis = warningAlarmTime,
+                pendingIntent = pendingIntent,
+                exact = hasPermission()
             )
         }
     }

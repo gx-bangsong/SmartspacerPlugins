@@ -7,5 +7,10 @@
             android:name="com.kieronquinn.app.smartspacer.plugin.shared.ui.activities.DialogLauncherActivity"
             android:exported="true"
             android:theme="@style/Theme.Smartspacer.Dialog" />
+
+        <activity
+            android:name="com.kieronquinn.app.smartspacer.plugin.shared.permissions.PermissionOnboardingActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Smartspacer" />
     </application>
 </manifest>

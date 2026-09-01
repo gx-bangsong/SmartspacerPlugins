@@ -7,8 +7,11 @@ import com.kieronquinn.app.smartspacer.plugin.checkin.repositories.CheckInSettin
 import com.kieronquinn.app.smartspacer.plugin.checkin.repositories.CheckInScheduler
 import com.kieronquinn.app.smartspacer.plugin.checkin.repositories.CheckInSchedulerImpl
 import com.kieronquinn.app.smartspacer.plugin.checkin.repositories.NavGraphRepositoryImpl
+import com.kieronquinn.app.smartspacer.plugin.checkin.permissions.CheckInPermissions
 import com.kieronquinn.app.smartspacer.plugin.checkin.ui.fragments.CheckInSettingsViewModel
 import com.kieronquinn.app.smartspacer.plugin.shared.SmartspacerPlugin
+import com.kieronquinn.app.smartspacer.plugin.shared.permissions.ExactAlarmRescheduler
+import com.kieronquinn.app.smartspacer.plugin.shared.permissions.PluginPermissionConfig
 import com.kieronquinn.app.smartspacer.plugin.shared.repositories.NavGraphRepository
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
@@ -19,6 +22,10 @@ class CheckInPlugin : SmartspacerPlugin() {
         single { CheckInDatabase.getDatabase(get()).checkInDao() }
         single<CheckInSettingsRepository> { CheckInSettingsRepositoryImpl(get()) }
         single<CheckInScheduler> { CheckInSchedulerImpl(get(), get()) }
+        single<PluginPermissionConfig> { CheckInPermissions.config }
+        single<ExactAlarmRescheduler> {
+            ExactAlarmRescheduler { get<CheckInScheduler>().scheduleDailyAlarms() }
+        }
         single<NavGraphRepository> { NavGraphRepositoryImpl() }
         viewModel { CheckInSettingsViewModel(get(), get(), get()) }
     }

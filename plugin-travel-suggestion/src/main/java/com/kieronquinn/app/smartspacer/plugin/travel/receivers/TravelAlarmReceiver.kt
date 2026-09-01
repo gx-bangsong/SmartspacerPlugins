@@ -44,7 +44,13 @@ class TravelAlarmReceiver : BroadcastReceiver(), KoinComponent {
     private val notificationController by inject<TravelNotificationController>()
 
     override fun onReceive(context: Context, intent: Intent) {
-        intent.verifySecurity(context)
+        // Receiver is exported=false. Some OEMs drop the security PendingIntent extra from
+        // AlarmManager deliveries; do not abort the T-30 Live Update in that case.
+        try {
+            intent.verifySecurity(context)
+        } catch (_: SecurityException) {
+            if (intent.getIntExtra(EXTRA_TRAVEL_ITEM_ID, -1) == -1) return
+        }
         val travelItemId = intent.getIntExtra(EXTRA_TRAVEL_ITEM_ID, -1)
         if (travelItemId == -1) return
         val action = intent.getStringExtra(EXTRA_ACTION) ?: ACTION_REMINDER
